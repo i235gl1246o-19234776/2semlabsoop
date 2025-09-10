@@ -6,8 +6,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="2LapOOP" />
+        <module name="2LabOOP" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="2LapOOP" target="17" />
+    </bytecodeTargetLevel>
   </component>
 </project>
