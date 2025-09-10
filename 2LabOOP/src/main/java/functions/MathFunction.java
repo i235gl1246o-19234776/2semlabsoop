@@ -1,6 +1,6 @@
 package functions;
 
-public interface MathFunctions {
+public interface MathFunction {
 
     double apply(double x);
 
