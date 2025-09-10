@@ -23,8 +23,8 @@ public class MySecondClass {
         secondNum = val;
     }
 
-    public int add() {
-        return firstNum + secondNum;
+    public int bitAnd() {
+        return firstNum & secondNum;
     }
 
 }
