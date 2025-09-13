@@ -2,12 +2,12 @@ package functions;
 
 import java.util.Arrays;
 
-public class ArrayTabulateFunction extends AbstractTabulatedFunction implements Removable {
+public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements Removable {
     private double[] xVal;
     private double[] yVal;
     private int count;
 
-    public ArrayTabulateFunction(double[] xVal, double[] yVal){
+    public ArrayTabulatedFunction(double[] xVal, double[] yVal){
         if (xVal.length != yVal.length){
             throw new IllegalArgumentException("Массивы разной длины");
         }
@@ -22,7 +22,7 @@ public class ArrayTabulateFunction extends AbstractTabulatedFunction implements 
         this.yVal = Arrays.copyOf(yVal, count);
     }
 
-    public ArrayTabulateFunction(MathFunction s, double xFrom, double xTo, int count){
+    public ArrayTabulatedFunction(MathFunction s, double xFrom, double xTo, int count){
         if(count < 2){
             throw new IllegalArgumentException("Меньше 2х элементов");
         }
