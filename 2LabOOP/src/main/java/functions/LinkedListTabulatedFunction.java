@@ -212,22 +212,51 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction{
         return head.prev.x;
     }
 
+    protected Node floorNodeOfX(double x){
+        if (head == null){
+            throw new IllegalStateException("Список пуст, ы");
+        }
+        if(x < head.x){
+            return head;
+        }
+
+        if(x >= head.prev.x){
+            return head.prev;
+        }
+
+        Node curr = head;
+        for(int i = 0; i < count - 1; i++){
+            if(x >= curr.x && x < curr.next.x){
+                return curr;
+            }
+            curr = curr.next;
+        }
+
+        return head.prev;
+    }
+
     @Override
     public double apply(double x) {
-        if (x < getX(0)) {
+        if(x < leftBound()){
             return extrapolateLeft(x);
-        }
-
-        if (x > getX(count - 1)) {
+        }else if(x > rightBound()){
             return extrapolateRight(x);
-        }
+        }else{
+            Node floorNode = floorNodeOfX(x);
 
-        int exactIndex = indexOfX(x);
-        if (exactIndex != -1) {
-            return getY(exactIndex);
-        }
+            if(java.lang.Math.abs(floorNode.x - x) < 1e-10){
+                return floorNode.y;
+            }
 
-        int floorIndex = floorIndexOfX(x);
-        return interpolate(x, floorIndex);
+            if(floorNode.next == head && java.lang.Math.abs(floorNode.x - x) < 1e-10){
+                return floorNode.y;
+            }
+
+            if(floorNode.next != head && x >= floorNode.x && x < floorNode.next.x){
+                return interpolate(x, floorNode.x, floorNode.next.x, floorNode.y, floorNode.next.y);
+            }
+
+            return interpolate(x, floorNode.x, floorNode.next.x, floorNode.y, floorNode.next.y);
+        }
     }
 }

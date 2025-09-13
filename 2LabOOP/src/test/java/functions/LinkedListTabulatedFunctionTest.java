@@ -105,7 +105,7 @@ class LinkedListTabulatedFunctionTest {
     }
 
     @Test
-    void testFloorIndexOfX() {
+    void testFloorNodeOfX() {
         double[] xValues = {1.0, 3.0, 5.0, 7.0};
         double[] yValues = {10.0, 30.0, 50.0, 70.0};
         LinkedListTabulatedFunction function = new LinkedListTabulatedFunction(xValues, yValues);
@@ -119,23 +119,25 @@ class LinkedListTabulatedFunctionTest {
     }
 
     @Test
-    void testApply() {
-        double[] xValues = {1.0, 2.0, 3.0};
-        double[] yValues = {10.0, 20.0, 30.0};
+    void testOptimizedApply() {
+        double[] xValues = {1.0, 2.0, 3.0, 4.0};
+        double[] yValues = {10.0, 20.0, 30.0, 40.0};
         LinkedListTabulatedFunction function = new LinkedListTabulatedFunction(xValues, yValues);
 
         // Точные значения
         assertEquals(10.0, function.apply(1.0), DELTA, "apply(1.0)");
         assertEquals(20.0, function.apply(2.0), DELTA, "apply(2.0)");
         assertEquals(30.0, function.apply(3.0), DELTA, "apply(3.0)");
+        assertEquals(40.0, function.apply(4.0), DELTA, "apply(4.0)");
 
         // Интерполяция
         assertEquals(15.0, function.apply(1.5), DELTA, "apply(1.5) интерполяция");
         assertEquals(25.0, function.apply(2.5), DELTA, "apply(2.5) интерполяция");
+        assertEquals(35.0, function.apply(3.5), DELTA, "apply(3.5) интерполяция");
 
         // Экстраполяция
         assertEquals(0.0, function.apply(0.0), DELTA, "apply(0.0) экстраполяция");
-        assertEquals(35.0, function.apply(3.5), DELTA, "apply(3.5) экстраполяция");
+        assertEquals(45.0, function.apply(4.5), DELTA, "apply(4.5) экстраполяция");
     }
 
     @Test
