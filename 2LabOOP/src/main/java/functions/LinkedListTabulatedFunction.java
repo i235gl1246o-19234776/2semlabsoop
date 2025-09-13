@@ -2,7 +2,7 @@ package functions;
 
 import java.util.Arrays;
 
-public class LinkedListTabulatedFunction extends AbstractTabulatedFunction{
+public class LinkedListTabulatedFunction extends AbstractTabulatedFunction implements Insertable {
 
     private Node head;
     private int count;
@@ -259,4 +259,52 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction{
             return interpolate(x, floorNode.x, floorNode.next.x, floorNode.y, floorNode.next.y);
         }
     }
+
+    @Override
+    public void insert(double x, double y) {
+        if (head == null) {
+            addNode(x, y);
+            return;
+        }
+
+        Node curr = head;
+        do {
+            if (Math.abs(curr.x - x) < 1e-10) {
+                curr.y = y;
+                return;
+            }
+            if (x < curr.x) {
+                Node newNode = new Node(x, y);
+
+                Node prevNode = curr.prev;
+                prevNode.next = newNode;
+                newNode.prev = prevNode;
+
+                newNode.next = curr;
+                curr.prev = newNode;
+
+                if (curr == head) {
+                    head = newNode;
+                }
+
+                count++;
+                return;
+            }
+
+            curr = curr.next;
+        } while (curr != head);
+
+        Node last = head.prev;
+        Node newNode = new Node(x, y);
+
+        last.next = newNode;
+        newNode.prev = last;
+
+        newNode.next = head;
+        head.prev = newNode;
+
+        count++;
+    }
+
+    
 }

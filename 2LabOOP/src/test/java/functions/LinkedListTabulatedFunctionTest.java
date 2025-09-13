@@ -178,4 +178,82 @@ class LinkedListTabulatedFunctionTest {
 
         assertEquals(5.0, function.getY(0), DELTA, "y[0] для одной точки");
     }
+
+
+
+    //==============
+
+
+    @Test
+    public void testInsertEmptyList() {
+        LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(new double[]{}, new double[]{});
+        assertEquals(0, list.getCount());
+
+        list.insert(1.0, 2.0);
+        assertEquals(1, list.getCount());
+        assertEquals(1.0, list.getX(0));
+        assertEquals(2.0, list.getY(0));
+    }
+
+    @Test
+    public void testInsertAtBeginning() {
+        LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(new double[]{2.0, 4.0, 6.0}, new double[]{1.0, 2.0, 3.0});
+        assertEquals(3, list.getCount());
+
+        list.insert(1.0, 10.0);
+        assertEquals(4, list.getCount());
+        assertEquals(1.0, list.getX(0));
+        assertEquals(10.0, list.getY(0));
+        assertEquals(2.0, list.getX(1)); // остались в порядке
+    }
+
+    @Test
+    public void testInsertInMiddle() {
+        LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(new double[]{1.0, 3.0, 5.0}, new double[]{1.0, 3.0, 5.0});
+        list.insert(2.0, 2.0);
+        assertEquals(4, list.getCount());
+        assertEquals(1.0, list.getX(0));
+        assertEquals(2.0, list.getX(1));
+        assertEquals(3.0, list.getX(2));
+        assertEquals(2.0, list.getY(1));
+    }
+
+    @Test
+    public void testInsertAtEnd() {
+        LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(new double[]{1.0, 2.0, 3.0}, new double[]{1.0, 2.0, 3.0});
+        list.insert(4.0, 4.0);
+        assertEquals(4, list.getCount());
+        assertEquals(4.0, list.getX(3));
+        assertEquals(4.0, list.getY(3));
+    }
+
+    @Test
+    public void testInsertDuplicateX() {
+        LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(new double[]{1.0, 2.0, 3.0}, new double[]{1.0, 2.0, 3.0});
+        list.insert(2.0, 99.0); // замена
+        assertEquals(3, list.getCount());
+        assertEquals(99.0, list.getY(1)); // y обновился
+    }
+     @Test
+     public void testInsertMultipleTimes() {
+        LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(new double[]{}, new double[]{});
+        list.insert(5.0, 5.0);
+        list.insert(3.0, 3.0);
+        list.insert(7.0, 7.0);
+        list.insert(4.0, 4.0);
+
+        assertEquals(4, list.getCount());
+        assertEquals(3.0, list.getX(0));
+        assertEquals(4.0, list.getX(1));
+        assertEquals(5.0, list.getX(2));
+        assertEquals(7.0, list.getX(3));
+    }
+
+    @Test
+    public void testInsertWithSmallEpsilon() {
+        LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(new double[]{1.0, 3.0}, new double[]{1.0, 3.0});
+        list.insert(1.0 + 1e-11, 99.0); // почти совпадает — должно заменить
+        assertEquals(2, list.getCount());
+        assertEquals(99.0, list.getY(0)); // заменило первый элемент
+    }
 }
