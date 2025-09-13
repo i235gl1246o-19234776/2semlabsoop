@@ -133,11 +133,17 @@ public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements
 
     @Override
     public double leftBound() {
+        if (count == 0) {
+            throw new IndexOutOfBoundsException("Нет точек в функции: невозможно определить левую границу");
+        }
         return xVal[0];
     }
 
     @Override
     public double rightBound() {
+        if (count == 0) {
+            throw new IndexOutOfBoundsException("Нет точек в функции: невозможно определить правую границу");
+        }
         return xVal[count-1];
     }
 

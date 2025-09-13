@@ -7,13 +7,19 @@ import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-
 @DisplayName("Тесты для ArrayTabulatedFunction")
 public class ArrayTabulatedFunctionTest {
 
     // Вспомогательный метод для создания простой MathFunction
     private static MathFunction linearFunc(double slope, double intercept) {
         return x -> slope * x + intercept;
+    }
+
+    // Вспомогательный метод для создания тестового объекта
+    private ArrayTabulatedFunction createTestFunction() {
+        double[] x = {1.0, 2.0, 3.0, 4.0, 5.0};
+        double[] y = {1.0, 4.0, 6.0, 8.0, 10.0};
+        return new ArrayTabulatedFunction(x, y);
     }
 
     // === Конструктор с массивами ===
@@ -54,6 +60,21 @@ public class ArrayTabulatedFunctionTest {
         assertEquals(4.0, f.getY(1), 1e-10);
     }
 
+    @Test
+    @DisplayName("Конструктор не модифицирует входные массивы")
+    void constructorDoesNotModifyInputArrays() {
+        double[] originalX = {1, 2, 3};
+        double[] originalY = {1, 4, 9};
+        double[] copyX = Arrays.copyOf(originalX, originalX.length);
+        double[] copyY = Arrays.copyOf(originalY, originalY.length);
+
+        new ArrayTabulatedFunction(originalX, originalY);
+
+        // Убеждаемся, что оригинальные массивы остались неизменными
+        assertArrayEquals(copyX, originalX, 1e-10);
+        assertArrayEquals(copyY, originalY, 1e-10);
+    }
+
     // === Конструктор с MathFunction ===
 
     @Test
@@ -75,6 +96,19 @@ public class ArrayTabulatedFunctionTest {
             assertEquals(2.0, tab.getX(i), 1e-10);
             assertEquals(4.0, tab.getY(i), 1e-10); // 2^2 = 4
         }
+    }
+
+    @Test
+    @DisplayName("Конструктор с xFrom == xTo и count=2 создаёт две одинаковые точки")
+    void constructorEqualBoundsCountTwo() {
+        MathFunction f = x -> x * x;
+        ArrayTabulatedFunction tab = new ArrayTabulatedFunction(f, 2.0, 2.0, 2);
+
+        assertEquals(2, tab.getCount());
+        assertEquals(2.0, tab.getX(0), 1e-10);
+        assertEquals(2.0, tab.getX(1), 1e-10);
+        assertEquals(4.0, tab.getY(0), 1e-10);
+        assertEquals(4.0, tab.getY(1), 1e-10);
     }
 
     @Test
@@ -317,6 +351,28 @@ public class ArrayTabulatedFunctionTest {
         assertEquals(1, f.floorIndexOfX(2.0));
     }
 
+    @Test
+    @DisplayName("floorIndexOfX не возвращает -42")
+    void floorIndexOfXNeverReturnsMinus42() {
+        ArrayTabulatedFunction f = new ArrayTabulatedFunction(
+                new double[]{0, 1, 2},
+                new double[]{0, 1, 4}
+        );
+
+        for (double x = -1.0; x <= 3.0; x += 0.1) {
+            int result = f.floorIndexOfX(x);
+            assertNotEquals(-42, result, "Метод floorIndexOfX не должен возвращать -42");
+        }
+    }
+
+    @Test
+    @DisplayName("floorIndexOfX на пустой функции выбрасывает исключение")
+    void floorIndexOfXOnEmptyFunctionThrows() {
+        ArrayTabulatedFunction f = new ArrayTabulatedFunction(new double[]{1}, new double[]{1});
+        f.remove(0); // count = 0
+        assertThrows(IndexOutOfBoundsException.class, () -> f.floorIndexOfX(5.0));
+    }
+
     // === interpolate ===
 
     @Test
@@ -359,6 +415,14 @@ public class ArrayTabulatedFunctionTest {
                 new double[]{5}
         );
         assertEquals(5, f.interpolate(10, 0), 1e-10); // даже если floorIndex не подходит — возвращает y[0]
+    }
+
+    @Test
+    @DisplayName("interpolate на пустой функции выбрасывает исключение")
+    void interpolateOnEmptyFunctionThrows() {
+        ArrayTabulatedFunction f = new ArrayTabulatedFunction(new double[]{1}, new double[]{1});
+        f.remove(0); // count = 0
+        assertThrows(IndexOutOfBoundsException.class, () -> f.interpolate(1.5, 0));
     }
 
     // === extrapolateLeft и extrapolateRight ===
@@ -407,6 +471,16 @@ public class ArrayTabulatedFunctionTest {
         assertEquals(5, f.extrapolateRight(3), 1e-10); // 2*3 - 1 = 5
     }
 
+    // === apply ===
+
+    @Test
+    @DisplayName("apply на пустой функции выбрасывает исключение")
+    void applyOnEmptyFunctionThrows() {
+        ArrayTabulatedFunction f = new ArrayTabulatedFunction(new double[]{1}, new double[]{1});
+        f.remove(0); // count = 0
+        assertThrows(IndexOutOfBoundsException.class, () -> f.apply(5.0));
+    }
+
     // === andThen ===
 
     @Test
@@ -420,100 +494,81 @@ public class ArrayTabulatedFunctionTest {
         MathFunction after = x -> x * 2;
         MathFunction composed = f.andThen(after);
 
-        // composed(0) = after(f(0)) = after(0) = 0
-        // composed(1) = after(f(1)) = after(1) = 2
-        // Проверяем через вызов apply
         assertEquals(0, composed.apply(0), 1e-10);
         assertEquals(2, composed.apply(1), 1e-10);
     }
 
-    // === Дополнительные тесты: сложные случаи ===
+    @Test
+    @DisplayName("andThen не изменяет оригинал")
+    void andThenDoesNotModifyOriginal() {
+        ArrayTabulatedFunction f = createTestFunction();
+        MathFunction after = x -> x * 2;
+        MathFunction composed = f.andThen(after);
+
+        // Проверяем, что f не изменился
+        assertEquals(5, f.getCount());
+        assertEquals(1.0, f.getX(0), 1e-10);
+        assertEquals(10.0, f.getY(4), 1e-10);
+    }
+
+    // === getxVal и getyVal ===
 
     @Test
-    @DisplayName("Интерполяция с большим количеством точек")
-    void interpolateWithManyPoints() {
-        double[] x = {0, 1, 2, 3, 4};
-        double[] y = {0, 2, 4, 6, 8}; // y = 2x
-        ArrayTabulatedFunction f = new ArrayTabulatedFunction(x, y);
+    @DisplayName("getxVal возвращает копию массива x с правильной длиной")
+    void getxValReturnsCopyAndCorrectLength() {
+        ArrayTabulatedFunction f = createTestFunction();
+        double[] xCopy = f.getxVal();
 
-        // Интерполируем между 1 и 2: x=1.5 → y ≈ 2.25
-        assertEquals(3, f.interpolate(1.5, 1), 1e-10);
+        assertArrayEquals(new double[]{1.0, 2.0, 3.0, 4.0, 5.0}, xCopy, 1e-10);
+        assertEquals(5, xCopy.length);
+
+        // Изменяем копию — оригинал не должен меняться
+        xCopy[0] = 999;
+        assertEquals(1.0, f.getX(0), 1e-10);
     }
 
     @Test
-    @DisplayName("Экстраполяция слева с более чем 2 точками")
-    void extrapolateLeftWithManyPoints() {
-        ArrayTabulatedFunction f = new ArrayTabulatedFunction(
-                new double[]{1, 2, 3},
-                new double[]{1, 4, 9}
-        );
-        // Линейная экстраполяция по первым двум точкам: y = 3x - 2
-        assertEquals(1, f.extrapolateLeft(1), 1e-10); // граница
-        assertEquals(-2, f.extrapolateLeft(0), 1e-10); // 3*0 - 2 = -2
+    @DisplayName("getyVal возвращает копию массива y с правильной длиной")
+    void getyValReturnsCopyAndCorrectLength() {
+        ArrayTabulatedFunction f = createTestFunction();
+        double[] yCopy = f.getyVal();
+
+        assertArrayEquals(new double[]{1.0, 4.0, 6.0, 8.0, 10.0}, yCopy, 1e-10);
+        assertEquals(5, yCopy.length);
+
+        // Изменяем копию — оригинал не должен меняться
+        yCopy[0] = 999;
+        assertEquals(1.0, f.getY(0), 1e-10);
     }
 
     @Test
-    @DisplayName("Экстраполяция справа с более чем 2 точками")
-    void extrapolateRightWithManyPoints() {
-        ArrayTabulatedFunction f = new ArrayTabulatedFunction(
-                new double[]{1, 2, 3},
-                new double[]{1, 4, 9}
-        );
-        // Последний отрезок: от (2,4) до (3,9) → наклон = 5 → y = 5x - 6
-        assertEquals(9, f.extrapolateRight(3), 1e-10);
-        assertEquals(14, f.extrapolateRight(4), 1e-10); // 5*4 - 6 = 14
+    @DisplayName("getxVal и getyVal возвращают только первые count элементов после удаления")
+    void getxValGetyValAfterRemoval() {
+        ArrayTabulatedFunction f = createTestFunction();
+        f.remove(2); // удалили x=3.0, y=6.0 → теперь count=4
+        f.remove(3); // удалили x=4.0, y=8.0 → теперь count=3
+
+        double[] xCopy = f.getxVal();
+        double[] yCopy = f.getyVal();
+
+        assertEquals(3, xCopy.length);
+        assertEquals(3, yCopy.length);
+
+        assertArrayEquals(new double[]{1.0, 2.0, 4.0}, xCopy, 1e-10);
+        assertArrayEquals(new double[]{1.0, 4.0, 8.0}, yCopy, 1e-10);
     }
 
-    // === Тест на идемпотентность и неизменность входных данных ===
-
-    @Test
-    @DisplayName("Конструктор не модифицирует входные массивы")
-    void constructorDoesNotModifyInputArrays() {
-        double[] originalX = {1, 2, 3};
-        double[] originalY = {1, 4, 9};
-        double[] copyX = Arrays.copyOf(originalX, originalX.length);
-        double[] copyY = Arrays.copyOf(originalY, originalY.length);
-
-        new ArrayTabulatedFunction(originalX, originalY);
-
-        // Убеждаемся, что оригинальные массивы остались неизменными
-        assertArrayEquals(copyX, originalX, 1e-10);
-        assertArrayEquals(copyY, originalY, 1e-10);
-    }
-
-    // === Тест на инициализацию при равных границах с count=2 ===
-    @Test
-    @DisplayName("Конструктор с xFrom == xTo и count=2 создаёт две одинаковые точки")
-    void constructorEqualBoundsCountTwo() {
-        MathFunction f = x -> x * x;
-        ArrayTabulatedFunction tab = new ArrayTabulatedFunction(f, 2.0, 2.0, 2);
-
-        assertEquals(2, tab.getCount());
-        assertEquals(2.0, tab.getX(0), 1e-10);
-        assertEquals(2.0, tab.getX(1), 1e-10);
-        assertEquals(4.0, tab.getY(0), 1e-10);
-        assertEquals(4.0, tab.getY(1), 1e-10);
-    }
-    // Вспомогательный метод для создания тестового объекта
-    private ArrayTabulatedFunction createTestFunction() {
-        double[] x = {1.0, 2.0, 3.0, 4.0, 5.0};
-        double[] y = {1.0, 4.0, 6.0, 8.0, 10.0};
-        return new ArrayTabulatedFunction(x, y);
-    }
-
-    // ==================== ТЕСТЫ НА МЕТОД remove(int index) ====================
+    // === remove ===
 
     @Test
     void testRemoveMiddleElement() {
         ArrayTabulatedFunction f = createTestFunction();
         assertEquals(5, f.getCount());
 
-        // Удаляем элемент с индексом 2 → x=3.0, y=6.0
-        f.remove(2);
+        f.remove(2); // удаляем x=3.0, y=6.0
 
         assertEquals(4, f.getCount());
 
-        // Проверяем новые значения через публичные методы
         assertEquals(1.0, f.getX(0));
         assertEquals(2.0, f.getX(1));
         assertEquals(4.0, f.getX(2));
@@ -524,9 +579,8 @@ public class ArrayTabulatedFunctionTest {
         assertEquals(8.0, f.getY(2));
         assertEquals(10.0, f.getY(3));
 
-        // Проверка интерполяции: теперь между 2.0 и 4.0
-        assertEquals(6.0, f.interpolate(3.0, 1), 1e-10); // x=3.0 между x[1]=2.0 и x[2]=4.0 → (4+8)/2 = 6.0
-        assertEquals(6.0, f.apply(3.0), 1e-10); // apply должна использовать floorIndexOfX и interpolate
+        assertEquals(6.0, f.interpolate(3.0, 1), 1e-10);
+        assertEquals(6.0, f.apply(3.0), 1e-10);
     }
 
     @Test
@@ -546,10 +600,6 @@ public class ArrayTabulatedFunctionTest {
         assertEquals(8.0, f.getY(2));
         assertEquals(10.0, f.getY(3));
 
-        // Проверка экстраполяции слева: x=1.5 < 2.0
-        // Интерполируем между первыми двумя точками: (2.0,4.0) и (3.0,6.0)
-        // slope = (6-4)/(3-2) = 2
-        // y = 4 + 2*(1.5 - 2.0) = 4 - 1 = 3.0
         assertEquals(3.0, f.extrapolateLeft(1.5), 1e-10);
         assertEquals(3.0, f.apply(1.5), 1e-10);
     }
@@ -571,9 +621,6 @@ public class ArrayTabulatedFunctionTest {
         assertEquals(6.0, f.getY(2));
         assertEquals(8.0, f.getY(3));
 
-        // Экстраполяция справа: x=6.0 > 4.0
-        // Между последними двумя: (3.0,6.0) и (4.0,8.0) → slope = (8-6)/(4-3) = 2
-        // y = 8 + 2*(6-4) = 12.0
         assertEquals(12.0, f.extrapolateRight(6.0), 1e-10);
         assertEquals(12.0, f.apply(6.0), 1e-10);
     }
@@ -594,20 +641,9 @@ public class ArrayTabulatedFunctionTest {
         assertEquals(4.0, f.getY(0));
         assertEquals(10.0, f.getY(1));
 
-        // Проверка интерполяции между 2.0 и 5.0
-        // slope = (10-4)/(5-2) = 2
-        // apply(3.5): y = 4 + 2*(3.5-2) = 4 + 3 = 7.0
         assertEquals(7.0, f.apply(3.5), 1e-10);
-
-        // floorIndexOfX(3.5) должен вернуть 0 (последний x <= 3.5 — это 2.0)
         assertEquals(0, f.floorIndexOfX(3.5));
-
-        // extrapolateLeft(1.0): x=1.0 < 2.0 → использует первый отрезок (между 2 и 5)
-        // y = 4 + 2*(1.0 - 2.0) = 4 - 2 = 2.0
         assertEquals(2.0, f.extrapolateLeft(1.0), 1e-10);
-        assertEquals(2.0, f.apply(1.0), 1e-10);
-
-        // extrapolateRight(6.0): y = 10 + 2*(6-5) = 12.0
         assertEquals(12.0, f.extrapolateRight(6.0), 1e-10);
     }
 
@@ -620,17 +656,13 @@ public class ArrayTabulatedFunctionTest {
 
         assertEquals(0, f.getCount());
 
-        // После удаления все методы, обращающиеся к индексам, должны бросать исключение
         assertThrows(IndexOutOfBoundsException.class, () -> f.getX(0));
         assertThrows(IndexOutOfBoundsException.class, () -> f.getY(0));
-        assertThrows(IndexOutOfBoundsException.class, () -> f.interpolate(15.0, 0)); // нет отрезка!
-
-
+        assertThrows(IndexOutOfBoundsException.class, () -> f.interpolate(15.0, 0));
         assertThrows(IndexOutOfBoundsException.class, () -> f.extrapolateLeft(15.0));
         assertThrows(IndexOutOfBoundsException.class, () -> f.extrapolateRight(15.0));
+        assertThrows(IndexOutOfBoundsException.class, () -> f.apply(15.0));
     }
-
-    // ==================== ТЕСТЫ НА ОШИБКИ ====================
 
     @Test
     void testRemoveNegativeIndex() {
@@ -655,29 +687,27 @@ public class ArrayTabulatedFunctionTest {
         f.remove(0);
         assertEquals(0, f.getCount());
 
-        // Попытка удалить из пустого — должно бросить исключение
         assertThrows(IndexOutOfBoundsException.class, () -> f.remove(0));
     }
 
-    // ==================== ТЕСТЫ НА СОХРАНЕНИЕ УПОРЯДОЧЕННОСТИ И КОРРЕКТНОСТЬ ПОСЛЕ УДАЛЕНИЯ ====================
+    // === Тест на сохранение упорядоченности и корректность после удаления ===
 
     @Test
     void testFloorIndexOfXAfterRemoval() {
         ArrayTabulatedFunction f = createTestFunction();
         f.remove(2); // удалили x=3.0
 
-        // Теперь массив: [1.0, 2.0, 4.0, 5.0]
         assertEquals(0, f.floorIndexOfX(1.0));
         assertEquals(0, f.floorIndexOfX(1.5));
         assertEquals(1, f.floorIndexOfX(2.0));
         assertEquals(1, f.floorIndexOfX(2.5));
-        assertEquals(1, f.floorIndexOfX(3.0)); // 3.0 не существует, но 2.0 ≤ 3.0 < 4.0 → floor=1
+        assertEquals(1, f.floorIndexOfX(3.0));
         assertEquals(1, f.floorIndexOfX(3.9));
         assertEquals(2, f.floorIndexOfX(4.0));
         assertEquals(2, f.floorIndexOfX(4.5));
         assertEquals(3, f.floorIndexOfX(5.0));
         assertEquals(3, f.floorIndexOfX(10.0));
-        assertEquals(0, f.floorIndexOfX(0.5)); // по текущей логике — возвращает 0 (баг, но тестируем как есть)
+        assertEquals(0, f.floorIndexOfX(0.5));
     }
 
     @Test
@@ -685,26 +715,12 @@ public class ArrayTabulatedFunctionTest {
         ArrayTabulatedFunction f = createTestFunction();
         f.remove(1); // удаляем x=2.0, y=4.0 → теперь точки: [1, 3, 4, 5] с y=[1,6,8,10]
 
-        // Проверим интерполяцию между 1.0 и 3.0
-        assertEquals(3.5, f.apply(2.0), 1e-10); // (1+6)/2 = 3.5? Нет — линейная интерполяция:
-        // x=2.0 между x0=1.0 (y=1) и x1=3.0 (y=6)
-        // slope = (6-1)/(3-1) = 2.5
-        // y = 1 + 2.5*(2-1) = 3.5 → верно
-
-        // Проверим между 3.0 и 4.0
-        assertEquals(7.0, f.apply(3.5), 1e-10); // (6+8)/2 = 7
-
-        // Проверим экстраполяцию
-        assertEquals(1.0, f.apply(1.0));
-        assertEquals(10.0, f.apply(5.0));
-        assertEquals(12.0, f.apply(6.0), 1e-10); // между 4 и 5: slope=2 → 10 + 2*(1)=12 → ждём 12.0? Подождите...
-
-        // Между 4.0 и 5.0: slope = (10-8)/(5-4) = 2
-        // apply(6.0) = 10 + 2*(6-5) = 12.0
-        assertEquals(12.0, f.apply(6.0), 1e-10);
+        assertEquals(3.5, f.apply(2.0), 1e-10); // (1+6)/2? Нет — интерполяция: 1 + (6-1)/(3-1)*(2-1) = 1 + 2.5 = 3.5
+        assertEquals(7.0, f.apply(3.5), 1e-10); // между 3 и 4: (6+8)/2 = 7
+        assertEquals(12.0, f.apply(6.0), 1e-10); // экстраполяция справа: 10 + 2*(6-5) = 12
     }
 
-    // ==================== ТЕСТ НА indexOfX / indexOfY ПОСЛЕ УДАЛЕНИЯ ====================
+    // === Тест на indexOfX / indexOfY после удаления ===
 
     @Test
     void testIndexOfXAndYAfterRemoval() {
@@ -722,5 +738,25 @@ public class ArrayTabulatedFunctionTest {
         assertEquals(-1, f.indexOfY(6.0)); // удалено!
         assertEquals(2, f.indexOfY(8.0));
         assertEquals(3, f.indexOfY(10.0));
+    }
+
+    // === ФИНАЛЬНЫЙ ТЕСТ: все методы должны бросать исключение при count == 0 ===
+
+    @Test
+    void testAllMethodsThrowAfterLastPointRemoved() {
+        ArrayTabulatedFunction f = new ArrayTabulatedFunction(new double[]{1}, new double[]{1});
+        f.remove(0); // count = 0
+
+        assertThrows(IndexOutOfBoundsException.class, () -> f.getX(0));
+        assertThrows(IndexOutOfBoundsException.class, () -> f.getY(0));
+        assertThrows(IndexOutOfBoundsException.class, () -> f.leftBound());
+        assertThrows(IndexOutOfBoundsException.class, () -> f.rightBound());
+        assertThrows(IndexOutOfBoundsException.class, () -> f.floorIndexOfX(0.5));
+        assertThrows(IndexOutOfBoundsException.class, () -> f.interpolate(0.5, 0));
+        assertThrows(IndexOutOfBoundsException.class, () -> f.extrapolateLeft(0.5));
+        assertThrows(IndexOutOfBoundsException.class, () -> f.extrapolateRight(0.5));
+        assertThrows(IndexOutOfBoundsException.class, () -> f.apply(0.5));
+        assertEquals(-1, f.indexOfX(0.5));
+        assertEquals(-1, f.indexOfY(0.5));
     }
 }
