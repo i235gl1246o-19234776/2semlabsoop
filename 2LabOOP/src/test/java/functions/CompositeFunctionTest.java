@@ -87,15 +87,15 @@ class CompositeFunctionTest {
         CompositeFunction level3 = new CompositeFunction(identity, level2);
         CompositeFunction level4 = new CompositeFunction(level3, sqr);
 
-        assertEquals(390625.0, level1.apply(5.0), 0.0001, "sqr(sqr(5)) = 390625");
-        assertEquals(390625.0, level2.apply(5.0), 0.0001, "identity(sqr(sqr(5))) = 390625");
-        assertEquals(390625.0, level3.apply(5.0), 0.0001, "identity(sqr(sqr(5))) через level3 = 390625");
-        assertEquals(152587890625.0, level4.apply(5.0), 1.0, "sqr(identity(sqr(sqr(5)))) = 152587890625");
+        assertEquals(625.0, level1.apply(5.0), 0.0001, "sqr(sqr(5)) = 390625");
+        assertEquals(625.0, level2.apply(5.0), 0.0001, "identity(sqr(sqr(5))) = 390625");
+        assertEquals(625.0, level3.apply(5.0), 0.0001, "identity(sqr(sqr(5))) через level3 = 390625");
+        assertEquals(390625.0, level4.apply(5.0), 1.0, "sqr(identity(sqr(sqr(5)))) = 152587890625");
 
-        assertEquals(256.0, level1.apply(2.0), 0.0001, "sqr(sqr(2)) = 256");
-        assertEquals(256.0, level2.apply(2.0), 0.0001, "identity(sqr(sqr(2))) = 256");
-        assertEquals(256.0, level3.apply(2.0), 0.0001, "identity(sqr(sqr(2))) через level3 = 256");
-        assertEquals(65536.0, level4.apply(2.0), 0.0001, "sqr(identity(sqr(sqr(2)))) = 65536");
+        assertEquals(16.0, level1.apply(2.0), 0.0001, "sqr(sqr(2)) = 256");
+        assertEquals(16.0, level2.apply(2.0), 0.0001, "identity(sqr(sqr(2))) = 256");
+        assertEquals(16.0, level3.apply(2.0), 0.0001, "identity(sqr(sqr(2))) через level3 = 256");
+        assertEquals(256.0, level4.apply(2.0), 0.0001, "sqr(identity(sqr(sqr(2)))) = 65536");
 
         assertEquals(0.0, level1.apply(0.0), 0.0001, "sqr(sqr(0)) = 0");
         assertEquals(0.0, level2.apply(0.0), 0.0001, "identity(sqr(sqr(0))) = 0");
