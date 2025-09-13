@@ -2,9 +2,9 @@ package functions;
 
 import java.util.Arrays;
 
-public class LinkedListTabulatedFunction extends AbstractTabulatedFunction implements Insertable {
+public class LinkedListTabulatedFunction extends AbstractTabulatedFunction implements Insertable, Removable {
 
-    private Node head;
+    Node head;
     private int count;
 
     //конструктор с массивами значений
@@ -306,5 +306,34 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
         count++;
     }
 
-    
+
+    @Override
+    public void remove(int index) {
+        if (index < 0 || index >= count) {
+            throw new IndexOutOfBoundsException("Индекс: " + index + ", размер: " + count);
+        }
+
+        if (head == null) {
+            throw new IllegalStateException("Список пуст");
+        }
+
+        Node nodeToRemove = getNode(index);
+
+        if (count == 1) {
+            head = null;
+            count--;
+            return;
+        }
+
+        Node prevNode = nodeToRemove.prev;
+        Node nextNode = nodeToRemove.next;
+
+        prevNode.next = nextNode;
+        nextNode.prev = prevNode;
+
+        if (nodeToRemove == head) {
+            head = nextNode;
+        }
+        count--;
+    }
 }
