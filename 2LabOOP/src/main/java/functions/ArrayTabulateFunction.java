@@ -2,7 +2,7 @@ package functions;
 
 import java.util.Arrays;
 
-public class ArrayTabulateFunction extends AbstractTabulatedFunction {
+public class ArrayTabulateFunction extends AbstractTabulatedFunction implements Removable {
     private double[] xVal;
     private double[] yVal;
     private int count;
@@ -178,4 +178,30 @@ public class ArrayTabulateFunction extends AbstractTabulatedFunction {
             }
         }
     }
+
+    @Override
+    public void remove(int index) {
+        if (index < 0 || index >= count) {
+            throw new IndexOutOfBoundsException("Индекс: " + index + ", размер: " + count);
+        }
+
+        for (int i = index; i < count - 1; i++) {
+            xVal[i] = xVal[i + 1];
+            yVal[i] = yVal[i + 1];
+        }
+
+        // Уменьшаем количество точек
+        count--;
+
+        // Опционально: можно обнулить последний элемент для GC (не обязательно, но чисто)
+        xVal[count] = Double.NaN;
+        yVal[count] = Double.NaN;
+    }
+    public double[] getxVal() {
+        return Arrays.copyOf(xVal, count);
+    }
+    public double[] getyVal() {
+        return Arrays.copyOf(yVal, count);
+    }
+
 }

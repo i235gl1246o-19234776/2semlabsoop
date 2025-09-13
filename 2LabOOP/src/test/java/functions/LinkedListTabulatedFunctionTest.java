@@ -3,9 +3,6 @@ package functions;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * Тестовый класс для LinkedListTabulatedFunction.
- */
 class LinkedListTabulatedFunctionTest {
 
     private static final double DELTA = 0.0001;
@@ -266,7 +263,7 @@ class LinkedListTabulatedFunctionTest {
 
         list.remove(0);
         assertEquals(0, list.getCount());
-        assertNull(list.head);
+        assertNull(list.getHead());
     }
 
     @Test
@@ -345,7 +342,7 @@ class LinkedListTabulatedFunctionTest {
             assertEquals(3 - i, list.getCount());
         }
 
-        assertNull(list.head);
+        assertNull(list.getHead());
         assertEquals(0, list.getCount());
     }
 

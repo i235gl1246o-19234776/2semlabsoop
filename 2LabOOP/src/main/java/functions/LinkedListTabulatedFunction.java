@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 public class LinkedListTabulatedFunction extends AbstractTabulatedFunction implements Insertable, Removable {
 
-    Node head;
+    private Node head;
     private int count;
 
     //конструктор с массивами значений
@@ -335,5 +335,8 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
             head = nextNode;
         }
         count--;
+    }
+    public Node getHead(){
+        return head;
     }
 }

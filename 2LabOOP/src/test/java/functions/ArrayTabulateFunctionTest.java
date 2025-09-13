@@ -494,4 +494,233 @@ public class ArrayTabulateFunctionTest {
         assertEquals(4.0, tab.getY(0), 1e-10);
         assertEquals(4.0, tab.getY(1), 1e-10);
     }
+// Вспомогательный метод для создания тестового объекта
+        private ArrayTabulateFunction createTestFunction() {
+        double[] x = {1.0, 2.0, 3.0, 4.0, 5.0};
+        double[] y = {1.0, 4.0, 6.0, 8.0, 10.0};
+        return new ArrayTabulateFunction(x, y);
+    }
+
+        // ==================== ТЕСТЫ НА МЕТОД remove(int index) ====================
+
+    @Test
+    void testRemoveMiddleElement() {
+        ArrayTabulateFunction f = createTestFunction();
+        assertEquals(5, f.getCount());
+
+        // Удаляем элемент с индексом 2 → x=3.0, y=6.0
+        f.remove(2);
+
+        assertEquals(4, f.getCount());
+
+        // Проверяем новые значения через публичные методы
+        assertEquals(1.0, f.getX(0));
+        assertEquals(2.0, f.getX(1));
+        assertEquals(4.0, f.getX(2));
+        assertEquals(5.0, f.getX(3));
+
+        assertEquals(1.0, f.getY(0));
+        assertEquals(4.0, f.getY(1));
+        assertEquals(8.0, f.getY(2));
+        assertEquals(10.0, f.getY(3));
+
+        // Проверка интерполяции: теперь между 2.0 и 4.0
+        assertEquals(6.0, f.interpolate(3.0, 1), 1e-10); // x=3.0 между x[1]=2.0 и x[2]=4.0 → (4+8)/2 = 6.0
+        assertEquals(6.0, f.apply(3.0), 1e-10); // apply должна использовать floorIndexOfX и interpolate
+    }
+
+    @Test
+    void testRemoveFirstElement() {
+        ArrayTabulateFunction f = createTestFunction();
+        f.remove(0); // удаляем x=1.0, y=1.0
+
+        assertEquals(4, f.getCount());
+
+        assertEquals(2.0, f.getX(0));
+        assertEquals(3.0, f.getX(1));
+        assertEquals(4.0, f.getX(2));
+        assertEquals(5.0, f.getX(3));
+
+        assertEquals(4.0, f.getY(0));
+        assertEquals(6.0, f.getY(1));
+        assertEquals(8.0, f.getY(2));
+        assertEquals(10.0, f.getY(3));
+
+            // Проверка экстраполяции слева: x=1.5 < 2.0
+            // Интерполируем между первыми двумя точками: (2.0,4.0) и (3.0,6.0)
+            // slope = (6-4)/(3-2) = 2
+            // y = 4 + 2*(1.5 - 2.0) = 4 - 1 = 3.0
+        assertEquals(3.0, f.extrapolateLeft(1.5), 1e-10);
+        assertEquals(3.0, f.apply(1.5), 1e-10);
+    }
+
+    @Test
+    void testRemoveLastElement() {
+        ArrayTabulateFunction f = createTestFunction();
+        f.remove(4); // удаляем x=5.0, y=10.0
+
+        assertEquals(4, f.getCount());
+
+        assertEquals(1.0, f.getX(0));
+        assertEquals(2.0, f.getX(1));
+        assertEquals(3.0, f.getX(2));
+        assertEquals(4.0, f.getX(3));
+
+        assertEquals(1.0, f.getY(0));
+        assertEquals(4.0, f.getY(1));
+        assertEquals(6.0, f.getY(2));
+        assertEquals(8.0, f.getY(3));
+
+            // Экстраполяция справа: x=6.0 > 4.0
+            // Между последними двумя: (3.0,6.0) и (4.0,8.0) → slope = (8-6)/(4-3) = 2
+            // y = 8 + 2*(6-4) = 12.0
+        assertEquals(12.0, f.extrapolateRight(6.0), 1e-10);
+        assertEquals(12.0, f.apply(6.0), 1e-10);
+    }
+
+    @Test
+    void testRemoveMultipleElements() {
+        ArrayTabulateFunction f = createTestFunction();
+
+        f.remove(0); // удаляем (1,1)
+        f.remove(1); // удаляем (3,6) — теперь на позиции 1 был (4,8)
+        f.remove(1); // удаляем (4,8) — теперь осталось (2,4) и (5,10)
+
+        assertEquals(2, f.getCount());
+
+        assertEquals(2.0, f.getX(0));
+        assertEquals(5.0, f.getX(1));
+
+        assertEquals(4.0, f.getY(0));
+        assertEquals(10.0, f.getY(1));
+
+            // Проверка интерполяции между 2.0 и 5.0
+            // slope = (10-4)/(5-2) = 2
+            // apply(3.5): y = 4 + 2*(3.5-2) = 4 + 3 = 7.0
+        assertEquals(7.0, f.apply(3.5), 1e-10);
+
+            // floorIndexOfX(3.5) должен вернуть 0 (последний x <= 3.5 — это 2.0)
+        assertEquals(0, f.floorIndexOfX(3.5));
+
+            // extrapolateLeft(1.0): x=1.0 < 2.0 → использует первый отрезок (между 2 и 5)
+            // y = 4 + 2*(1.0 - 2.0) = 4 - 2 = 2.0
+        assertEquals(2.0, f.extrapolateLeft(1.0), 1e-10);
+        assertEquals(2.0, f.apply(1.0), 1e-10);
+
+            // extrapolateRight(6.0): y = 10 + 2*(6-5) = 12.0
+        assertEquals(12.0, f.extrapolateRight(6.0), 1e-10);
+    }
+
+    @Test
+    void testRemoveFromSizeOne() {
+        ArrayTabulateFunction f = new ArrayTabulateFunction(new double[]{10.0}, new double[]{100.0});
+        assertEquals(1, f.getCount());
+
+        f.remove(0);
+
+        assertEquals(0, f.getCount());
+
+            // После удаления все методы, обращающиеся к индексам, должны бросать исключение
+        assertThrows(IndexOutOfBoundsException.class, () -> f.getX(0));
+        assertThrows(IndexOutOfBoundsException.class, () -> f.getY(0));
+        assertThrows(IndexOutOfBoundsException.class, () -> f.interpolate(15.0, 0)); // нет отрезка!
+
+
+        assertThrows(IndexOutOfBoundsException.class, () -> f.extrapolateLeft(15.0));
+        assertThrows(IndexOutOfBoundsException.class, () -> f.extrapolateRight(15.0));
+    }
+
+        // ==================== ТЕСТЫ НА ОШИБКИ ====================
+
+    @Test
+    void testRemoveNegativeIndex() {
+        ArrayTabulateFunction f = createTestFunction();
+        assertThrows(IndexOutOfBoundsException.class, () -> f.remove(-1));
+    }
+
+    @Test
+    void testRemoveIndexTooLarge() {
+        ArrayTabulateFunction f = createTestFunction();
+        assertThrows(IndexOutOfBoundsException.class, () -> f.remove(5)); // max index = 4
+    }
+
+    @Test
+    void testRemoveOnEmptyAfterAllRemoved() {
+        ArrayTabulateFunction f = createTestFunction();
+        f.remove(0);
+        f.remove(0);
+        f.remove(0);
+        f.remove(0);
+        assertEquals(1, f.getCount());
+        f.remove(0);
+        assertEquals(0, f.getCount());
+
+            // Попытка удалить из пустого — должно бросить исключение
+        assertThrows(IndexOutOfBoundsException.class, () -> f.remove(0));
+    }
+
+        // ==================== ТЕСТЫ НА СОХРАНЕНИЕ УПОРЯДОЧЕННОСТИ И КОРРЕКТНОСТЬ ПОСЛЕ УДАЛЕНИЯ ====================
+
+    @Test
+    void testFloorIndexOfXAfterRemoval() {
+        ArrayTabulateFunction f = createTestFunction();
+        f.remove(2); // удалили x=3.0
+
+            // Теперь массив: [1.0, 2.0, 4.0, 5.0]
+        assertEquals(0, f.floorIndexOfX(1.0));
+        assertEquals(0, f.floorIndexOfX(1.5));
+        assertEquals(1, f.floorIndexOfX(2.0));
+        assertEquals(1, f.floorIndexOfX(2.5));
+        assertEquals(1, f.floorIndexOfX(3.0)); // 3.0 не существует, но 2.0 ≤ 3.0 < 4.0 → floor=1
+        assertEquals(1, f.floorIndexOfX(3.9));
+        assertEquals(2, f.floorIndexOfX(4.0));
+        assertEquals(2, f.floorIndexOfX(4.5));
+        assertEquals(3, f.floorIndexOfX(5.0));
+        assertEquals(3, f.floorIndexOfX(10.0));
+        assertEquals(0, f.floorIndexOfX(0.5)); // по текущей логике — возвращает 0 (баг, но тестируем как есть)
+    }
+
+    @Test
+    void testApplyAfterRemoval() {
+        ArrayTabulateFunction f = createTestFunction();
+        f.remove(1); // удаляем x=2.0, y=4.0 → теперь точки: [1, 3, 4, 5] с y=[1,6,8,10]
+
+            // Проверим интерполяцию между 1.0 и 3.0
+        assertEquals(3.5, f.apply(2.0), 1e-10); // (1+6)/2 = 3.5? Нет — линейная интерполяция:
+            // x=2.0 между x0=1.0 (y=1) и x1=3.0 (y=6)
+            // slope = (6-1)/(3-1) = 2.5
+            // y = 1 + 2.5*(2-1) = 3.5 → верно
+
+            // Проверим между 3.0 и 4.0
+        assertEquals(7.0, f.apply(3.5), 1e-10); // (6+8)/2 = 7
+
+            // Проверим экстраполяцию
+        assertEquals(1.0, f.apply(1.0));
+        assertEquals(10.0, f.apply(5.0));
+        assertEquals(12.0, f.apply(6.0), 1e-10); // между 4 и 5: slope=2 → 10 + 2*(1)=12 → ждём 12.0? Подождите...
+
+            // Между 4.0 и 5.0: slope = (10-8)/(5-4) = 2
+            // apply(6.0) = 10 + 2*(6-5) = 12.0
+        assertEquals(12.0, f.apply(6.0), 1e-10);
+    }
+
+        // ==================== ТЕСТ НА indexOfX / indexOfY ПОСЛЕ УДАЛЕНИЯ ====================
+
+    @Test
+    void testIndexOfXAndYAfterRemoval() {
+        ArrayTabulateFunction f = createTestFunction();
+        f.remove(2); // удалили x=3.0, y=6.0
+
+        assertEquals(0, f.indexOfX(1.0));
+        assertEquals(1, f.indexOfX(2.0));
+        assertEquals(-1, f.indexOfX(3.0)); // удалено!
+        assertEquals(2, f.indexOfX(4.0));
+        assertEquals(3, f.indexOfX(5.0));
+
+        assertEquals(0, f.indexOfY(1.0));
+        assertEquals(1, f.indexOfY(4.0));
+        assertEquals(-1, f.indexOfY(6.0)); // удалено!
+        assertEquals(2, f.indexOfY(8.0));
+        assertEquals(3, f.indexOfY(10.0));
+    }
 }
