@@ -2,12 +2,12 @@ package functions;
 
 import java.util.Arrays;
 
-public class ArrayTabulateFunction extends AbstractTabulatedFunction {
+public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements Insertable{
     private double[] xVal;
     private double[] yVal;
     private int count;
 
-    public ArrayTabulateFunction(double[] xVal, double[] yVal){
+    public ArrayTabulatedFunction(double[] xVal, double[] yVal){
         if (xVal.length != yVal.length){
             throw new IllegalArgumentException("Массивы разной длины");
         }
@@ -22,7 +22,7 @@ public class ArrayTabulateFunction extends AbstractTabulatedFunction {
         this.yVal = Arrays.copyOf(yVal, count);
     }
 
-    public ArrayTabulateFunction(MathFunction s, double xFrom, double xTo, int count){
+    public ArrayTabulatedFunction(MathFunction s, double xFrom, double xTo, int count){
         if(count < 2){
             throw new IllegalArgumentException("Меньше 2х элементов");
         }
@@ -47,6 +47,54 @@ public class ArrayTabulateFunction extends AbstractTabulatedFunction {
             yVal[i] = s.apply(x);
         }
 
+    }
+
+    @Override
+    public void insert(double x, double y){
+        int index = findInsertionIndex(x);
+
+        if(index < count && java.lang.Math.abs(xVal[index] - x) < 1e-10){
+            yVal[index] = y;
+            return;
+        }else{
+            ensureCapacity();
+
+            if(index < count){
+                System.arraycopy(xVal, index, xVal, index + 1, count - index);
+                System.arraycopy(yVal, index, yVal, index + 1, count - index);
+            }
+
+            xVal[index] = x;
+            yVal[index] = y;
+            count++;
+        }
+    }
+
+    private int findInsertionIndex(double x){
+        for (int i = 0; i < count; i++){
+            if(java.lang.Math.abs(xVal[i] - x) < 1e-10){
+                return i;
+            }
+            if(xVal[i] > x){
+                return i;
+            }
+        }
+        return count;
+    }
+
+    private void ensureCapacity() {
+        if (count == xVal.length) {
+            // Увеличиваем массивы в 2 раза
+            int nwCapacity = xVal.length * 2;
+            double[] nwXVal = new double[nwCapacity];
+            double[] nwYVal = new double[nwCapacity];
+
+            System.arraycopy(xVal, 0, nwXVal, 0, count);
+            System.arraycopy(yVal, 0, nwYVal, 0, count);
+
+            xVal = nwXVal;
+            yVal = nwYVal;
+        }
     }
 
     @Override

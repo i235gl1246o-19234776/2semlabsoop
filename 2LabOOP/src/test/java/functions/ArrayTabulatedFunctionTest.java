@@ -8,8 +8,8 @@ import java.util.Arrays;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-@DisplayName("Тесты для ArrayTabulateFunction")
-public class ArrayTabulateFunctionTest {
+@DisplayName("Тесты для ArrayTabulatedFunction")
+public class ArrayTabulatedFunctionTest {
 
     // Вспомогательный метод для создания простой MathFunction
     private static MathFunction linearFunc(double slope, double intercept) {
@@ -22,7 +22,7 @@ public class ArrayTabulateFunctionTest {
     @DisplayName("Конструктор с разными длинами массивов выбрасывает исключение")
     void constructorDifferentLengthsThrows() {
         assertThrows(IllegalArgumentException.class, () ->
-                new ArrayTabulateFunction(new double[]{1, 2}, new double[]{3})
+                new ArrayTabulatedFunction(new double[]{1, 2}, new double[]{3})
         );
     }
 
@@ -30,7 +30,7 @@ public class ArrayTabulateFunctionTest {
     @DisplayName("Конструктор с неупорядоченными xVal выбрасывает исключение")
     void constructorUnsortedXThrows() {
         assertThrows(IllegalArgumentException.class, () ->
-                new ArrayTabulateFunction(new double[]{2, 1}, new double[]{4, 5})
+                new ArrayTabulatedFunction(new double[]{2, 1}, new double[]{4, 5})
         );
     }
 
@@ -38,7 +38,7 @@ public class ArrayTabulateFunctionTest {
     @DisplayName("Конструктор с одинаковыми xVal (не строго возрастающими) выбрасывает исключение")
     void constructorDuplicateXThrows() {
         assertThrows(IllegalArgumentException.class, () ->
-                new ArrayTabulateFunction(new double[]{1, 1}, new double[]{2, 3})
+                new ArrayTabulatedFunction(new double[]{1, 1}, new double[]{2, 3})
         );
     }
 
@@ -47,7 +47,7 @@ public class ArrayTabulateFunctionTest {
     void constructorValidArraysCreatesObject() {
         double[] x = {1.0, 2.0, 3.0};
         double[] y = {1.0, 4.0, 9.0};
-        ArrayTabulateFunction f = new ArrayTabulateFunction(x, y);
+        ArrayTabulatedFunction f = new ArrayTabulatedFunction(x, y);
 
         assertEquals(3, f.getCount());
         assertEquals(1.0, f.getX(0), 1e-10);
@@ -60,7 +60,7 @@ public class ArrayTabulateFunctionTest {
     @DisplayName("Конструктор с count < 2 выбрасывает исключение")
     void constructorWithMathFunctionCountTooSmallThrows() {
         assertThrows(IllegalArgumentException.class, () ->
-                new ArrayTabulateFunction(x -> x, 0, 1, 1)
+                new ArrayTabulatedFunction(x -> x, 0, 1, 1)
         );
     }
 
@@ -68,7 +68,7 @@ public class ArrayTabulateFunctionTest {
     @DisplayName("Конструктор с xFrom == xTo заполняет все значения одинаковыми")
     void constructorEqualBoundsCreatesUniformValues() {
         MathFunction f = x -> x * x;
-        ArrayTabulateFunction tab = new ArrayTabulateFunction(f, 2.0, 2.0, 5);
+        ArrayTabulatedFunction tab = new ArrayTabulatedFunction(f, 2.0, 2.0, 5);
 
         assertEquals(5, tab.getCount());
         for (int i = 0; i < 5; i++) {
@@ -81,7 +81,7 @@ public class ArrayTabulateFunctionTest {
     @DisplayName("Конструктор с xFrom > xTo меняет их местами корректно")
     void constructorReversesBoundsIfNecessary() {
         MathFunction f = x -> x;
-        ArrayTabulateFunction tab = new ArrayTabulateFunction(f, 5.0, 1.0, 5);
+        ArrayTabulatedFunction tab = new ArrayTabulatedFunction(f, 5.0, 1.0, 5);
 
         assertEquals(5, tab.getCount());
         assertEquals(1.0, tab.getX(0), 1e-10);
@@ -94,7 +94,7 @@ public class ArrayTabulateFunctionTest {
     @DisplayName("Конструктор с MathFunction создает правильную дискретизацию")
     void constructorWithMathFunctionCorrectDiscretization() {
         MathFunction f = x -> 2 * x + 1;
-        ArrayTabulateFunction tab = new ArrayTabulateFunction(f, 0, 4, 5);
+        ArrayTabulatedFunction tab = new ArrayTabulatedFunction(f, 0, 4, 5);
 
         // x: [0, 1, 2, 3, 4]
         // y: [1, 3, 5, 7, 9]
@@ -109,7 +109,7 @@ public class ArrayTabulateFunctionTest {
     @Test
     @DisplayName("getCount возвращает правильное количество точек")
     void getCountReturnsCorrectSize() {
-        ArrayTabulateFunction f = new ArrayTabulateFunction(
+        ArrayTabulatedFunction f = new ArrayTabulatedFunction(
                 new double[]{1, 2, 3},
                 new double[]{1, 4, 9}
         );
@@ -119,7 +119,7 @@ public class ArrayTabulateFunctionTest {
     @Test
     @DisplayName("getX возвращает значение по индексу")
     void getXReturnsCorrectValue() {
-        ArrayTabulateFunction f = new ArrayTabulateFunction(
+        ArrayTabulatedFunction f = new ArrayTabulatedFunction(
                 new double[]{10, 20, 30},
                 new double[]{1, 2, 3}
         );
@@ -129,7 +129,7 @@ public class ArrayTabulateFunctionTest {
     @Test
     @DisplayName("getX с некорректным индексом выбрасывает IndexOutOfBoundsException")
     void getXOutOfBoundsThrows() {
-        ArrayTabulateFunction f = new ArrayTabulateFunction(
+        ArrayTabulatedFunction f = new ArrayTabulatedFunction(
                 new double[]{1, 2},
                 new double[]{1, 4}
         );
@@ -140,7 +140,7 @@ public class ArrayTabulateFunctionTest {
     @Test
     @DisplayName("getY возвращает значение по индексу")
     void getYReturnsCorrectValue() {
-        ArrayTabulateFunction f = new ArrayTabulateFunction(
+        ArrayTabulatedFunction f = new ArrayTabulatedFunction(
                 new double[]{1, 2, 3},
                 new double[]{1, 4, 9}
         );
@@ -150,7 +150,7 @@ public class ArrayTabulateFunctionTest {
     @Test
     @DisplayName("getY с некорректным индексом выбрасывает IndexOutOfBoundsException")
     void getYOutOfBoundsThrows() {
-        ArrayTabulateFunction f = new ArrayTabulateFunction(
+        ArrayTabulatedFunction f = new ArrayTabulatedFunction(
                 new double[]{1, 2},
                 new double[]{1, 4}
         );
@@ -161,7 +161,7 @@ public class ArrayTabulateFunctionTest {
     @Test
     @DisplayName("setY устанавливает новое значение")
     void setYSetsCorrectValue() {
-        ArrayTabulateFunction f = new ArrayTabulateFunction(
+        ArrayTabulatedFunction f = new ArrayTabulatedFunction(
                 new double[]{1, 2, 3},
                 new double[]{1, 4, 9}
         );
@@ -172,7 +172,7 @@ public class ArrayTabulateFunctionTest {
     @Test
     @DisplayName("setY с некорректным индексом выбрасывает IndexOutOfBoundsException")
     void setYOutOfBoundsThrows() {
-        ArrayTabulateFunction f = new ArrayTabulateFunction(
+        ArrayTabulatedFunction f = new ArrayTabulatedFunction(
                 new double[]{1, 2},
                 new double[]{1, 4}
         );
@@ -185,7 +185,7 @@ public class ArrayTabulateFunctionTest {
     @Test
     @DisplayName("indexOfX находит существующий x")
     void indexOfXFindsExistingX() {
-        ArrayTabulateFunction f = new ArrayTabulateFunction(
+        ArrayTabulatedFunction f = new ArrayTabulatedFunction(
                 new double[]{1.0, 2.5, 4.0},
                 new double[]{1, 6.25, 16}
         );
@@ -196,7 +196,7 @@ public class ArrayTabulateFunctionTest {
     @Test
     @DisplayName("indexOfX возвращает -1 для отсутствующего x")
     void indexOfXReturnsMinusOneForNotFound() {
-        ArrayTabulateFunction f = new ArrayTabulateFunction(
+        ArrayTabulatedFunction f = new ArrayTabulatedFunction(
                 new double[]{1.0, 2.0, 3.0},
                 new double[]{1, 4, 9}
         );
@@ -206,7 +206,7 @@ public class ArrayTabulateFunctionTest {
     @Test
     @DisplayName("indexOfX работает с погрешностью 1e-10")
     void indexOfXWorksWithTolerance() {
-        ArrayTabulateFunction f = new ArrayTabulateFunction(
+        ArrayTabulatedFunction f = new ArrayTabulatedFunction(
                 new double[]{1.0, 2.0, 3.0},
                 new double[]{1, 4, 9}
         );
@@ -217,7 +217,7 @@ public class ArrayTabulateFunctionTest {
     @Test
     @DisplayName("indexOfY находит существующий y")
     void indexOfYFindsExistingY() {
-        ArrayTabulateFunction f = new ArrayTabulateFunction(
+        ArrayTabulatedFunction f = new ArrayTabulatedFunction(
                 new double[]{1, 2, 3},
                 new double[]{1, 4, 9}
         );
@@ -228,7 +228,7 @@ public class ArrayTabulateFunctionTest {
     @Test
     @DisplayName("indexOfY возвращает -1 для отсутствующего y")
     void indexOfYReturnsMinusOneForNotFound() {
-        ArrayTabulateFunction f = new ArrayTabulateFunction(
+        ArrayTabulatedFunction f = new ArrayTabulatedFunction(
                 new double[]{1, 2, 3},
                 new double[]{1, 4, 9}
         );
@@ -238,7 +238,7 @@ public class ArrayTabulateFunctionTest {
     @Test
     @DisplayName("indexOfY работает с погрешностью 1e-10")
     void indexOfYWorksWithTolerance() {
-        ArrayTabulateFunction f = new ArrayTabulateFunction(
+        ArrayTabulatedFunction f = new ArrayTabulatedFunction(
                 new double[]{1, 2, 3},
                 new double[]{1, 4, 9}
         );
@@ -251,7 +251,7 @@ public class ArrayTabulateFunctionTest {
     @Test
     @DisplayName("leftBound возвращает минимальный x")
     void leftBoundReturnsFirstX() {
-        ArrayTabulateFunction f = new ArrayTabulateFunction(
+        ArrayTabulatedFunction f = new ArrayTabulatedFunction(
                 new double[]{10, 20, 30},
                 new double[]{1, 2, 3}
         );
@@ -261,7 +261,7 @@ public class ArrayTabulateFunctionTest {
     @Test
     @DisplayName("rightBound возвращает максимальный x")
     void rightBoundReturnsLastX() {
-        ArrayTabulateFunction f = new ArrayTabulateFunction(
+        ArrayTabulatedFunction f = new ArrayTabulatedFunction(
                 new double[]{10, 20, 30},
                 new double[]{1, 2, 3}
         );
@@ -273,7 +273,7 @@ public class ArrayTabulateFunctionTest {
     @Test
     @DisplayName("floorIndexOfX возвращает 0 при x <= первому значению")
     void floorIndexOfXUnderLeftBound() {
-        ArrayTabulateFunction f = new ArrayTabulateFunction(
+        ArrayTabulatedFunction f = new ArrayTabulatedFunction(
                 new double[]{1, 2, 3},
                 new double[]{1, 4, 9}
         );
@@ -284,7 +284,7 @@ public class ArrayTabulateFunctionTest {
     @Test
     @DisplayName("floorIndexOfX возвращает последний индекс при x >= последнему значению")
     void floorIndexOfXOverRightBound() {
-        ArrayTabulateFunction f = new ArrayTabulateFunction(
+        ArrayTabulatedFunction f = new ArrayTabulatedFunction(
                 new double[]{1, 2, 3},
                 new double[]{1, 4, 9}
         );
@@ -295,7 +295,7 @@ public class ArrayTabulateFunctionTest {
     @Test
     @DisplayName("floorIndexOfX возвращает корректный индекс внутри диапазона")
     void floorIndexOfXInMiddle() {
-        ArrayTabulateFunction f = new ArrayTabulateFunction(
+        ArrayTabulatedFunction f = new ArrayTabulatedFunction(
                 new double[]{1, 2, 3, 4},
                 new double[]{1, 4, 9, 16}
         );
@@ -307,7 +307,7 @@ public class ArrayTabulateFunctionTest {
     @Test
     @DisplayName("floorIndexOfX с двумя точками")
     void floorIndexOfXWithTwoPoints() {
-        ArrayTabulateFunction f = new ArrayTabulateFunction(
+        ArrayTabulatedFunction f = new ArrayTabulatedFunction(
                 new double[]{0, 1},
                 new double[]{0, 1}
         );
@@ -322,7 +322,7 @@ public class ArrayTabulateFunctionTest {
     @Test
     @DisplayName("interpolate с корректным floorIndex возвращает линейно интерполированное значение")
     void interpolateCorrectly() {
-        ArrayTabulateFunction f = new ArrayTabulateFunction(
+        ArrayTabulatedFunction f = new ArrayTabulatedFunction(
                 new double[]{0, 2},
                 new double[]{0, 4}
         );
@@ -333,7 +333,7 @@ public class ArrayTabulateFunctionTest {
     @Test
     @DisplayName("interpolate с floorIndex = 0 при двух точках")
     void interpolateWithFloorZero() {
-        ArrayTabulateFunction f = new ArrayTabulateFunction(
+        ArrayTabulatedFunction f = new ArrayTabulatedFunction(
                 new double[]{1, 3},
                 new double[]{1, 5}
         );
@@ -343,7 +343,7 @@ public class ArrayTabulateFunctionTest {
     @Test
     @DisplayName("interpolate с некорректным floorIndex выбрасывает IndexOutOfBoundsException")
     void interpolateInvalidFloorIndexThrows() {
-        ArrayTabulateFunction f = new ArrayTabulateFunction(
+        ArrayTabulatedFunction f = new ArrayTabulatedFunction(
                 new double[]{1, 2, 3},
                 new double[]{1, 4, 9}
         );
@@ -354,7 +354,7 @@ public class ArrayTabulateFunctionTest {
     @Test
     @DisplayName("interpolate с одной точкой возвращает её y")
     void interpolateSinglePoint() {
-        ArrayTabulateFunction f = new ArrayTabulateFunction(
+        ArrayTabulatedFunction f = new ArrayTabulatedFunction(
                 new double[]{1},
                 new double[]{5}
         );
@@ -366,7 +366,7 @@ public class ArrayTabulateFunctionTest {
     @Test
     @DisplayName("extrapolateLeft с одной точкой возвращает её y")
     void extrapolateLeftSinglePoint() {
-        ArrayTabulateFunction f = new ArrayTabulateFunction(
+        ArrayTabulatedFunction f = new ArrayTabulatedFunction(
                 new double[]{1},
                 new double[]{5}
         );
@@ -377,7 +377,7 @@ public class ArrayTabulateFunctionTest {
     @Test
     @DisplayName("extrapolateLeft с несколькими точками использует первый отрезок")
     void extrapolateLeftUsesFirstSegment() {
-        ArrayTabulateFunction f = new ArrayTabulateFunction(
+        ArrayTabulatedFunction f = new ArrayTabulatedFunction(
                 new double[]{1, 2},
                 new double[]{1, 3}
         );
@@ -388,7 +388,7 @@ public class ArrayTabulateFunctionTest {
     @Test
     @DisplayName("extrapolateRight с одной точкой возвращает её y")
     void extrapolateRightSinglePoint() {
-        ArrayTabulateFunction f = new ArrayTabulateFunction(
+        ArrayTabulatedFunction f = new ArrayTabulatedFunction(
                 new double[]{1},
                 new double[]{5}
         );
@@ -399,7 +399,7 @@ public class ArrayTabulateFunctionTest {
     @Test
     @DisplayName("extrapolateRight с несколькими точками использует последний отрезок")
     void extrapolateRightUsesLastSegment() {
-        ArrayTabulateFunction f = new ArrayTabulateFunction(
+        ArrayTabulatedFunction f = new ArrayTabulatedFunction(
                 new double[]{1, 2},
                 new double[]{1, 3}
         );
@@ -412,7 +412,7 @@ public class ArrayTabulateFunctionTest {
     @Test
     @DisplayName("andThen применяет функцию после табулированной")
     void andThenAppliesAfterFunction() {
-        ArrayTabulateFunction f = new ArrayTabulateFunction(
+        ArrayTabulatedFunction f = new ArrayTabulatedFunction(
                 new double[]{0, 1, 2},
                 new double[]{0, 1, 2}
         );
@@ -434,7 +434,7 @@ public class ArrayTabulateFunctionTest {
     void interpolateWithManyPoints() {
         double[] x = {0, 1, 2, 3, 4};
         double[] y = {0, 2, 4, 6, 8}; // y = 2x
-        ArrayTabulateFunction f = new ArrayTabulateFunction(x, y);
+        ArrayTabulatedFunction f = new ArrayTabulatedFunction(x, y);
 
         // Интерполируем между 1 и 2: x=1.5 → y ≈ 2.25
         assertEquals(3, f.interpolate(1.5, 1), 1e-10);
@@ -443,7 +443,7 @@ public class ArrayTabulateFunctionTest {
     @Test
     @DisplayName("Экстраполяция слева с более чем 2 точками")
     void extrapolateLeftWithManyPoints() {
-        ArrayTabulateFunction f = new ArrayTabulateFunction(
+        ArrayTabulatedFunction f = new ArrayTabulatedFunction(
                 new double[]{1, 2, 3},
                 new double[]{1, 4, 9}
         );
@@ -455,7 +455,7 @@ public class ArrayTabulateFunctionTest {
     @Test
     @DisplayName("Экстраполяция справа с более чем 2 точками")
     void extrapolateRightWithManyPoints() {
-        ArrayTabulateFunction f = new ArrayTabulateFunction(
+        ArrayTabulatedFunction f = new ArrayTabulatedFunction(
                 new double[]{1, 2, 3},
                 new double[]{1, 4, 9}
         );
@@ -474,7 +474,7 @@ public class ArrayTabulateFunctionTest {
         double[] copyX = Arrays.copyOf(originalX, originalX.length);
         double[] copyY = Arrays.copyOf(originalY, originalY.length);
 
-        new ArrayTabulateFunction(originalX, originalY);
+        new ArrayTabulatedFunction(originalX, originalY);
 
         // Убеждаемся, что оригинальные массивы остались неизменными
         assertArrayEquals(copyX, originalX, 1e-10);
@@ -486,12 +486,70 @@ public class ArrayTabulateFunctionTest {
     @DisplayName("Конструктор с xFrom == xTo и count=2 создаёт две одинаковые точки")
     void constructorEqualBoundsCountTwo() {
         MathFunction f = x -> x * x;
-        ArrayTabulateFunction tab = new ArrayTabulateFunction(f, 2.0, 2.0, 2);
+        ArrayTabulatedFunction tab = new ArrayTabulatedFunction(f, 2.0, 2.0, 2);
 
         assertEquals(2, tab.getCount());
         assertEquals(2.0, tab.getX(0), 1e-10);
         assertEquals(2.0, tab.getX(1), 1e-10);
         assertEquals(4.0, tab.getY(0), 1e-10);
         assertEquals(4.0, tab.getY(1), 1e-10);
+    }
+
+    @Test
+    void testArrayInsertAtBeginning() {
+        double[] xValues = {2.0, 3.0, 4.0};
+        double[] yValues = {20.0, 30.0, 40.0};
+        ArrayTabulatedFunction function = new ArrayTabulatedFunction(xValues, yValues);
+
+        // Вставка в начало
+        function.insert(1.0, 10.0);
+
+        assertEquals(4, function.getCount(), "Количество точек должно увеличиться");
+        assertEquals(1.0, function.getX(0), 1e-10, "Новая точка в начале");
+        assertEquals(10.0, function.getY(0), 1e-10, "Значение новой точки");
+        assertEquals(2.0, function.getX(1), 1e-10, "Следующая точка сдвинута");
+    }
+
+    @Test
+    void testArrayInsertAtEnd() {
+        double[] xValues = {1.0, 2.0, 3.0};
+        double[] yValues = {10.0, 20.0, 30.0};
+        ArrayTabulatedFunction function = new ArrayTabulatedFunction(xValues, yValues);
+
+        // Вставка в конец
+        function.insert(4.0, 40.0);
+
+        assertEquals(4, function.getCount(), "Количество точек должно увеличиться");
+        assertEquals(4.0, function.getX(3), 1e-10, "Новая точка в конце");
+        assertEquals(40.0, function.getY(3), 1e-10, "Значение новой точки");
+    }
+
+    @Test
+    void testArrayInsertInMiddle() {
+        double[] xValues = {1.0, 3.0, 4.0};
+        double[] yValues = {10.0, 30.0, 40.0};
+        ArrayTabulatedFunction function = new ArrayTabulatedFunction(xValues, yValues);
+
+        // Вставка в середину
+        function.insert(2.0, 20.0);
+
+        assertEquals(4, function.getCount(), "Количество точек должно увеличиться");
+        assertEquals(2.0, function.getX(1), 1e-10, "Новая точка в середине");
+        assertEquals(20.0, function.getY(1), 1e-10, "Значение новой точки");
+        assertEquals(3.0, function.getX(2), 1e-10, "Следующая точка сдвинута");
+    }
+
+    @Test
+    void testArrayUpdateExisting() {
+        double[] xValues = {1.0, 2.0, 3.0};
+        double[] yValues = {10.0, 20.0, 30.0};
+        ArrayTabulatedFunction function = new ArrayTabulatedFunction(xValues, yValues);
+
+        // Обновление существующего значения
+        function.insert(2.0, 25.0);
+
+        assertEquals(3, function.getCount(), "Количество точек не должно измениться");
+        assertEquals(2.0, function.getX(1), 1e-10, "Точка должна остаться на месте");
+        assertEquals(25.0, function.getY(1), 1e-10, "Значение должно обновиться");
     }
 }
