@@ -2,9 +2,9 @@ package functions;
 
 import java.util.Arrays;
 
-public class LinkedListTabulatedFunction extends AbstractTabulatedFunction{
+public class LinkedListTabulatedFunction extends AbstractTabulatedFunction implements Insertable, Removable {
 
-    private Node head;
+    Node head;
     private int count;
 
     //конструктор с массивами значений
@@ -258,5 +258,82 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction{
 
             return interpolate(x, floorNode.x, floorNode.next.x, floorNode.y, floorNode.next.y);
         }
+    }
+
+    @Override
+    public void insert(double x, double y) {
+        if (head == null) {
+            addNode(x, y);
+            return;
+        }
+
+        Node curr = head;
+        do {
+            if (Math.abs(curr.x - x) < 1e-10) {
+                curr.y = y;
+                return;
+            }
+            if (x < curr.x) {
+                Node newNode = new Node(x, y);
+
+                Node prevNode = curr.prev;
+                prevNode.next = newNode;
+                newNode.prev = prevNode;
+
+                newNode.next = curr;
+                curr.prev = newNode;
+
+                if (curr == head) {
+                    head = newNode;
+                }
+
+                count++;
+                return;
+            }
+
+            curr = curr.next;
+        } while (curr != head);
+
+        Node last = head.prev;
+        Node newNode = new Node(x, y);
+
+        last.next = newNode;
+        newNode.prev = last;
+
+        newNode.next = head;
+        head.prev = newNode;
+
+        count++;
+    }
+
+
+    @Override
+    public void remove(int index) {
+        if (index < 0 || index >= count) {
+            throw new IndexOutOfBoundsException("Индекс: " + index + ", размер: " + count);
+        }
+
+        if (head == null) {
+            throw new IllegalStateException("Список пуст");
+        }
+
+        Node nodeToRemove = getNode(index);
+
+        if (count == 1) {
+            head = null;
+            count--;
+            return;
+        }
+
+        Node prevNode = nodeToRemove.prev;
+        Node nextNode = nodeToRemove.next;
+
+        prevNode.next = nextNode;
+        nextNode.prev = prevNode;
+
+        if (nodeToRemove == head) {
+            head = nextNode;
+        }
+        count--;
     }
 }
