@@ -1,7 +1,5 @@
 package functions;
 
-import java.util.Arrays;
-
 public class LinkedListTabulatedFunction extends AbstractTabulatedFunction implements Insertable, Removable {
 
     private Node head;

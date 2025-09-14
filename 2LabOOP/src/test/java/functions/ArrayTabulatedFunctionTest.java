@@ -759,4 +759,104 @@ public class ArrayTabulatedFunctionTest {
         assertEquals(-1, f.indexOfX(0.5));
         assertEquals(-1, f.indexOfY(0.5));
     }
+
+    @Test
+    void testArrayWithArray(){
+        //f(x) = x + 1
+        double[] x1 = {0.0, 1.0, 2.0, 3.0, 4.0};
+        double[] y1 = {1.0, 2.0, 3.0, 4.0, 5.0};
+        ArrayTabulatedFunction f = new ArrayTabulatedFunction(x1, y1);
+
+        //g(x) = 2x + 3
+        double[] x2 = {0.0, 1.0, 2.0, 3.0, 4.0};
+        double[] y2 = {3.0, 5.0, 7.0, 9.0, 11.0};
+        ArrayTabulatedFunction g = new ArrayTabulatedFunction(x2, y2);
+
+        CompositeFunction composition = new CompositeFunction(g, f);
+        // f(g(x)) = (2x + 3) + 1 = 2x + 4
+        assertEquals(4.0, composition.apply(0.0), 1e-8, "f(g(0)) = f(3) = 4");
+        assertEquals(6.0, composition.apply(1.0), 1e-8, "f(g(1)) = f(5) = 6");
+        assertEquals(8.0, composition.apply(2.0), 1e-8, "f(g(2)) = f(7) = 8");
+        assertEquals(10.0, composition.apply(3.0), 1e-8, "f(g(3)) = f(9) = 10");
+
+        assertEquals(4.5, composition.apply(0.25), 1e-8, "f(g(0.5)) интерполяция");
+        assertEquals(5.0, composition.apply(0.5), 1e-8, "f(g(3.5)) интерполяций");
+        assertEquals(5.5, composition.apply(0.75), 1e-8, "f(g(3.5)) интерполяций");
+        assertEquals(6.5, composition.apply(1.25), 1e-8, "f(g(3.5)) интерполяций");
+        assertEquals(7.0, composition.apply(1.5), 1e-8, "f(g(3.5)) интерполяций");
+    }
+
+    @Test
+    void testExponentialWithLogarithmicComposition() {
+        //f(x) = x + 1
+        double[] x1 = {0.0, 0.5, 1.0, 1.5, 2.0};
+        double[] y1 = {1.0, 1.5, 2.0, 2.5, 3.0};
+        ArrayTabulatedFunction f = new ArrayTabulatedFunction(x1, y1);
+
+        //g(x) = ln(x + 1)
+        double[] x2 = {0.0, 1.0, 2.0, 3.0, 4.0};
+        double[] y2 = {0.0, 0.6931, 1.0986, 1.3863, 1.6094};
+        ArrayTabulatedFunction g = new ArrayTabulatedFunction(x2, y2);
+
+        //h(x) = f(g(x)) = ln(x + 1) + 1
+        CompositeFunction composition = new CompositeFunction(g, f);
+
+        assertEquals(1.0, composition.apply(0.0), 0.1, "f(g(0)) = f(0) = 1");
+        assertEquals(1.6931, composition.apply(1.0), 0.1, "f(g(1)) = f(ln2) ≈ 2");
+        assertEquals(2.0986, composition.apply(2.0), 0.1, "f(g(2)) = f(ln3) ≈ 3");
+        assertEquals(2.3863, composition.apply(3.0), 0.1, "f(g(3)) = f(ln4) ≈ 4");
+        assertEquals(2.6094, composition.apply(4.0), 0.1, "f(g(4)) = f(ln5) ≈ 5");
+    }
+
+    @Test
+    void testTrigonometricComposition() {
+        //f(x) = sin(x)
+        double[] x1 = {0.0, java.lang.Math.PI/6, java.lang.Math.PI/4, java.lang.Math.PI/3, java.lang.Math.PI/2};
+        double[] y1 = {0.0, 0.5, 0.7071, 0.8660, 1.0};
+        ArrayTabulatedFunction f = new ArrayTabulatedFunction(x1, y1);
+
+        //g(x) = cos(x)
+        double[] x2 = {0.0, java.lang.Math.PI/6, java.lang.Math.PI/4, java.lang.Math.PI/3, java.lang.Math.PI/2};
+        double[] y2 = {1.0, 0.8660, 0.7071, 0.5, 0.0};
+        ArrayTabulatedFunction g = new ArrayTabulatedFunction(x2, y2);
+
+        //h(x) = f(g(x)) = sin(cos(x))
+        CompositeFunction composition = new CompositeFunction(g, f);
+
+        assertEquals(java.lang.Math.sin(1.0), composition.apply(0.0), 0.1, "sin(cos(0)) = sin(1)");
+        assertEquals(java.lang.Math.sin(0.8660), composition.apply(Math.PI/6), 0.1, "sin(cos(π/6))");
+        assertEquals(java.lang.Math.sin(0.7071), composition.apply(Math.PI/4), 0.1, "sin(cos(π/4))");
+        assertEquals(java.lang.Math.sin(0.5), composition.apply(Math.PI/3), 0.1, "sin(cos(π/3))");
+        assertEquals(java.lang.Math.sin(0.0), composition.apply(Math.PI/2), 0.1, "sin(cos(π/2)) = sin(0)");
+    }
+
+    @Test
+    void testCompositeWithExtrapolation() {
+        //f(x) = √x
+        double[] x1 = {0.0, 1.0, 2.0, 3.0, 4.0};
+        double[] y1 = {0.0, 1.0, 1.4142, 1.7321, 2.0};
+        ArrayTabulatedFunction f = new ArrayTabulatedFunction(x1, y1);
+
+        //g(x) = x - 3
+        double[] x2 = {0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0};
+        double[] y2 = {-3.0, -2.0, -1.0, 0.0, 1.0, 2.0, 3.0};
+        ArrayTabulatedFunction g = new ArrayTabulatedFunction(x2, y2);
+
+        //h(x) = f(g(x)) = f(x - 3) = √(x - 3)
+        CompositeFunction composition = new CompositeFunction(g, f);
+        //Экстраполяция влево (x - 3 < 0)
+        assertTrue(composition.apply(0.0) < 0, "f(g(0)) = f(-3) экстраполяция влево");
+        assertTrue(composition.apply(1.0) < 0, "f(g(1)) = f(-2) экстраполяция влево");
+        assertTrue(composition.apply(2.0) < 0, "f(g(2)) = f(-1) экстраполяция влево");
+
+        //Граничные значения
+        assertEquals(0.0, composition.apply(3.0), 1e-8, "f(g(3)) = f(0) = 0");
+        assertEquals(1.0, composition.apply(4.0), 1e-8, "f(g(4)) = f(1) = 1");
+        assertEquals(1.4142, composition.apply(5.0), 0.1, "f(g(5)) = f(2) = √2");
+        assertEquals(1.7321, composition.apply(6.0), 0.1, "f(g(6)) = f(3) = √3");
+
+        //Экстраполяция вправо (x - 3 > 4)
+        assertEquals(2.236, composition.apply(8.0), 0.1, "f(g(8)) = f(5) экстраполяция вправо");
+    }
+
 }
