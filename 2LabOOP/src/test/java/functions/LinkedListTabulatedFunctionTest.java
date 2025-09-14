@@ -390,5 +390,253 @@ class LinkedListTabulatedFunctionTest {
 
         assertEquals(6.5, list.apply(2.5), 1e-10);
     }
+    @Test
+    public void testFloorIndexOfX_EmptyList() {
+        LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(new double[]{}, new double[]{});
+        assertThrows(IllegalArgumentException.class, () -> list.floorIndexOfX(1.0), "Пустой список должен бросать исключение");
+    }
+
+    @Test
+    public void testExtrapolateLeft_CountOne() {
+        LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(new double[]{5.0}, new double[]{10.0});
+        assertEquals(10.0, list.extrapolateLeft(3.0), DELTA, "Экстраполяция слева для одной точки");
+        assertEquals(10.0, list.extrapolateRight(7.0), DELTA, "Экстраполяция справа для одной точки");
+    }
+
+    @Test
+    public void testInterpolate_CountOne() {
+        LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(new double[]{5.0}, new double[]{10.0});
+        assertEquals(10.0, list.interpolate(5.0, 0), DELTA, "Интерполяция для одной точки");
+    }
+
+    @Test
+    public void testApply_ExactMatchOnHead() {
+        double[] xValues = {1.0, 3.0, 5.0};
+        double[] yValues = {10.0, 30.0, 50.0};
+        LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(xValues, yValues);
+
+        assertEquals(10.0, list.apply(1.0), DELTA, "apply(1.0) — точное совпадение с head");
+    }
+
+    @Test
+    public void testApply_ExactMatchOnLast() {
+        double[] xValues = {1.0, 3.0, 5.0};
+        double[] yValues = {10.0, 30.0, 50.0};
+        LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(xValues, yValues);
+
+        assertEquals(50.0, list.apply(5.0), DELTA, "apply(5.0) — точное совпадение с последним");
+    }
+
+    @Test
+    public void testFloorNodeOfX_ExactMatchOnHead() {
+        double[] xValues = {1.0, 3.0, 5.0};
+        double[] yValues = {10.0, 30.0, 50.0};
+        LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(xValues, yValues);
+
+        Node node = list.floorNodeOfX(1.0);
+        assertEquals(1.0, node.x, DELTA, "floorNodeOfX(1.0) должен вернуть head");
+    }
+
+    @Test
+    public void testFloorNodeOfX_ExactMatchOnLast() {
+        double[] xValues = {1.0, 3.0, 5.0};
+        double[] yValues = {10.0, 30.0, 50.0};
+        LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(xValues, yValues);
+
+        Node node = list.floorNodeOfX(5.0);
+        assertEquals(5.0, node.x, DELTA, "floorNodeOfX(5.0) должен вернуть последний узел");
+    }
+
+    @Test
+    public void testFloorNodeOfX_XGreaterThanOrEqualToLast() {
+        double[] xValues = {1.0, 3.0, 5.0};
+        double[] yValues = {10.0, 30.0, 50.0};
+        LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(xValues, yValues);
+
+        Node node = list.floorNodeOfX(6.0);
+        assertEquals(5.0, node.x, DELTA, "floorNodeOfX(6.0) должен вернуть последний узел");
+    }
+
+    @Test
+    public void testFloorNodeOfX_XLessThanFirst() {
+        double[] xValues = {1.0, 3.0, 5.0};
+        double[] yValues = {10.0, 30.0, 50.0};
+        LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(xValues, yValues);
+
+        Node node = list.floorNodeOfX(0.5);
+        assertEquals(1.0, node.x, DELTA, "floorNodeOfX(0.5) должен вернуть head");
+    }
+
+    @Test
+    public void testInsert_InsertAtEnd_CircularUpdate() {
+        LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(new double[]{1.0, 2.0}, new double[]{10.0, 20.0});
+        list.insert(3.0, 30.0);
+
+        // Проверим, что голова не сдвинулась, а хвост правильно связан
+        assertEquals(3.0, list.getX(2));
+        assertEquals(1.0, list.getX(0)); // head не изменился
+        assertEquals(2.0, list.getX(1));
+        assertEquals(3.0, list.rightBound());
+    }
+
+    @Test
+    public void testInsert_InsertDuplicateWithEpsilon() {
+        LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(new double[]{1.0}, new double[]{10.0});
+        list.insert(1.0 + 1e-9, 99.0); // должно заменить, т.к. |1.0 - 1.000000001| < 1e-10?
+
+        // ВАЖНО: в коде используется 1e-10, а здесь 1e-9 — это больше!
+        // Значит, НЕ должно заменить! Создаст новую точку → станет 2 точки!
+
+        assertEquals(2, list.getCount(), "1e-9 > 1e-10 — должно быть добавлено как новая точка");
+        assertEquals(1.0, list.getX(0));
+        assertEquals(10.0, list.getY(0));
+        assertEquals(1.000000001, list.getX(1), DELTA);
+        assertEquals(99.0, list.getY(1));
+    }
+
+    @Test
+    public void testInsert_InsertDuplicateWithinEpsilon() {
+        LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(new double[]{1.0}, new double[]{10.0});
+        list.insert(1.0 + 1e-11, 99.0); // |1.0 - 1.00000000001| < 1e-10 → true
+
+        assertEquals(1, list.getCount(), "Должно заменить существующий элемент");
+        assertEquals(99.0, list.getY(0), DELTA);
+    }
+/*
+    @Test
+    public void testGetNode_LeftHalf() {
+        double[] xValues = {1.0, 2.0, 3.0, 4.0, 5.0}; // count=5, index=2 (middle) → left half
+        double[] yValues = {10.0, 20.0, 30.0, 40.0, 50.0};
+        LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(xValues, yValues);
+
+        Node node = list.getNode(1); // индекс 1 < 5/2=2.5 → левая половина
+        assertEquals(2.0, node.x, DELTA);
+    }
+
+    @Test
+    public void testGetNode_RightHalf() {
+        double[] xValues = {1.0, 2.0, 3.0, 4.0, 5.0}; // count=5, index=3 > 2.5 → правая половина
+        double[] yValues = {10.0, 20.0, 30.0, 40.0, 50.0};
+        LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(xValues, yValues);
+
+        Node node = list.getNode(3); // индекс 3 >= 2.5 → правая половина
+        assertEquals(4.0, node.x, DELTA);
+    }
+    getNode() - приватный, поэтому не тестируем его, не ломаем инкапсуляцию
+*/
+    @Test
+    public void testIndexOfY_Found() {
+        double[] xValues = {1.0, 2.0, 3.0};
+        double[] yValues = {10.0, 20.0, 30.0};
+        LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(xValues, yValues);
+
+        assertEquals(1, list.indexOfY(20.0), "indexOfY(20.0) должен найти индекс 1");
+    }
+
+    @Test
+    public void testIndexOfY_NotFound() {
+        double[] xValues = {1.0, 2.0, 3.0};
+        double[] yValues = {10.0, 20.0, 30.0};
+        LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(xValues, yValues);
+
+        assertEquals(-1, list.indexOfY(25.0), "indexOfY(25.0) не найден");
+    }
+
+    @Test
+    public void testIndexOfY_EpsilonMatch() {
+        double[] xValues = {1.0, 2.0, 3.0};
+        double[] yValues = {10.0, 20.0, 30.0};
+        LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(xValues, yValues);
+
+        assertEquals(1, list.indexOfY(20.0 + 1e-11), "indexOfY с погрешностью 1e-11 должен найти");
+        assertEquals(-1, list.indexOfY(20.0 + 1e-9), "indexOfY с погрешностью 1e-9 не должен найти (больше 1e-10)");
+    }
+
+    @Test
+    public void testLeftBound_EmptyList() {
+        LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(new double[]{}, new double[]{});
+        assertThrows(IllegalArgumentException.class, () -> list.leftBound(), "Пустой список при leftBound()");
+    }
+
+    @Test
+    public void testRightBound_EmptyList() {
+        LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(new double[]{}, new double[]{});
+        assertThrows(IllegalArgumentException.class, () -> list.rightBound(), "Пустой список при rightBound()");
+    }
+
+    @Test
+    public void testConstructor_ArraysDifferentLength() {
+        assertThrows(IllegalArgumentException.class, () ->
+                new LinkedListTabulatedFunction(new double[]{1.0, 2.0}, new double[]{10.0}), "Разные длины массивов");
+    }
+
+    @Test
+    public void testConstructor_XNotStrictlyIncreasing() {
+        assertThrows(IllegalArgumentException.class, () ->
+                new LinkedListTabulatedFunction(new double[]{1.0, 1.0, 2.0}, new double[]{10.0, 20.0, 30.0}), "Не строго возрастающие x");
+        assertThrows(IllegalArgumentException.class, () ->
+                new LinkedListTabulatedFunction(new double[]{2.0, 1.0}, new double[]{10.0, 20.0}), "Убывающие x");
+    }
+
+    @Test
+    public void testApply_ExtrapolateLeft_CountOne() {
+        LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(new double[]{5.0}, new double[]{10.0});
+        assertEquals(10.0, list.apply(4.0), DELTA, "apply(4.0) при одной точке — экстраполяция слева");
+    }
+
+    @Test
+    public void testApply_ExtrapolateRight_CountOne() {
+        LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(new double[]{5.0}, new double[]{10.0});
+        assertEquals(10.0, list.apply(6.0), DELTA, "apply(6.0) при одной точке — экстраполяция справа");
+    }
+
+    @Test
+    public void testApply_Interpolate_BoundaryCase() {
+        double[] xValues = {1.0, 2.0};
+        double[] yValues = {10.0, 20.0};
+        LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(xValues, yValues);
+
+        // Проверим границу: x = 1.0 (head) и x = 2.0 (last)
+        assertEquals(10.0, list.apply(1.0), DELTA);
+        assertEquals(20.0, list.apply(2.0), DELTA);
+
+        // Проверим интерполяцию на границе между ними
+        assertEquals(15.0, list.apply(1.5), DELTA);
+    }
+
+    @Test
+    public void testRemove_HeadIsUpdatedAfterRemoval() {
+        LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(
+                new double[]{1.0, 2.0, 3.0},
+                new double[]{10.0, 20.0, 30.0}
+        );
+
+        list.remove(0); // удаляем head
+
+        assertNotNull(list.getHead());
+        assertEquals(2.0, list.getHead().x, DELTA, "После удаления head, новый head должен быть 2.0");
+    }
+
+    @Test
+    public void testInsert_InsertAfterHeadInCircular() {
+        LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(new double[]{1.0}, new double[]{10.0});
+        list.insert(2.0, 20.0);
+        list.insert(0.5, 5.0); // вставить перед head
+
+        assertEquals(3, list.getCount());
+        assertEquals(0.5, list.getX(0));
+        assertEquals(1.0, list.getX(1));
+        assertEquals(2.0, list.getX(2));
+
+        assertEquals(5.0, list.getY(0));
+        assertEquals(10.0, list.getY(1));
+        assertEquals(20.0, list.getY(2));
+    }
+
+    @Test
+    public void testApply_WithSingleNodeAndEpsilon() {
+        LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(new double[]{1.0}, new double[]{10.0});
+        assertEquals(10.0, list.apply(1.0 + 1e-11), DELTA, "apply(1.0 + 1e-11) — должно вернуть 10.0 (точное совпадение по эпсилон)");
+    }
 }
 

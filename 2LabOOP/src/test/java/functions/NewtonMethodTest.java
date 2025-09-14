@@ -680,4 +680,46 @@ class NewtonMethodTest {
 
             assertEquals(1.0, result, 1e-6);
         }
+    @Test
+    void testCustomEAndMaxIterations() {
+        // Проверяем, что конструктор с пользовательскими e и maxIterations работает корректно
+        MathFunction f = x -> x * x - 4; // корень = 2
+        MathFunction df = x -> 2 * x;
+
+        // Используем очень строгий e и мало итераций, чтобы убедиться, что они применяются
+        double customE = 1e-10;
+        int customMaxIter = 50;
+
+        NewtonMethod newton = new NewtonMethod(f, df, customE, customMaxIter);
+
+        // Сходимость должна быть медленнее, но всё равно сойдётся за 5 итераций для x²=4
+        double result = newton.apply(1.0);
+        assertEquals(2.0, result, 1e-8); // Точность выше customE, но метод всё равно сходится
+    }
+
+    @Test
+    void testLowMaxIterationsThrowsException() {
+        // Проверяем, что при малом maxIterations бросается RuntimeException
+        MathFunction f = x -> x * x - 4;
+        MathFunction df = x -> 2 * x;
+
+        NewtonMethod newton = new NewtonMethod(f, df, 1e-6, 1); // только 1 итерация
+
+        assertThrows(RuntimeException.class, () -> {
+            newton.apply(1.0);
+        });
+    }
+
+    @Test
+    void testNegativeInitialGuess() {
+        // Проверяем, что метод работает с отрицательным x0
+        MathFunction f = x -> x * x - 9; // корни: ±3
+        MathFunction df = x -> 2 * x;
+
+        NewtonMethod newton = new NewtonMethod(f, df);
+
+        // Ищем отрицательный корень
+        double result = newton.apply(-1.0);
+        assertEquals(-3.0, result, 1e-6);
+    }
 }
