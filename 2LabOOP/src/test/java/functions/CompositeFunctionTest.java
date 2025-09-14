@@ -133,4 +133,109 @@ class CompositeFunctionTest {
         assertEquals(-60.0, doubleThenTriple.apply(-10.0), 0.0001, "triple(double(-10)) = -60");
         assertEquals(-60.0, tripleThenDouble.apply(-10.0), 0.0001, "double(triple(-10)) = -60");
     }
+
+    @Test
+    void testArrayWithArrayAndThen(){
+        //f(x) = 4x - 5
+        double[] x1 = {0.0, 1.0, 2.0, 3.0, 4.0};
+        double[] y1 = {-5.0, -1.0, 3.0, 7.0, 11.0};
+        ArrayTabulatedFunction f = new ArrayTabulatedFunction(x1, y1);
+
+        //g(x) = x + 10
+        double[] x2 = {0.0, 1.0, 2.0, 3.0, 4.0};
+        double[] y2 = {10.0, 11.0, 12.0, 13.0, 14.0};
+        ArrayTabulatedFunction g = new ArrayTabulatedFunction(x2, y2);
+
+        MathFunction composition = f.andThen(g);
+        // f(g(x)) = 4(x + 10) - 5 = 4x + 35
+        assertEquals(35.0, composition.apply(0.0), 1e-8, "f(g(0)) = f(10) = 35");
+        assertEquals(39.0, composition.apply(1.0), 1e-8, "f(g(1)) = f(11) = 39");
+        assertEquals(43.0, composition.apply(2.0), 1e-8, "f(g(2)) = f(12) = 43");
+        assertEquals(47.0, composition.apply(3.0), 1e-8, "f(g(3)) = f(13) = 47");
+        assertEquals(51.0, composition.apply(4.0), 1e-8, "f(g(3)) = f(14) = 51");
+
+        assertEquals(36.0, composition.apply(0.25), 1e-8, "f(g(0.25)) интерполяция");
+        assertEquals(37.0, composition.apply(0.5), 1e-8, "f(g(0.5)) интерполяций");
+        assertEquals(38.0, composition.apply(0.75), 1e-8, "f(g(0.75)) интерполяций");
+        assertEquals(40.0, composition.apply(1.25), 1e-8, "f(g(1.25)) интерполяций");
+        assertEquals(41.0, composition.apply(1.5), 1e-8, "f(g(1.5)) интерполяций");
+    }
+
+    void testArrayWithLinkedListAndThen(){
+        //f(x) = 4x - 5
+        double[] x1 = {0.0, 1.0, 2.0, 3.0, 4.0};
+        double[] y1 = {-5.0, -1.0, 3.0, 7.0, 11.0};
+        ArrayTabulatedFunction f = new ArrayTabulatedFunction(x1, y1);
+
+        //g(x) = x + 10
+        double[] x2 = {0.0, 1.0, 2.0, 3.0, 4.0};
+        double[] y2 = {10.0, 11.0, 12.0, 13.0, 14.0};
+        LinkedListTabulatedFunction g = new LinkedListTabulatedFunction(x2, y2);
+
+        MathFunction composition = f.andThen(g);
+        // f(g(x)) = 4(x + 10) - 5 = 4x + 35
+        assertEquals(35.0, composition.apply(0.0), 1e-8, "f(g(0)) = f(10) = 35");
+        assertEquals(39.0, composition.apply(1.0), 1e-8, "f(g(1)) = f(11) = 39");
+        assertEquals(43.0, composition.apply(2.0), 1e-8, "f(g(2)) = f(12) = 43");
+        assertEquals(47.0, composition.apply(3.0), 1e-8, "f(g(3)) = f(13) = 47");
+        assertEquals(51.0, composition.apply(4.0), 1e-8, "f(g(3)) = f(14) = 51");
+
+        assertEquals(36.0, composition.apply(0.25), 1e-8, "f(g(0.25)) интерполяция");
+        assertEquals(37.0, composition.apply(0.5), 1e-8, "f(g(0.5)) интерполяций");
+        assertEquals(38.0, composition.apply(0.75), 1e-8, "f(g(0.75)) интерполяций");
+        assertEquals(40.0, composition.apply(1.25), 1e-8, "f(g(1.25)) интерполяций");
+        assertEquals(41.0, composition.apply(1.5), 1e-8, "f(g(1.5)) интерполяций");
+    }
+
+    void testLinkedListyWithLinkedListAndThen(){
+        //f(x) = 4x - 5
+        double[] x1 = {0.0, 1.0, 2.0, 3.0, 4.0};
+        double[] y1 = {-5.0, -1.0, 3.0, 7.0, 11.0};
+        LinkedListTabulatedFunction f = new LinkedListTabulatedFunction(x1, y1);
+
+        //g(x) = x + 10
+        double[] x2 = {0.0, 1.0, 2.0, 3.0, 4.0};
+        double[] y2 = {10.0, 11.0, 12.0, 13.0, 14.0};
+        LinkedListTabulatedFunction g = new LinkedListTabulatedFunction(x2, y2);
+
+        MathFunction composition = f.andThen(g);
+        // f(g(x)) = 4(x + 10) - 5 = 4x + 35
+        assertEquals(35.0, composition.apply(0.0), 1e-8, "f(g(0)) = f(10) = 35");
+        assertEquals(39.0, composition.apply(1.0), 1e-8, "f(g(1)) = f(11) = 39");
+        assertEquals(43.0, composition.apply(2.0), 1e-8, "f(g(2)) = f(12) = 43");
+        assertEquals(47.0, composition.apply(3.0), 1e-8, "f(g(3)) = f(13) = 47");
+        assertEquals(51.0, composition.apply(4.0), 1e-8, "f(g(3)) = f(14) = 51");
+
+        assertEquals(36.0, composition.apply(0.25), 1e-8, "f(g(0.25)) интерполяция");
+        assertEquals(37.0, composition.apply(0.5), 1e-8, "f(g(0.5)) интерполяций");
+        assertEquals(38.0, composition.apply(0.75), 1e-8, "f(g(0.75)) интерполяций");
+        assertEquals(40.0, composition.apply(1.25), 1e-8, "f(g(1.25)) интерполяций");
+        assertEquals(41.0, composition.apply(1.5), 1e-8, "f(g(1.5)) интерполяций");
+    }
+
+    void testLinkedListyWithArrayAndThen(){
+        //f(x) = 4x - 5
+        double[] x1 = {0.0, 1.0, 2.0, 3.0, 4.0};
+        double[] y1 = {-5.0, -1.0, 3.0, 7.0, 11.0};
+        LinkedListTabulatedFunction f = new LinkedListTabulatedFunction(x1, y1);
+
+        //g(x) = x + 10
+        double[] x2 = {0.0, 1.0, 2.0, 3.0, 4.0};
+        double[] y2 = {10.0, 11.0, 12.0, 13.0, 14.0};
+        ArrayTabulatedFunction g = new ArrayTabulatedFunction(x2, y2);
+
+        MathFunction composition = f.andThen(g);
+        // f(g(x)) = 4(x + 10) - 5 = 4x + 35
+        assertEquals(35.0, composition.apply(0.0), 1e-8, "f(g(0)) = f(10) = 35");
+        assertEquals(39.0, composition.apply(1.0), 1e-8, "f(g(1)) = f(11) = 39");
+        assertEquals(43.0, composition.apply(2.0), 1e-8, "f(g(2)) = f(12) = 43");
+        assertEquals(47.0, composition.apply(3.0), 1e-8, "f(g(3)) = f(13) = 47");
+        assertEquals(51.0, composition.apply(4.0), 1e-8, "f(g(3)) = f(14) = 51");
+
+        assertEquals(36.0, composition.apply(0.25), 1e-8, "f(g(0.25)) интерполяция");
+        assertEquals(37.0, composition.apply(0.5), 1e-8, "f(g(0.5)) интерполяций");
+        assertEquals(38.0, composition.apply(0.75), 1e-8, "f(g(0.75)) интерполяций");
+        assertEquals(40.0, composition.apply(1.25), 1e-8, "f(g(1.25)) интерполяций");
+        assertEquals(41.0, composition.apply(1.5), 1e-8, "f(g(1.5)) интерполяций");
+    }
 }
