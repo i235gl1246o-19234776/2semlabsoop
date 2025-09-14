@@ -202,7 +202,7 @@ public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements
         // Уменьшаем количество точек
         count--;
 
-        // Опционально: можно обнулить последний элемент для GC (не обязательно, но чисто)
+        // Опционально: можно обнулить последний элемент для GC (необязательно, но чисто)
         xVal[count] = Double.NaN;
         yVal[count] = Double.NaN;
     }
