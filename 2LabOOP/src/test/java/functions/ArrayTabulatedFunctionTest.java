@@ -323,7 +323,7 @@ public class ArrayTabulatedFunctionTest {
                 new double[]{1, 4, 9}
         );
         assertEquals(2, f.floorIndexOfX(3.0));
-        assertEquals(2, f.floorIndexOfX(4.0));
+        assertEquals(3, f.floorIndexOfX(4.0)); //все меньше данного - count = 3
     }
 
     @Test
@@ -348,7 +348,7 @@ public class ArrayTabulatedFunctionTest {
         assertEquals(0, f.floorIndexOfX(0.5));
         assertEquals(0, f.floorIndexOfX(0.0));
         assertEquals(1, f.floorIndexOfX(1.0));
-        assertEquals(1, f.floorIndexOfX(2.0));
+        assertEquals(2, f.floorIndexOfX(2.0));
     }
 
     @Test
@@ -706,7 +706,7 @@ public class ArrayTabulatedFunctionTest {
         assertEquals(2, f.floorIndexOfX(4.0));
         assertEquals(2, f.floorIndexOfX(4.5));
         assertEquals(3, f.floorIndexOfX(5.0));
-        assertEquals(3, f.floorIndexOfX(10.0));
+        assertEquals(4, f.floorIndexOfX(10.0)); // count
         assertEquals(0, f.floorIndexOfX(0.5));
     }
 

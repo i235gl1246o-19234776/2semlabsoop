@@ -20,10 +20,14 @@ public class MockTabulatedFunction extends AbstractTabulatedFunction{
     @Override
     protected int floorIndexOfX(double x){
         if(x < x0){
+            return 0; // все больше заданного - 0
+        }else if(x > x1){
+            return count; //все меньше заданного - count
+        } else if(x == x0){
             return 0;
-        }else if(x >= x1){
-            return count;
-        }else{
+        } else if(x == x1){
+            return 1;
+        } else{
             return 0;
         }
     }
@@ -69,15 +73,15 @@ public class MockTabulatedFunction extends AbstractTabulatedFunction{
 
     @Override
     public int indexOfX(double x) {
-        if (Math.abs(x - x0) < 1e-10) return 0;
-        if (Math.abs(x - x1) < 1e-10) return 1;
+        if (Math.abs(x - x0) <= 1e-10) return 0;
+        if (Math.abs(x - x1) <= 1e-10) return 1;
         return -1;
     }
 
     @Override
     public int indexOfY(double y) {
-        if (Math.abs(y - y0) < 1e-10) return 0;
-        if (Math.abs(y - y1) < 1e-10) return 1;
+        if (Math.abs(y - y0) <= 1e-10) return 0;
+        if (Math.abs(y - y1) <= 1e-10) return 1;
         return -1;
     }
 

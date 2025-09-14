@@ -156,10 +156,10 @@ public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements
 
     public int floorIndexOfX(double x) {
         if (x < xVal[0]) {
-            return 0;
+            return 0; // все больше заданного - 0
         }
-        if (x >= xVal[count - 1]) {
-            return count - 1;
+        if (x > xVal[count - 1]) {
+            return count; //все меньше заданного - count
         }
 
         for (int i = 0; i < count - 1; i++) {
@@ -167,7 +167,10 @@ public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements
                 return i;
             }
         }
-        return -42;
+        if (x >= xVal[count - 1]) {
+            return count - 1;
+        }
+        return 0;
     }
     @Override
     public double apply(double x) {
