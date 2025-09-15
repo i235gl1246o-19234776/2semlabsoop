@@ -11,6 +11,9 @@ public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements
         if (xVal.length != yVal.length){
             throw new IllegalArgumentException("Массивы разной длины");
         }
+        if (xVal.length < 2) {
+            throw new IllegalArgumentException("Таблица должна содержать как минимум 2 точки");
+        }
         for (int i = 1; i < xVal.length; i++){
             if (xVal[i] <= xVal[i-1]){
                 throw new IllegalArgumentException("xVal не упорядочены");
@@ -30,10 +33,6 @@ public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements
         this.xVal = new double[count];
         this.yVal = new double[count];
 
-        if (xFrom == xTo){
-            Arrays.fill(xVal, xFrom);
-            Arrays.fill(yVal, s.apply(xFrom));
-        }
         if (xFrom > xTo){
             double t = xFrom;
             xFrom = xTo;
@@ -51,26 +50,16 @@ public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements
 
     @Override
     public double extrapolateLeft(double x) {
-        if (count == 1) {
-            return yVal[0];
-        }
         return interpolate(x, 0);
     }
 
     @Override
     public double extrapolateRight(double x) {
-        if (count == 1) {
-            return yVal[0];
-        }
         return interpolate(x, count - 2);
     }
 
     @Override
     public double interpolate(double x, int floorIndex) {
-        if (count == 1) {
-            return yVal[0];
-        }
-
         if (floorIndex < 0 || floorIndex >= count - 1) {
             throw new IndexOutOfBoundsException("Аут оф индекс: " + floorIndex);
         }
@@ -90,7 +79,7 @@ public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements
     @Override
     public double getX(int index){
         if (index < 0 || index >= count){
-            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + count);
+            throw new IllegalArgumentException("Index: " + index + ", Size: " + count);
         }
         return xVal[index];
     }
@@ -98,7 +87,7 @@ public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements
     @Override
     public double getY(int index) {
         if (index < 0 || index >= count) {
-            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + count);
+            throw new IllegalArgumentException("Index: " + index + ", Size: " + count);
         }
         return yVal[index];
     }
@@ -106,7 +95,7 @@ public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements
     @Override
     public void setY(int index, double value) {
         if (index < 0 || index >= count) {
-            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + count);
+            throw new IllegalArgumentException("Index: " + index + ", Size: " + count);
         }
         yVal[index] = value;
     }
@@ -155,11 +144,11 @@ public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements
     @Override
 
     public int floorIndexOfX(double x) {
-        if (x < xVal[0]) {
-            return 0; // все больше заданного - 0
+        if (x < leftBound()) {
+            throw new IllegalArgumentException("Значение x = " + x + " меньше левой границы таблицы ");
         }
-        if (x > xVal[count - 1]) {
-            return count; //все меньше заданного - count
+        if (x >  rightBound()) {
+            throw new IllegalArgumentException("Значение x = " + x + " больше правой границы таблицы ");
         }
 
         for (int i = 0; i < count - 1; i++) {
@@ -167,10 +156,8 @@ public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements
                 return i;
             }
         }
-        if (x >= xVal[count - 1]) {
-            return count - 1;
-        }
-        return 0;
+
+        return count-1;
     }
     @Override
     public double apply(double x) {
@@ -193,18 +180,17 @@ public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements
         if (index < 0 || index >= count) {
             throw new IndexOutOfBoundsException("Индекс: " + index + ", размер: " + count);
         }
+        if (count == 3) {
+            throw new IndexOutOfBoundsException("После удаления будет 2 элемента");
+        }
 
         for (int i = index; i < count - 1; i++) {
             xVal[i] = xVal[i + 1];
             yVal[i] = yVal[i + 1];
         }
 
-        // Уменьшаем количество точек
         count--;
 
-        // Опционально: можно обнулить последний элемент для GC (необязательно, но чисто)
-        xVal[count] = Double.NaN;
-        yVal[count] = Double.NaN;
     }
     public double[] getxVal() {
         return Arrays.copyOf(xVal, count);
