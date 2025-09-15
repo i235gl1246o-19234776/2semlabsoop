@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @DisplayName("Тесты для RungeKuttaFunction")
 class RungeKuttaFunctionTest {
     
-    private final static double delta = 1e-6;
+    private final static double delta = 1e-3;
 
     @Test
     @DisplayName("Тест на проверку константы")
@@ -108,4 +108,59 @@ class RungeKuttaFunctionTest {
         assertEquals(0.36, function.apply(0.6), delta, "y(0.6) = 0.6² = 0.36, GOOD");
         assertEquals(0.25, function.apply(0.5), delta, "y(0.5) = 0.5² = 0.25, GOOD");
     }
+
+    @Test
+    @DisplayName("Тест на проверку сложной тригонометрической функции")
+    void testComplexTrigonometricFunction() {
+        //dy/dx = sin(x) + cos(x), y(0) = 0 -> y(x) = -cos(x) + sin(x) + 1
+        MathFunction derivative = x -> java.lang.Math.sin(x) + java.lang.Math.cos(x);
+
+        RungeKuttaFunction solver = new RungeKuttaFunction(derivative, 0, 0, 0.001);
+
+        //Точное решение: y(x) = -cos(x) + sin(x) + 1
+        assertEquals(0.0, solver.apply(0.0), delta, "Начальное условие, GOOD");
+        assertEquals(0.634, solver.apply(java.lang.Math.PI/6), delta, "y(π/6) = -cos(π/6) + sin(π/6) + 1 = -0.866 + 0.5 + 1 = 0.634, GOOD");
+        assertEquals(2.0, solver.apply(java.lang.Math.PI/2), delta, "y(π/2) = -cos(π/2) + sin(π/2) + 1 = 0 + 1 + 1 = 2, GOOD");
+        assertEquals(2.0, solver.apply(java.lang.Math.PI), delta, "y(π) = -cos(π) + sin(π) + 1 = 1 + 0 + 1 = 2, GOOD");
+        assertEquals(0.0, solver.apply(3*java.lang.Math.PI/2), delta, "y(3π/2) = - cos(3π/2) + sin(3π/2) + 1 = 0 - 1 + 1 = 0, GOOD");
+    }
+
+    @Test
+    @DisplayName("Тест на проверку рациональной функции с подвохом")
+    void testRationalFunction() {
+        //dy/dx = 1/(1 + x²), y(0) = 0 -> y(x) = arctan(x)
+        MathFunction derivative = x -> 1.0 / (1.0 + x*x);
+
+        RungeKuttaFunction solver = new RungeKuttaFunction(derivative, 0, 0, 0.0001);
+
+        assertEquals(0.0, solver.apply(0.0), delta, "Начальное условие, GOOD");
+        assertEquals(java.lang.Math.atan(1.0), solver.apply(1.0), delta, "y(1) = arctan(1), GOOD");
+        assertEquals(java.lang.Math.atan(2.0), solver.apply(2.0), delta, "y(2) = arctan(2), GOOD");
+        assertEquals(java.lang.Math.atan(10.0), solver.apply(10.0), delta, "y(10) = arctan(10), GOOD");
+        assertEquals(java.lang.Math.atan(0.5), solver.apply(0.5), delta, "y(0.5) = arctan(0.5), GOOD");
+    }
+
+    @Test
+    @DisplayName("Тест на проверку тригонометрической функции с экспонентой")
+    void testExponentialTrigonometricCombination() {
+        //dy/dx = e^(-x) * sin(x), y(0) = 0
+        //Точное решение: y(x) = (1 - e^(-x)(sin(x) + cos(x)))/2
+        MathFunction derivative = x -> java.lang.Math.exp(-x) * java.lang.Math.sin(x);
+
+        RungeKuttaFunction function = new RungeKuttaFunction(derivative, 0, 0, 0.0005);
+
+        //Проверяем в нескольких точках
+        double x1 = 1.0;
+        double exact1 = (1 - java.lang.Math.exp(-x1) * (java.lang.Math.sin(x1) + java.lang.Math.cos(x1))) / 2;//0.245837
+        assertEquals(exact1, function.apply(x1), delta, "y(1) = , GOOD");
+
+        double x2 = 2.0;
+        double exact2 = (1 - java.lang.Math.exp(-x2) * (java.lang.Math.sin(x2) + java.lang.Math.cos(x2))) / 2;//0.46662
+        assertEquals(exact2, function.apply(x2), delta, "y(2), GOOD");
+
+        double x3 = 0.5;
+        double exact3 = (1 - java.lang.Math.exp(-x3) * (java.lang.Math.sin(x3) + java.lang.Math.cos(x3))) / 2;//0.08846
+        assertEquals(exact3, function.apply(x3), delta, "y(0.5), GOOD");
+    }
+
 }

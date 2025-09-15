@@ -1,12 +1,9 @@
 package functions;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.DisplayName;
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * Тестовый класс для CompositeFunction.
- * Проверяет корректность работы композитных функций.
- */
 class CompositeFunctionTest {
 
     @Test
