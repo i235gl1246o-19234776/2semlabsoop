@@ -722,4 +722,54 @@ class NewtonMethodTest {
         double result = newton.apply(-1.0);
         assertEquals(-3.0, result, 1e-6);
     }
+    @Test
+    void testCompositeFunction(){
+        MathFunction f = x -> 2*x+3;
+        MathFunction df = x -> 2;
+
+        MathFunction g = x -> x*x;
+        MathFunction dg = x -> 2*x;
+
+        MathFunction f_ = new NewtonMethod(f, df);
+        MathFunction g_ = new NewtonMethod(g, dg);
+
+        CompositeFunction comp = new CompositeFunction(g, f);
+        assertEquals(3, comp.apply(0));
+
+        CompositeFunction comp1 = new CompositeFunction(f, g);
+        assertEquals(9, comp1.apply(0));
+
+        CompositeFunction comp2 = new CompositeFunction(g_, f_);
+        assertEquals(9, comp1.apply(0));
+
+    }
+
+
+    @Test
+    void testNewtonMethodOnCompositeFunction() {
+        // h = g(f(x)) = sin(x^2 - 1)
+        MathFunction f = x -> x * x - 1.0; // f = x^2 - 1
+        MathFunction df = x -> 2 * x;  // df = 2x
+
+        MathFunction g = Math::sin;  // g = sin(x)
+        MathFunction dg = Math::cos; // dg = cos(x)
+
+        CompositeFunction h = new CompositeFunction(f, g);
+        MathFunction h_ = g.andThen(f);
+
+        // dh = cos(x^2 - 1) * 2x
+
+        MathFunction dh = x -> dg.apply(f.apply(x)) * df.apply(x);
+
+        NewtonMethod solver1 = new NewtonMethod(h, dh);
+        NewtonMethod solver2 = new NewtonMethod(h_, dh);
+
+        assertEquals(1.0, solver2.apply(1.2), 1e-8, "sin(x² - 1)=0 x: 1.0, AndThen");
+        assertEquals(1.0, solver2.apply(1.2), 1e-8, "sin(x² - 1)=0 x: 1.0, AndThen");
+        assertEquals(1.0, solver1.apply(1.2), 1e-8, "sin(x² - 1)=0 x: 1.0, Composite");
+        assertEquals(-1.0, solver1.apply(-1.2), 1e-8, "sin(x² - 1) x: -1.0, Composite");
+
+    }
+
 }
+
