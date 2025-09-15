@@ -1,6 +1,22 @@
 package functions;
 
+
+
 public class LinkedListTabulatedFunction extends AbstractTabulatedFunction implements Insertable, Removable {
+
+    public static class Node { //Вопрос, public или private?
+        public Node next;
+        public Node prev;
+        public double x;
+        public double y;
+
+        public Node(double x, double y) {
+            this.x = x;
+            this.y = y;
+            this.next = null;
+            this.prev = null;
+        }
+    }
 
     private Node head;
     private int count;

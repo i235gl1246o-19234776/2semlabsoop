@@ -1,5 +1,5 @@
 package functions;
-
+/*
 class Node {
 
     public Node next;
@@ -14,3 +14,4 @@ class Node {
         this.prev = null;
     }
 }
+*/
