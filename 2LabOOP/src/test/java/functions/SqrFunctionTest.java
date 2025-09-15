@@ -96,7 +96,7 @@ class SqrFunctionTest {
 
         for(int i = 1; i <= 10; i++){
             double x = i * 0.7;
-            assertEquals(function.apply(x), function.apply(-x), 1e-8, "square x = square -x, GOOD");
+            assertEquals(function.apply(x), function.apply(-x), 1e-8, "square x = square (-x), GOOD");
         }
     }
 
