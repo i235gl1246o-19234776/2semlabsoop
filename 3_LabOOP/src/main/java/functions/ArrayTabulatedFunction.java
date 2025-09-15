@@ -2,7 +2,9 @@ package functions;
 
 import exception.InterpolationException;
 
+import java.awt.*;
 import java.util.Arrays;
+import java.util.Iterator;
 
 public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements Removable {
     private double[] xVal;
@@ -205,4 +207,8 @@ public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements
         return Arrays.copyOf(yVal, count);
     }
 
+    @Override
+    public Iterator<Point> iterator() {
+        throw new UnsupportedOperationException("Итерация по точкам не поддерживается");
+    }
 }

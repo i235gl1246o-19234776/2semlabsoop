@@ -3,7 +3,15 @@ package functions;
 
 import exception.InterpolationException;
 
+import java.awt.*;
+import java.util.Iterator;
+
 public class LinkedListTabulatedFunction extends AbstractTabulatedFunction implements Insertable, Removable {
+
+    @Override
+    public Iterator<Point> iterator() {
+        throw new UnsupportedOperationException("Итерация по точкам не поддерживается");
+    }
 
     public static class Node { //Вопрос, public или private?
         public Node next;
