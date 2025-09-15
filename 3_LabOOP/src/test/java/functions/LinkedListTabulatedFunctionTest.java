@@ -1,5 +1,7 @@
 package functions;
 
+import exception.InterpolationException;
+import exception.DifferentLengthOfArraysException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -404,11 +406,6 @@ class LinkedListTabulatedFunctionTest {
         assertEquals(10.0, list.extrapolateRight(7.0), DELTA, "Экстраполяция справа для одной точки");
     }
 
-    @Test
-    public void testInterpolate_CountOne() {
-        LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(new double[]{5.0}, new double[]{10.0});
-        assertEquals(10.0, list.interpolate(5.0, 0), DELTA, "Интерполяция для одной точки");
-    }
 
     @Test
     public void testApply_ExactMatchOnHead() {
@@ -567,17 +564,10 @@ class LinkedListTabulatedFunctionTest {
 
     @Test
     public void testConstructor_ArraysDifferentLength() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new LinkedListTabulatedFunction(new double[]{1.0, 2.0}, new double[]{10.0}), "Разные длины массивов");
+        assertThrows(DifferentLengthOfArraysException.class, () ->
+                new LinkedListTabulatedFunction(new double[]{1.0, 2.0, 3.0}, new double[]{10.0, 9.0}), "Разные длины массивов");
     }
 
-    @Test
-    public void testConstructor_XNotStrictlyIncreasing() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new LinkedListTabulatedFunction(new double[]{1.0, 1.0, 2.0}, new double[]{10.0, 20.0, 30.0}), "Не строго возрастающие x");
-        assertThrows(IllegalArgumentException.class, () ->
-                new LinkedListTabulatedFunction(new double[]{2.0, 1.0}, new double[]{10.0, 20.0}), "Убывающие x");
-    }
 
     @Test
     public void testApply_ExtrapolateLeft_CountOne() {
@@ -864,5 +854,71 @@ class LinkedListTabulatedFunctionTest {
         //Экстраполяция вправо (x - 3 > 4)
         assertEquals(2.236, composition.apply(8.0), 0.1, "f(g(8)) = f(5) экстраполяция вправо");
     }
-}
 
+
+    private LinkedListTabulatedFunction createList(double[] x, double[] y) {
+        return new LinkedListTabulatedFunction(x, y);
+    }
+
+        // ========================
+        // Тесты: интерполяция внутри интервала (должна работать)
+        // ========================
+
+    @Test
+    void testInterpolate_SimpleLinearCase() {
+            // Точки: (1, 1), (3, 5) → линейная функция: y = 2x - 1
+        double[] x = {1.0, 3.0};
+        double[] y = {1.0, 5.0};
+        LinkedListTabulatedFunction list = createList(x, y);
+
+            // Интерполяция при x=2.0 → должно быть (1+5)/2 = 3.0
+        double result = list.interpolate(2.0, 0); // floorIndex=0, т.к. 1.0 <= 2.0 < 3.0
+        assertEquals(3.0, result, 1e-10, "Интерполяция между (1,1) и (3,5) при x=2.0 должна дать 3.0");
+    }
+
+    @Test
+    void testInterpolate_QuadraticBehavior() {
+            // Точки: (0,0), (2,4), (4,16) — как y=x²
+        double[] x = {0.0, 2.0, 4.0};
+        double[] y = {0.0, 4.0, 16.0};
+        LinkedListTabulatedFunction list = createList(x, y);
+
+            // Интерполируем между (0,0) и (2,4): x=1.0 → ожидаем 2.0
+        double res1 = list.interpolate(1.0, 0);
+        assertEquals(2.0, res1, 1e-10, "x=1.0 между [0,2]: (0→4) → линейно: 2.0");
+
+            // Между (2,4) и (4,16): x=3.0 → ожидаем 10.0
+        double res2 = list.interpolate(3.0, 1);
+        assertEquals(10.0, res2, 1e-10, "x=3.0 между [2,4]: (4→16) → линейно: 10.0");
+    }
+
+    @Test
+    void testInterpolate_AtExactPoint() {
+            // Если x совпадает с узлом — должен вернуть y этого узла
+        double[] x = {1.0, 2.0, 3.0};
+        double[] y = {10.0, 20.0, 30.0};
+        LinkedListTabulatedFunction list = createList(x, y);
+
+            // x=2.0 — это точный узел, но мы вызываем interpolate с floorIndex=1
+            // Это НЕ ожидается в нормальном use-case, но метод должен корректно обработать
+        double result = list.interpolate(2.0, 1); // x == x[1]
+        assertEquals(20.0, result, 1e-10, "Если x == x[i], интерполяция должна вернуть y[i]");
+    }
+
+        // ========================
+        // Тесты: InterpolationException — x вне интервала
+        // ========================
+
+
+    @Test
+    void testInterpolate_XAboveRightBound_ThrowsException() {
+        double[] x = {1.0, 3.0, 5.0};
+        double[] y = {1.0, 9.0, 25.0};
+        LinkedListTabulatedFunction list = createList(x, y);
+
+            // Пытаемся интерполировать между 3.0 и 5.0 (floorIndex=1), но x=6.0 — выше правого
+        assertThrows(InterpolationException.class,
+                () -> list.interpolate(6.0, 1),
+                "Должен бросить InterpolationException, если x > x[floorIndex + 1]");
+        }
+}

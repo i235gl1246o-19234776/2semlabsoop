@@ -1,5 +1,7 @@
 package functions;
 
+import exception.ArrayIsNotSortedException;
+import exception.DifferentLengthOfArraysException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 
@@ -27,15 +29,15 @@ public class ArrayTabulatedFunctionTest {
     @Test
     @DisplayName("Конструктор с разными длинами массивов выбрасывает исключение")
     void constructorDifferentLengthsThrows() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new ArrayTabulatedFunction(new double[]{1, 2}, new double[]{3})
+        assertThrows(DifferentLengthOfArraysException.class, () ->
+                new ArrayTabulatedFunction(new double[]{1, 2, 4, 10}, new double[]{3, 4, 8})
         );
     }
 
     @Test
     @DisplayName("Конструктор с неупорядоченными xVal выбрасывает исключение")
     void constructorUnsortedXThrows() {
-        assertThrows(IllegalArgumentException.class, () ->
+        assertThrows(ArrayIsNotSortedException.class, () ->
                 new ArrayTabulatedFunction(new double[]{2, 1}, new double[]{4, 5})
         );
     }
@@ -43,7 +45,7 @@ public class ArrayTabulatedFunctionTest {
     @Test
     @DisplayName("Конструктор с одинаковыми xVal (не строго возрастающими) выбрасывает исключение")
     void constructorDuplicateXThrows() {
-        assertThrows(IllegalArgumentException.class, () ->
+        assertThrows(ArrayIsNotSortedException.class, () ->
                 new ArrayTabulatedFunction(new double[]{1, 1}, new double[]{2, 3})
         );
     }

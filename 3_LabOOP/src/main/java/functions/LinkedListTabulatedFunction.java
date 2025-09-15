@@ -1,6 +1,7 @@
 package functions;
 
 
+import exception.InterpolationException;
 
 public class LinkedListTabulatedFunction extends AbstractTabulatedFunction implements Insertable, Removable {
 
@@ -23,15 +24,11 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
 
     //конструктор с массивами значений
     public LinkedListTabulatedFunction(double[] xVal, double[] yVal){
-        if(xVal.length != yVal.length){
-            throw new IllegalArgumentException("Массивы должны быть одинаковой длины");
-        }
+        checkLengthIsTheSame(xVal, yVal);
 
-        for(int i = 1; i < xVal.length; i++){
-            if(xVal[i] <= xVal[i-1]){
-                throw new IllegalArgumentException("Значения должны строго возрастать в xVal");
-            }
-        }
+        checkSorted(xVal);
+
+        // сюда куда-то добавить count != 2
 
         this.count = 0;
         this.head = null;
@@ -150,11 +147,18 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
 
     @Override
     protected double interpolate(double x, int floorIndex) {
-        if(count == 1){
-            return head.y;
-        }
+
         Node leftNode = getNode(floorIndex);
         Node rightNode = leftNode.next;
+
+        double x1 = leftNode.x;
+        double x2 = rightNode.x;
+
+        if (x < x1 || x > x2) {
+            throw new InterpolationException(
+                    "Значение x = " + x + " не находится в интервале [" + x1 + ", " + x2 + "]");
+        }
+
         return interpolate(x, leftNode.x, rightNode.x, leftNode.y, rightNode.y);
     }
 
@@ -323,6 +327,7 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
 
     @Override
     public void remove(int index) {
+        // Если count == 3, то ремув делать нельзя, потому что будет 2 элемента, что низя
         if (index < 0 || index >= count) {
             throw new IndexOutOfBoundsException("Индекс: " + index + ", размер: " + count);
         }
