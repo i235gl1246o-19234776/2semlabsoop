@@ -81,7 +81,7 @@ class IdentityFunctionTest{
     }
 
     @Test
-    @DisplayName("Тест на проверку бесконечности")
+    @DisplayName("Тест на проверку бесконечностей")
     void testApplyWithInfinity(){
         IdentityFunction function = new IdentityFunction();
         assertEquals(Double.POSITIVE_INFINITY, function.apply(Double.POSITIVE_INFINITY), delta, "+∞ = +∞, GOOD");
