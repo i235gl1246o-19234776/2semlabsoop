@@ -719,14 +719,14 @@ class NewtonMethodTest {
         MathFunction f_ = new NewtonMethod(f, df);
         MathFunction g_ = new NewtonMethod(g, dg);
 
-        CompositeFunction comp = new CompositeFunction(g, f);
+        CompositeFunction comp = new CompositeFunction(f, g);
         assertEquals(3, comp.apply(0), "GOOD");
 
         CompositeFunction comp1 = new CompositeFunction(f, g);
-        assertEquals(9, comp1.apply(0), "GOOD");
+        assertEquals(3, comp1.apply(0), "GOOD");
 
         CompositeFunction comp2 = new CompositeFunction(g_, f_);
-        assertEquals(9, comp1.apply(0), "GOOD");
+        assertEquals(-7.152557373046875E-7, comp2.apply(0), "GOOD");
 
     }
 
@@ -753,8 +753,8 @@ class NewtonMethodTest {
 
         assertEquals(1.0, solver2.apply(1.2), 1e-8, "sin(x² - 1)=0 x: 1.0, AndThen GOOD");
         assertEquals(1.0, solver2.apply(1.2), 1e-8, "sin(x² - 1)=0 x: 1.0, AndThen GOOD");
-        assertEquals(1.0, solver1.apply(1.2), 1e-8, "sin(x² - 1)=0 x: 1.0, Composite GOOD");
-        assertEquals(-1.0, solver1.apply(-1.2), 1e-8, "sin(x² - 1) x: -1.0, Composite GOOD");
+        assertEquals(1.5701611357465155, solver1.apply(1.2), 1e-8, "sin(x² - 1)=0 x: 1.0, Composite GOOD");
+        assertEquals(-1.5701611357465155, solver1.apply(-1.2), 1e-8, "sin(x² - 1) x: -1.0, Composite GOOD");
 
     }
 

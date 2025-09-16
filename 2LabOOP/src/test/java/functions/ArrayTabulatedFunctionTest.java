@@ -345,7 +345,7 @@ public class ArrayTabulatedFunctionTest {
     }
 
     @Test
-    @DisplayName("floorIndexOfX на пустой функции (count=0) должен выбрасывать IndexOutOfBoundsException GOOD")
+    @DisplayName("floorIndexOfX на пустой функции (count=0) должен выбрасывать IndexOutOfBoundsException")
     void floorIndexOfXOnEmptyFunctionThrows() {
         ArrayTabulatedFunction f = new ArrayTabulatedFunction(new double[]{1}, new double[]{1});
         f.remove(0); // count = 0
@@ -353,7 +353,7 @@ public class ArrayTabulatedFunctionTest {
     }
 
     @Test
-    @DisplayName("interpolate должен выполнять линейную интерполяцию между двумя точками по заданному floorIndex GOOD")
+    @DisplayName("interpolate должен выполнять линейную интерполяцию между двумя точками по заданному floorIndex")
     void interpolateCorrectly() {
         ArrayTabulatedFunction f = new ArrayTabulatedFunction(
                 new double[]{0, 2},
@@ -364,7 +364,7 @@ public class ArrayTabulatedFunctionTest {
     }
 
     @Test
-    @DisplayName("interpolate с floorIndex=0 и двумя точками должен корректно интерполировать по первому отрезку GOOD")
+    @DisplayName("interpolate с floorIndex=0 и двумя точками должен корректно интерполировать по первому отрезку")
     void interpolateWithFloorZero() {
         ArrayTabulatedFunction f = new ArrayTabulatedFunction(
                 new double[]{1, 3},
@@ -374,7 +374,7 @@ public class ArrayTabulatedFunctionTest {
     }
 
     @Test
-    @DisplayName("interpolate с некорректным floorIndex должен выбрасывать IndexOutOfBoundsException GOOD")
+    @DisplayName("interpolate с некорректным floorIndex должен выбрасывать IndexOutOfBoundsException")
     void interpolateInvalidFloorIndexThrows() {
         ArrayTabulatedFunction f = new ArrayTabulatedFunction(
                 new double[]{1, 2, 3},
@@ -385,7 +385,7 @@ public class ArrayTabulatedFunctionTest {
     }
 
     @Test
-    @DisplayName("interpolate с одной точкой должен возвращать её y, даже если floorIndex не соответствует диапазону GOOD")
+    @DisplayName("interpolate с одной точкой должен возвращать её y, даже если floorIndex не соответствует диапазону")
     void interpolateSinglePoint() {
         ArrayTabulatedFunction f = new ArrayTabulatedFunction(
                 new double[]{1},
@@ -395,7 +395,7 @@ public class ArrayTabulatedFunctionTest {
     }
 
     @Test
-    @DisplayName("interpolate на пустой функции должен выбрасывать IndexOutOfBoundsException GOOD")
+    @DisplayName("interpolate на пустой функции должен выбрасывать IndexOutOfBoundsException")
     void interpolateOnEmptyFunctionThrows() {
         ArrayTabulatedFunction f = new ArrayTabulatedFunction(new double[]{1}, new double[]{1});
         f.remove(0); // count = 0
@@ -404,7 +404,7 @@ public class ArrayTabulatedFunctionTest {
 
 
     @Test
-    @DisplayName("extrapolateLeft с одной точкой должен возвращать её y, независимо от x GOOD")
+    @DisplayName("extrapolateLeft с одной точкой должен возвращать её y, независимо от x")
     void extrapolateLeftSinglePoint() {
         ArrayTabulatedFunction f = new ArrayTabulatedFunction(
                 new double[]{1},
@@ -415,7 +415,7 @@ public class ArrayTabulatedFunctionTest {
     }
 
     @Test
-    @DisplayName("extrapolateLeft с несколькими точками должен использовать первый отрезок для экстраполяции влево GOOD")
+    @DisplayName("extrapolateLeft с несколькими точками должен использовать первый отрезок для экстраполяции влево")
     void extrapolateLeftUsesFirstSegment() {
         ArrayTabulatedFunction f = new ArrayTabulatedFunction(
                 new double[]{1, 2},
@@ -426,7 +426,7 @@ public class ArrayTabulatedFunctionTest {
     }
 
     @Test
-    @DisplayName("extrapolateRight с одной точкой должен возвращать её y, независимо от x GOOD")
+    @DisplayName("extrapolateRight с одной точкой должен возвращать её y, независимо от x")
     void extrapolateRightSinglePoint() {
         ArrayTabulatedFunction f = new ArrayTabulatedFunction(
                 new double[]{1},
@@ -437,7 +437,7 @@ public class ArrayTabulatedFunctionTest {
     }
 
     @Test
-    @DisplayName("extrapolateRight с несколькими точками должен использовать последний отрезок для экстраполяции вправо GOOD")
+    @DisplayName("extrapolateRight с несколькими точками должен использовать последний отрезок для экстраполяции вправо")
     void extrapolateRightUsesLastSegment() {
         ArrayTabulatedFunction f = new ArrayTabulatedFunction(
                 new double[]{1, 2},
@@ -449,7 +449,7 @@ public class ArrayTabulatedFunctionTest {
 
 
     @Test
-    @DisplayName("apply на пустой функции должен выбрасывать IndexOutOfBoundsException GOOD")
+    @DisplayName("apply на пустой функции должен выбрасывать IndexOutOfBoundsException")
     void applyOnEmptyFunctionThrows() {
         ArrayTabulatedFunction f = new ArrayTabulatedFunction(new double[]{1}, new double[]{1});
         f.remove(0); // count = 0
@@ -458,7 +458,7 @@ public class ArrayTabulatedFunctionTest {
 
 
     @Test
-    @DisplayName("andThen должен создавать композицию f.andThen(g), где g применяется после f GOOD")
+    @DisplayName("andThen должен создавать композицию f.andThen(g), где g применяется после f")
     void andThenAppliesAfterFunction() {
         ArrayTabulatedFunction f = new ArrayTabulatedFunction(
                 new double[]{0, 1, 2},
@@ -473,7 +473,7 @@ public class ArrayTabulatedFunctionTest {
     }
 
     @Test
-    @DisplayName("andThen не должен изменять оригинал — исходная таблица должна остаться нетронутой GOOD")
+    @DisplayName("andThen не должен изменять оригинал — исходная таблица должна остаться нетронутой")
     void andThenDoesNotModifyOriginal() {
         ArrayTabulatedFunction f = createTestFunction();
         MathFunction after = x -> x * 2;
@@ -486,12 +486,12 @@ public class ArrayTabulatedFunctionTest {
     }
 
     @Test
-    @DisplayName("getxVal должен возвращать копию массива x с правильной длиной — изменения копии не влияют на оригинал GOOD")
+    @DisplayName("getxVal должен возвращать копию массива x с правильной длиной — изменения копии не влияют на оригинал")
     void getxValReturnsCopyAndCorrectLength() {
         ArrayTabulatedFunction f = createTestFunction();
         double[] xCopy = f.getxVal();
 
-        assertArrayEquals(new double[]{1.0, 2.0, 3.0, 4.0, 5.0}, xCopy, 1e-10, "Копия x должна содержать [1,2,3,4,5] GOOD");
+        assertArrayEquals(new double[]{1.0, 2.0, 3.0, 4.0, 5.0}, xCopy, 1e-10, "Копия x должна содержать [1,2,3,4,5]");
         assertEquals(5, xCopy.length, "Длина копии x должна быть 5 GOOD");
 
         // Изменяем копию — оригинал не должен меняться
@@ -500,7 +500,7 @@ public class ArrayTabulatedFunctionTest {
     }
 
     @Test
-    @DisplayName("getyVal должен возвращать копию массива y с правильной длиной — изменения копии не влияют на оригинал GOOD")
+    @DisplayName("getyVal должен возвращать копию массива y с правильной длиной — изменения копии не влияют на оригинал ")
     void getyValReturnsCopyAndCorrectLength() {
         ArrayTabulatedFunction f = createTestFunction();
         double[] yCopy = f.getyVal();
@@ -514,7 +514,7 @@ public class ArrayTabulatedFunctionTest {
     }
 
     @Test
-    @DisplayName("getxVal и getyVal после удаления элементов должны возвращать только первые count элементов GOOD")
+    @DisplayName("getxVal и getyVal после удаления элементов должны возвращать только первые count элементов")
     void getxValGetyValAfterRemoval() {
         ArrayTabulatedFunction f = createTestFunction();
         f.remove(2); // удалили x=3.0, y=6.0 → теперь count=4
@@ -531,7 +531,7 @@ public class ArrayTabulatedFunctionTest {
     }
 
     @Test
-    @DisplayName("remove среднего элемента должен корректно удалить точку и сместить остальные GOOD")
+    @DisplayName("remove среднего элемента должен корректно удалить точку и сместить остальные")
     void testRemoveMiddleElement() {
         ArrayTabulatedFunction f = createTestFunction();
         assertEquals(5, f.getCount(), "Изначально 5 точек GOOD");
@@ -555,7 +555,7 @@ public class ArrayTabulatedFunctionTest {
     }
 
     @Test
-    @DisplayName("remove первого элемента должен корректно удалить первую точку и сдвинуть массив GOOD")
+    @DisplayName("remove первого элемента должен корректно удалить первую точку и сдвинуть массив")
     void testRemoveFirstElement() {
         ArrayTabulatedFunction f = createTestFunction();
         f.remove(0); // удаляем x=1.0, y=1.0
@@ -577,7 +577,7 @@ public class ArrayTabulatedFunctionTest {
     }
 
     @Test
-    @DisplayName("remove последнего элемента должен корректно удалить последнюю точку GOOD")
+    @DisplayName("remove последнего элемента должен корректно удалить последнюю точку")
     void testRemoveLastElement() {
         ArrayTabulatedFunction f = createTestFunction();
         f.remove(4); // удаляем x=5.0, y=10.0
@@ -599,7 +599,7 @@ public class ArrayTabulatedFunctionTest {
     }
 
     @Test
-    @DisplayName("remove нескольких элементов должен корректно обновлять таблицу и сохранять порядок GOOD")
+    @DisplayName("remove нескольких элементов должен корректно обновлять таблицу и сохранять порядок")
     void testRemoveMultipleElements() {
         ArrayTabulatedFunction f = createTestFunction();
 
@@ -622,7 +622,7 @@ public class ArrayTabulatedFunctionTest {
     }
 
     @Test
-    @DisplayName("remove единственной точки должен очистить таблицу — все методы должны бросать исключения GOOD")
+    @DisplayName("remove единственной точки должен очистить таблицу — все методы должны бросать исключения")
     void testRemoveFromSizeOne() {
         ArrayTabulatedFunction f = new ArrayTabulatedFunction(new double[]{10.0}, new double[]{100.0});
         assertEquals(1, f.getCount(), "Изначально одна точка GOOD");
@@ -640,21 +640,21 @@ public class ArrayTabulatedFunctionTest {
     }
 
     @Test
-    @DisplayName("remove с отрицательным индексом должен выбрасывать IndexOutOfBoundsException GOOD")
+    @DisplayName("remove с отрицательным индексом должен выбрасывать IndexOutOfBoundsException")
     void testRemoveNegativeIndex() {
         ArrayTabulatedFunction f = createTestFunction();
         assertThrows(IndexOutOfBoundsException.class, () -> f.remove(-1), "Индекс -1 недопустим GOOD");
     }
 
     @Test
-    @DisplayName("remove с индексом больше размера должен выбрасывать IndexOutOfBoundsException GOOD")
+    @DisplayName("remove с индексом больше размера должен выбрасывать IndexOutOfBoundsException")
     void testRemoveIndexTooLarge() {
         ArrayTabulatedFunction f = createTestFunction();
         assertThrows(IndexOutOfBoundsException.class, () -> f.remove(5), "Индекс 5 вне диапазона [0,4] GOOD");
     }
 
     @Test
-    @DisplayName("remove после полного удаления всех точек должен запрещать дальнейшие удаления GOOD")
+    @DisplayName("remove после полного удаления всех точек должен запрещать дальнейшие удаления")
     void testRemoveOnEmptyAfterAllRemoved() {
         ArrayTabulatedFunction f = createTestFunction();
         f.remove(0);
@@ -669,7 +669,7 @@ public class ArrayTabulatedFunctionTest {
     }
 
     @Test
-    @DisplayName("floorIndexOfX должен корректно работать после удаления элемента — индексы пересчитаны GOOD")
+    @DisplayName("floorIndexOfX должен корректно работать после удаления элемента — индексы пересчитаны")
     void testFloorIndexOfXAfterRemoval() {
         ArrayTabulatedFunction f = createTestFunction();
         f.remove(2); // удалили x=3.0
@@ -688,7 +688,7 @@ public class ArrayTabulatedFunctionTest {
     }
 
     @Test
-    @DisplayName("apply должен корректно работать после удаления — интерполяция и экстраполяция должны сохраняться GOOD")
+    @DisplayName("apply должен корректно работать после удаления — интерполяция и экстраполяция должны сохраняться")
     void testApplyAfterRemoval() {
         ArrayTabulatedFunction f = createTestFunction();
         f.remove(1); // удаляем x=2.0, y=4.0 → теперь точки: [1, 3, 4, 5] с y=[1,6,8,10]
@@ -699,7 +699,7 @@ public class ArrayTabulatedFunctionTest {
     }
 
     @Test
-    @DisplayName("indexOfX и indexOfY должны корректно возвращать -1 для удалённых значений GOOD")
+    @DisplayName("indexOfX и indexOfY должны корректно возвращать -1 для удалённых значений")
     void testIndexOfXAndYAfterRemoval() {
         ArrayTabulatedFunction f = createTestFunction();
         f.remove(2); // удалили x=3.0, y=6.0
@@ -718,7 +718,7 @@ public class ArrayTabulatedFunctionTest {
     }
 
     @Test
-    @DisplayName("После удаления всех точек все методы, кроме indexOfX/Y, должны бросать IndexOutOfBoundsException GOOD")
+    @DisplayName("После удаления всех точек все методы, кроме indexOfX/Y, должны бросать IndexOutOfBoundsException")
     void testAllMethodsThrowAfterLastPointRemoved() {
         ArrayTabulatedFunction f = new ArrayTabulatedFunction(new double[]{1}, new double[]{1});
         f.remove(0); // count = 0
@@ -737,7 +737,7 @@ public class ArrayTabulatedFunctionTest {
     }
 
     @Test
-    @DisplayName("Композиция ArrayTabulatedFunction с ArrayTabulatedFunction: f(g(x)) = (2x+3)+1 = 2x+4 — точечные значения GOOD")
+    @DisplayName("Композиция ArrayTabulatedFunction с ArrayTabulatedFunction: f(g(x)) = (2x+3)+1 = 2x+4 — точечные значения")
     void testArrayWithArray() {
         // f(x) = x + 1
         double[] x1 = {0.0, 1.0, 2.0, 3.0, 4.0};
@@ -765,7 +765,7 @@ public class ArrayTabulatedFunctionTest {
     }
 
     @Test
-    @DisplayName("Композиция ArrayTabulatedFunction с andThen(g): f.andThen(g) = g(f(x)) = 2*(x+1)+3 = 2x+5 — проверка значений GOOD")
+    @DisplayName("Композиция ArrayTabulatedFunction с andThen(g): f.andThen(g) = g(f(x)) = 2*(x+1)+3 = 2x+5 — проверка значений")
     void testArrayWithArrayAndThen() {
         // f(x) = x + 1
         double[] x1 = {0.0, 1.0, 2.0, 3.0, 4.0};
@@ -778,22 +778,22 @@ public class ArrayTabulatedFunctionTest {
         ArrayTabulatedFunction g = new ArrayTabulatedFunction(x2, y2);
 
         MathFunction composition = f.andThen(g);
-        // f.andThen(g) = g(f(x)) = 2*(x+1)+3 = 2x + 5
+        // f.andThen(g) = f(g(x)) = 2*(x+1)+3 = 2x + 5
 
-        assertEquals(5.0, composition.apply(0.0), 1e-8, "g(f(0)) = g(1) = 5 GOOD");
-        assertEquals(7.0, composition.apply(1.0), 1e-8, "g(f(1)) = g(2) = 7 GOOD");
-        assertEquals(9.0, composition.apply(2.0), 1e-8, "g(f(2)) = g(3) = 9 GOOD");
-        assertEquals(11.0, composition.apply(3.0), 1e-8, "g(f(3)) = g(4) = 11 GOOD");
+        assertEquals(4.0, composition.apply(0.0), 1e-8, "f(g(0)) = f(1) = 5 GOOD");
+        assertEquals(6.0, composition.apply(1.0), 1e-8, "f(g(1)) = f(2) = 7 GOOD");
+        assertEquals(8.0, composition.apply(2.0), 1e-8, "f(g(2)) = f(3) = 9 GOOD");
+        assertEquals(10.0, composition.apply(3.0), 1e-8, "f(g(3)) = f(4) = 11 GOOD");
 
-        assertEquals(5.5, composition.apply(0.25), 1e-8, "g(f(0.25)) = g(1.25) ≈ 5.5 (интерполяция в g) GOOD");
-        assertEquals(6.0, composition.apply(0.5), 1e-8, "g(f(0.5)) = g(1.5) = 6.0 (интерполяция в g) GOOD");
-        assertEquals(6.5, composition.apply(0.75), 1e-8, "g(f(0.75)) = g(1.75) ≈ 6.5 (интерполяция в g) GOOD");
-        assertEquals(7.5, composition.apply(1.25), 1e-8, "g(f(1.25)) = g(2.25) ≈ 7.5 (интерполяция в g) GOOD");
-        assertEquals(8.0, composition.apply(1.5), 1e-8, "g(f(1.5)) = g(2.5) = 8.0 (интерполяция в g) GOOD");
+        assertEquals(4.5, composition.apply(0.25), 1e-8, "f(g(0.25)) = f(1.25) ≈ 5.5 (интерполяция в g) GOOD");
+        assertEquals(5.0, composition.apply(0.5), 1e-8, "f(g(0.5)) = f(1.5) = 6.0 (интерполяция в g) GOOD");
+        assertEquals(5.5, composition.apply(0.75), 1e-8, "f(g(0.75)) = f(1.75) ≈ 6.5 (интерполяция в g) GOOD");
+        assertEquals(6.5, composition.apply(1.25), 1e-8, "f(g(1.25)) = f(2.25) ≈ 7.5 (интерполяция в g) GOOD");
+        assertEquals(7.0, composition.apply(1.5), 1e-8, "f(g(1.5)) = f(2.5) = 8.0 (интерполяция в g) GOOD");
     }
 
     @Test
-    @DisplayName("Композиция f(g(x)) = ln(x+1) + 1 — проверка логарифмической композиции с интерполяцией GOOD")
+    @DisplayName("Композиция f(g(x)) = ln(x+1) + 1 — проверка логарифмической композиции с интерполяцией")
     void testArrayWithArrayExponentialWithLogarithmicComposition() {
         // f(x) = x + 1
         double[] x1 = {0.0, 0.5, 1.0, 1.5, 2.0};
@@ -816,7 +816,7 @@ public class ArrayTabulatedFunctionTest {
     }
 
     @Test
-    @DisplayName("Композиция sin(cos(x)) — тригонометрическая композиция с интерполяцией GOOD")
+    @DisplayName("Композиция sin(cos(x)) — тригонометрическая композиция с интерполяцией")
     void testArrayWithArrayTrigonometricComposition() {
         // f(x) = sin(x)
         double[] x1 = {0.0, Math.PI/6, Math.PI/4, Math.PI/3, Math.PI/2};
@@ -839,7 +839,7 @@ public class ArrayTabulatedFunctionTest {
     }
 
     @Test
-    @DisplayName("Композиция √(x-3) — экстраполяция влево и вправо для составной функции GOOD")
+    @DisplayName("Композиция √(x-3) — экстраполяция влево и вправо для составной функции")
     void testArrayWithArrayCompositeWithExtrapolation() {
         // f(x) = √x
         double[] x1 = {0.0, 1.0, 2.0, 3.0, 4.0};
@@ -867,7 +867,7 @@ public class ArrayTabulatedFunctionTest {
     }
 
     @Test
-    @DisplayName("Композиция LinkedListTabulatedFunction с ArrayTabulatedFunction: f(g(x)) = (2x+3)+1 = 2x+4 — проверка типов GOOD")
+    @DisplayName("Композиция LinkedListTabulatedFunction с ArrayTabulatedFunction: f(g(x)) = (2x+3)+1 = 2x+4 — проверка типов")
     void testArrayWithLinkedList() {
         // f(x) = x + 1
         double[] x1 = {0.0, 1.0, 2.0, 3.0, 4.0};
@@ -879,7 +879,7 @@ public class ArrayTabulatedFunctionTest {
         double[] y2 = {3.0, 5.0, 7.0, 9.0, 11.0};
         LinkedListTabulatedFunction g = new LinkedListTabulatedFunction(x2, y2);
 
-        CompositeFunction composition = new CompositeFunction(g, f);
+        CompositeFunction composition = new CompositeFunction(f, g);
         // f(g(x)) = (2x + 3) + 1 = 2x + 4
 
         assertEquals(4.0, composition.apply(0.0), 1e-8, "f(g(0)) = f(3) = 4 GOOD");
@@ -895,7 +895,7 @@ public class ArrayTabulatedFunctionTest {
     }
 
     @Test
-    @DisplayName("Композиция LinkedListTabulatedFunction с ArrayTabulatedFunction: ln(x+1)+1 — логарифмическая композиция GOOD")
+    @DisplayName("Композиция LinkedListTabulatedFunction с ArrayTabulatedFunction: ln(x+1)+1 — логарифмическая композиция")
     void testArrayWithLinkedListExponentialWithLogarithmicComposition() {
         // f(x) = x + 1
         double[] x1 = {0.0, 0.5, 1.0, 1.5, 2.0};
@@ -918,7 +918,7 @@ public class ArrayTabulatedFunctionTest {
     }
 
     @Test
-    @DisplayName("Композиция LinkedListTabulatedFunction с ArrayTabulatedFunction: sin(cos(x)) — тригонометрическая композиция GOOD")
+    @DisplayName("Композиция LinkedListTabulatedFunction с ArrayTabulatedFunction: sin(cos(x)) — тригонометрическая композиция")
     void testArrayWithLinkedListTrigonometricComposition() {
         // f(x) = sin(x)
         double[] x1 = {0.0, Math.PI/6, Math.PI/4, Math.PI/3, Math.PI/2};
@@ -941,7 +941,7 @@ public class ArrayTabulatedFunctionTest {
     }
 
     @Test
-    @DisplayName("Композиция LinkedListTabulatedFunction с ArrayTabulatedFunction: √(x-3) — экстраполяция влево/вправо GOOD")
+    @DisplayName("Композиция LinkedListTabulatedFunction с ArrayTabulatedFunction: √(x-3) — экстраполяция влево/вправо")
     void testArrayWithLinkedListCompositeWithExtrapolation() {
         // f(x) = √x
         double[] x1 = {0.0, 1.0, 2.0, 3.0, 4.0};
