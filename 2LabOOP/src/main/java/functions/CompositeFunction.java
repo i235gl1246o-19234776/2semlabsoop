@@ -12,8 +12,8 @@ public class CompositeFunction implements MathFunction{
 
     @Override
     public double apply(double x){
-        double interResult = firstFunction.apply(x);//g(x)
-        return secondFunction.apply(interResult);//f(g(x))
+        double interResult = secondFunction.apply(x);//g(x)
+        return firstFunction.apply(interResult);//f(g(x))
     }
 
 }

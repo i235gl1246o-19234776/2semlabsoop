@@ -148,7 +148,7 @@ public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements
     }
 
     @Override
-    public MathFunction andThen(MathFunction afterFunction) {
+    public CompositeFunction andThen(MathFunction afterFunction) {
         return super.andThen(afterFunction);
     }
     //должен возвращать индекс наибольшего элемента массива, который меньше или равен заданному x

@@ -651,7 +651,7 @@ class LinkedListTabulatedFunctionTest {
         double[] y2 = {3.0, 5.0, 7.0, 9.0, 11.0};
         LinkedListTabulatedFunction g = new LinkedListTabulatedFunction(x2, y2);
 
-        CompositeFunction composition = new CompositeFunction(g, f);
+        CompositeFunction composition = new CompositeFunction(f, g);
         // f(g(x)) = (2x + 3) + 1 = 2x + 4
         assertEquals(4.0, composition.apply(0.0), 1e-8, "f(g(0)) = f(3) = 4");
         assertEquals(6.0, composition.apply(1.0), 1e-8, "f(g(1)) = f(5) = 6");
@@ -704,7 +704,7 @@ class LinkedListTabulatedFunctionTest {
         LinkedListTabulatedFunction g = new LinkedListTabulatedFunction(x2, y2);
 
         //h(x) = f(g(x)) = ln(x + 1) + 1
-        CompositeFunction composition = new CompositeFunction(g, f);
+        CompositeFunction composition = new CompositeFunction(f, g);
 
         assertEquals(1.0, composition.apply(0.0), 0.1, "f(g(0)) = f(0) = 1");
         assertEquals(1.6931, composition.apply(1.0), 0.1, "f(g(1)) = f(ln2) ≈ 2");
@@ -726,7 +726,7 @@ class LinkedListTabulatedFunctionTest {
         LinkedListTabulatedFunction g = new LinkedListTabulatedFunction(x2, y2);
 
         //h(x) = f(g(x)) = sin(cos(x))
-        CompositeFunction composition = new CompositeFunction(g, f);
+        CompositeFunction composition = new CompositeFunction(f, g);
 
         assertEquals(java.lang.Math.sin(1.0), composition.apply(0.0), 0.1, "sin(cos(0)) = sin(1)");
         assertEquals(java.lang.Math.sin(0.8660), composition.apply(Math.PI/6), 0.1, "sin(cos(π/6))");
@@ -748,7 +748,7 @@ class LinkedListTabulatedFunctionTest {
         LinkedListTabulatedFunction g = new LinkedListTabulatedFunction(x2, y2);
 
         //h(x) = f(g(x)) = f(x - 3) = √(x - 3)
-        CompositeFunction composition = new CompositeFunction(g, f);
+        CompositeFunction composition = new CompositeFunction(f, g);
         //Экстраполяция влево (x - 3 < 0)
         assertTrue(composition.apply(0.0) < 0, "f(g(0)) = f(-3) экстраполяция влево");
         assertTrue(composition.apply(1.0) < 0, "f(g(1)) = f(-2) экстраполяция влево");
@@ -804,7 +804,7 @@ class LinkedListTabulatedFunctionTest {
 
 
         //h(x) = f(g(x)) = ln(x + 1) + 1
-        CompositeFunction composition = new CompositeFunction(g, f);
+        CompositeFunction composition = new CompositeFunction(f, g);
 
         assertEquals(1.0, composition.apply(0.0), 0.1, "f(g(0)) = f(0) = 1");
         assertEquals(1.6931, composition.apply(1.0), 0.1, "f(g(1)) = f(ln2) ≈ 2");
@@ -826,7 +826,7 @@ class LinkedListTabulatedFunctionTest {
         ArrayTabulatedFunction g = new ArrayTabulatedFunction(x2, y2);
 
         //h(x) = f(g(x)) = sin(cos(x))
-        CompositeFunction composition = new CompositeFunction(g, f);
+        CompositeFunction composition = new CompositeFunction(f, g);
 
         assertEquals(java.lang.Math.sin(1.0), composition.apply(0.0), 0.1, "sin(cos(0)) = sin(1)");
         assertEquals(java.lang.Math.sin(0.8660), composition.apply(java.lang.Math.PI/6), 0.1, "sin(cos(π/6))");
@@ -848,7 +848,7 @@ class LinkedListTabulatedFunctionTest {
         ArrayTabulatedFunction g = new ArrayTabulatedFunction(x2, y2);
 
         //h(x) = f(g(x)) = f(x - 3) = √(x - 3)
-        CompositeFunction composition = new CompositeFunction(g, f);
+        CompositeFunction composition = new CompositeFunction(f, g);
         //Экстраполяция влево (x - 3 < 0)
         assertTrue(composition.apply(0.0) < 0, "f(g(0)) = f(-3) экстраполяция влево");
         assertTrue(composition.apply(1.0) < 0, "f(g(1)) = f(-2) экстраполяция влево");
