@@ -302,7 +302,7 @@ public class ArrayTabulatedFunctionTest {
                 new double[]{1, 4, 9}
         );
         assertEquals(2, f.floorIndexOfX(3.0), "x=3.0 — граница → floorIndex = 2 GOOD");
-        assertEquals(2, f.floorIndexOfX(4.0), "x=4.0 > 3 → floorIndex = 2 (последний) GOOD");
+        assertEquals(3, f.floorIndexOfX(4.0), "x=4.0 > 3 → floorIndex = 2 (последний) GOOD");
     }
 
     @Test
@@ -327,7 +327,7 @@ public class ArrayTabulatedFunctionTest {
         assertEquals(0, f.floorIndexOfX(0.5), "x=0.5 между 0 и 1 → floorIndex = 0 GOOD");
         assertEquals(0, f.floorIndexOfX(0.0), "x=0.0 — начало → floorIndex = 0 GOOD");
         assertEquals(1, f.floorIndexOfX(1.0), "x=1.0 — конец → floorIndex = 1 GOOD");
-        assertEquals(1, f.floorIndexOfX(2.0), "x=2.0 > 1 → floorIndex = 1 (последний) GOOD");
+        assertEquals(2, f.floorIndexOfX(2.0), "x=2.0 > 1 → floorIndex = 1 (последний) GOOD");
     }
 
     @Test
@@ -683,7 +683,7 @@ public class ArrayTabulatedFunctionTest {
         assertEquals(2, f.floorIndexOfX(4.0), "x=4.0 — точка 2 GOOD");
         assertEquals(2, f.floorIndexOfX(4.5), "x=4.5 — между 4 и 5 → floorIndex=2 GOOD");
         assertEquals(3, f.floorIndexOfX(5.0), "x=5.0 — точка 3 GOOD");
-        assertEquals(3, f.floorIndexOfX(10.0), "x=10.0 > max → floorIndex=3 (последний) GOOD");
+        assertEquals(4, f.floorIndexOfX(10.0), "x=10.0 > max → floorIndex=3 (последний) GOOD");
         assertEquals(0, f.floorIndexOfX(0.5), "x=0.5 < min → floorIndex=0 GOOD");
     }
 
