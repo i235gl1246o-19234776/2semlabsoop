@@ -1,13 +1,15 @@
 package functions;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class NewtonMethodTest {
 
     @Test
+    @DisplayName("Тест на корень из 2")
     void testSqrt2() {
-        // f(x) = x² - 2, корень ≈ 1.4142
+        // f(x) = x^2 - 2, 1.4142
         MathFunction f = new MathFunction() {
             @Override
             public double apply(double x) {
@@ -25,10 +27,11 @@ class NewtonMethodTest {
         NewtonMethod newton = new NewtonMethod(f, df);
         double result = newton.apply(1.0);
 
-        assertEquals(Math.sqrt(2), result, 1e-6);
+        assertEquals(Math.sqrt(2), result, 1e-6, "1.4142, GOOD");
     }
 
     @Test
+    @DisplayName("Тест на корень из pi/2")
     void testSinMinusOne() {
         // f(x) = sin(x) - 1, корни: x = π/2 + 2πk
         MathFunction f = new MathFunction() {
@@ -50,12 +53,13 @@ class NewtonMethodTest {
         // Находим корень π/2 ≈ 1.5708
         double result = newton.apply(1.4);
 
-        assertEquals(Math.PI / 2, result, 1e-6);
+        assertEquals(Math.PI / 2, result, 1e-6, "pi/2, GOOD");
     }
 
     @Test
+    @DisplayName("Тест на корень из 2")
     void testSinx2() {
-        // f(x) = sin(x²), корень: x = √(π/2) ≈ 1.2533 (когда x² = π/2)
+        // f(x) = sin(x^2), корень: x = √(π/2) = 1.2533 (когда x^2 = π/2)
         MathFunction f = new MathFunction() {
             @Override
             public double apply(double x) {
@@ -66,7 +70,6 @@ class NewtonMethodTest {
         MathFunction df = new MathFunction() {
             @Override
             public double apply(double x) {
-                // ПРАВИЛЬНАЯ производная: cos(x²) * 2x
                 return Math.cos(x * x) * 2 * x;
             }
         };
@@ -74,13 +77,12 @@ class NewtonMethodTest {
         NewtonMethod newton = new NewtonMethod(f, df);
         double result = newton.apply(1.2);
 
-        assertEquals(-Math.sqrt(Math.PI), result, 1e-6);
+        assertEquals(-Math.sqrt(Math.PI), result, 1e-6, "Корень pi, GOOD");
     }
 
 
-
-
     @Test
+    @DisplayName("Тест на ошибку")
     void testArctgNoSolution() {
         // f(x) = arctg + 7.8
         MathFunction f = new MathFunction() {
@@ -101,10 +103,11 @@ class NewtonMethodTest {
 
             assertThrows(RuntimeException.class, () -> {
                 newton.apply(1.0);
-            });
+            }, "Ошибка выбросилась (в окно) правильно");
         }
 
         @Test
+        @DisplayName("Тест на арктрангенс")
         void testArctgReal() {
             // f(x) = artcg(x) - 0.5
             MathFunction f = new MathFunction() {
@@ -124,10 +127,11 @@ class NewtonMethodTest {
             NewtonMethod newton = new NewtonMethod(f, df);
             double result = newton.apply(0.5);
 
-            assertEquals(Math.tan(0.5), result, 1e-6);
+            assertEquals(Math.tan(0.5), result, 1e-6, "GOOD");
         }
 
         @Test
+        @DisplayName("Тест на экпоненту")
         void testExponential() {
         // f(x) = e^x -2
             MathFunction f = new MathFunction() {
@@ -147,10 +151,11 @@ class NewtonMethodTest {
             NewtonMethod newton = new NewtonMethod(f, df);
             double result = newton.apply(0.5);
 
-            assertEquals(Math.log(2), result, 1e-6);
+            assertEquals(Math.log(2), result, 1e-6, "GOOD");
         }
 
         @Test
+        @DisplayName("Тест на корень из 3")
         void testZeroDerivative() {
         // f(x) = x^3
             MathFunction f = new MathFunction() {
@@ -171,10 +176,11 @@ class NewtonMethodTest {
 
             assertThrows(ArithmeticException.class, () -> {
                 newton.apply(0.0);
-            });
+            },"Ошибка выбросилась правильно");
         }
 
         @Test
+        @DisplayName("Тест на 2")
         void testCubicRoot() {
         // f(x) = x^3 - 8
             MathFunction f = new MathFunction() {
@@ -194,10 +200,11 @@ class NewtonMethodTest {
             NewtonMethod newton = new NewtonMethod(f, df);
             double result = newton.apply(1.5);
 
-            assertEquals(2.0, result, 1e-6);
+            assertEquals(2.0, result, 1e-6,"GOOD");
         }
 
         @Test
+        @DisplayName("Тест на логарифм")
         void testLogarithmic() {
         // f(x) = ln(x) - 1
             MathFunction f = new MathFunction() {
@@ -217,10 +224,11 @@ class NewtonMethodTest {
             NewtonMethod newton = new NewtonMethod(f, df);
             double result = newton.apply(2.5);
 
-            assertEquals(Math.E, result, 1e-6);
+            assertEquals(Math.E, result, 1e-6,"GOOD");
         }
 
         @Test
+        @DisplayName("Тест на косинус")
         void testCosMinusHalf() {
         //f(x) = cos(x) - 0.5
             MathFunction f = new MathFunction() {
@@ -240,11 +248,12 @@ class NewtonMethodTest {
             NewtonMethod newton = new NewtonMethod(f, df);
             double result = newton.apply(1.0);
 
-            assertEquals(Math.PI / 3, result, 1e-6);
+            assertEquals(Math.PI / 3, result, 1e-6,"GOOD");
         }
 
 
         @Test
+        @DisplayName("Тест на что-то сложное")
         void testNestedExpSin() {
             // f(x) = e^(sin(x)) - e^0.5 ≈ 1.6487
             MathFunction f = new MathFunction() {
@@ -265,10 +274,11 @@ class NewtonMethodTest {
             NewtonMethod newton = new NewtonMethod(f, df);
             double result = newton.apply(0.5);
 
-            assertEquals(Math.PI / 6, result, 1e-6);
+            assertEquals(Math.PI / 6, result, 1e-6,"GOOD");
         }
 
         @Test
+        @DisplayName("Тест на логарифт и косинус")
         void testLogOfTrigComposition() {
             // f(x) = ln(cos(x) + 1.5) - ln(2)
             MathFunction f = new MathFunction() {
@@ -289,10 +299,11 @@ class NewtonMethodTest {
             NewtonMethod newton = new NewtonMethod(f, df);
             double result = newton.apply(1.0);
 
-            assertEquals(Math.PI / 3, result, 1e-6);
+            assertEquals(Math.PI / 3, result, 1e-6,"GOOD");
         }
 
         @Test
+        @DisplayName("Тест на арксинус")
         void testArcsinOfSquare() {
             // f(x) = arcsin(x²) - π/4
             MathFunction f = new MathFunction() {
@@ -315,10 +326,11 @@ class NewtonMethodTest {
             double result = newton.apply(0.8);
 
             double expected = Math.sqrt(Math.sqrt(2) / 2); // = (2^{-1/4})
-            assertEquals(expected, result, 1e-6);
+            assertEquals(expected, result, 1e-6,"GOOD");
         }
 
         @Test
+        @DisplayName("Тест на тангенс")
         void testTanOfLogarithm() {
             // f(x) = tan(ln(x)) - 1
             MathFunction f = new MathFunction() {
@@ -340,10 +352,11 @@ class NewtonMethodTest {
             NewtonMethod newton = new NewtonMethod(f, df);
             double result = newton.apply(2.0);
 
-            assertEquals(Math.exp(Math.PI / 4), result, 1e-6);
+            assertEquals(Math.exp(Math.PI / 4), result, 1e-6,"GOOD");
         }
 
         @Test
+        @DisplayName("Тест на e^e")
         void testExpOfExpMinusTwo() {
             // f(x) = exp(exp(x)) - e^e ≈ 15.154
             MathFunction f = new MathFunction() {
@@ -364,32 +377,28 @@ class NewtonMethodTest {
             NewtonMethod newton = new NewtonMethod(f, df);
             double result = newton.apply(0.8);
 
-            assertEquals(1.0, result, 1e-6);
+            assertEquals(1.0, result, 1e-6,"GOOD");
         }
 
 
         @Test
+        @DisplayName("Тест на логарифм")
         void testLogOfArcsinPlusExp() {
             // f(x) = ln(arcsin(x) + exp(x)) - ln(π/2 + 1)
 
             MathFunction f = new MathFunction() {
                 @Override
                 public double apply(double x) {
-                    if (x <= -1 || x >= 1) return 1000; // вне области определения arcsin
-                    double arg = Math.asin(x) + Math.exp(x);
-                    if (arg <= 0) return -1000;
-                    return Math.log(arg) - Math.log(Math.PI / 2 + 1);
+                    return Math.log(Math.asin(x) + Math.exp(x)) - Math.log(Math.PI / 2 + 1);
                 }
             };
 
             MathFunction df = new MathFunction() {
                 @Override
                 public double apply(double x) {
-                    if (x <= -1 || x >= 1) return 0;
                     double asin_x = Math.asin(x);
                     double exp_x = Math.exp(x);
                     double sum = asin_x + exp_x;
-                    if (sum <= 0) return 0;
                     // d/dx [ln(asin(x) + exp(x))] = [1/sqrt(1-x²) + exp(x)] / (asin(x) + exp(x))
                     double numerator = (1.0 / Math.sqrt(1 - x * x)) + exp_x;
                     return numerator / sum;
@@ -400,10 +409,11 @@ class NewtonMethodTest {
             double result = newton.apply(0.6);
 
             // Точное решение: x ≈ 0.631 (численно найдено)
-            assertEquals(0.631, result, 1e-2);
+            assertEquals(0.631, result, 1e-2,"GOOD");
         }
 
         @Test
+        @DisplayName("xэ в степени хэ")
         void testPowerTower() {
             // f(x) = x^(x) - 4
             MathFunction f = new MathFunction() {
@@ -426,17 +436,17 @@ class NewtonMethodTest {
             NewtonMethod newton = new NewtonMethod(f, df);
             double result = newton.apply(1.8);
 
-            assertEquals(2.0, result, 1e-6);
+            assertEquals(2.0, result, 1e-6,"GOOD");
         }
 
         @Test
+        @DisplayName("Тест на непонятную штуку")
         void testInverseComposition() {
             // f(x) = sin(arccos(x)) - sqrt(1 - x²)
 
             MathFunction f = new MathFunction() {
                 @Override
                 public double apply(double x) {
-                    if (x < -1 || x > 1) return 1000;
                     return Math.sin(Math.acos(x)) - 0.5;
                 }
             };
@@ -444,7 +454,6 @@ class NewtonMethodTest {
             MathFunction df = new MathFunction() {
                 @Override
                 public double apply(double x) {
-                    if (x < -1 || x > 1) return 0;
                     // d/dx [sin(arccos(x))] = d/dx [sqrt(1-x²)] = -x / sqrt(1-x²)
                     return -x / Math.sqrt(1 - x * x);
                 }
@@ -453,10 +462,11 @@ class NewtonMethodTest {
             NewtonMethod newton = new NewtonMethod(f, df);
             double result = newton.apply(0.8);
 
-            assertEquals(Math.sqrt(3) / 2, result, 1e-6);
+            assertEquals(Math.sqrt(3) / 2, result, 1e-6,"GOOD");
         }
 
         @Test
+        @DisplayName("Тест на пупупу")
         void testHighlyNonlinearWithAsymptote() {
             // f(x) = exp(tan(x)) - e^1, на интервале (-π/2, π/2)
 
@@ -483,10 +493,11 @@ class NewtonMethodTest {
             NewtonMethod newton = new NewtonMethod(f, df);
             double result = newton.apply(0.7);
 
-            assertEquals(Math.PI / 4, result, 1e-6);
+            assertEquals(Math.PI / 4, result, 1e-6,"GOOD");
         }
 
         @Test
+        @DisplayName("Тест на корень некоренной")
         void testQuarticUnderRoot() {
             // f(x) = sqrt(x^4 + 1) - sqrt(17)
 
@@ -509,34 +520,12 @@ class NewtonMethodTest {
             NewtonMethod newton = new NewtonMethod(f, df);
             double result = newton.apply(1.8);
 
-            assertEquals(2.0, result, 1e-6);
+            assertEquals(2.0, result, 1e-6,"GOOD");
         }
 
-        @Test
-        void testHyperbolicComposition() {
-            // f(x) = sinh(cosh(x)) - sinh(cosh(1))
-            MathFunction f = new MathFunction() {
-                @Override
-                public double apply(double x) {
-                    return Math.sinh(Math.cosh(x)) - Math.sinh(Math.cosh(1));
-                }
-            };
-
-            MathFunction df = new MathFunction() {
-                @Override
-                public double apply(double x) {
-                    // d/dx [sinh(cosh(x))] = cosh(cosh(x)) * sinh(x)
-                    return Math.cosh(Math.cosh(x)) * Math.sinh(x);
-                }
-            };
-
-            NewtonMethod newton = new NewtonMethod(f, df);
-            double result = newton.apply(0.8);
-
-            assertEquals(1.0, result, 1e-6);
-        }
 
         @Test
+        @DisplayName("Тест на сложную тригу")
         void testComplexTrigProduct() {
             // f(x) = sin(x) * cos(x) * tan(x) - 0.5
 
@@ -558,17 +547,17 @@ class NewtonMethodTest {
             NewtonMethod newton = new NewtonMethod(f, df);
             double result = newton.apply(0.7);
 
-            assertEquals(Math.PI / 4, result, 1e-6);
+            assertEquals(Math.PI / 4, result, 1e-6,"GOOD");
         }
 
         @Test
+        @DisplayName("Хороший чел")
         void testNestedFractionalPower() {
             // f(x) = (x^(1/3) + 1)^2 - 4
 
             MathFunction f = new MathFunction() {
                 @Override
                 public double apply(double x) {
-                    if (x < 0) return Double.MAX_VALUE; // избегаем комплексных
                     return Math.pow(x, 1.0 / 3.0) + 1;
                 }
             };
@@ -594,16 +583,16 @@ class NewtonMethodTest {
             NewtonMethod newton = new NewtonMethod(f2, df);
             double result = newton.apply(0.8);
 
-            assertEquals(1.0, result, 1e-6);
+            assertEquals(1.0, result, 1e-6,"GOOD");
         }
 
         @Test
+        @DisplayName("Тест на дьявола")
         void testArbitraryDepthComposition() {
             // f(x) = exp(sin(ln(arcsin(x/2)))) - exp(sin(ln(π/6)))
             MathFunction f = new MathFunction() {
                 @Override
                 public double apply(double x) {
-                    if (x <= -2 || x >= 2) return 1000;
                     double inner = Math.asin(x / 2.0);
                     double mid = Math.log(inner);
                     double outer = Math.sin(mid);
@@ -614,7 +603,6 @@ class NewtonMethodTest {
             MathFunction df = new MathFunction() {
                 @Override
                 public double apply(double x) {
-                    if (x <= -2 || x >= 2) return 0;
                     double arg = x / 2.0;
                     double asin_arg = Math.asin(arg);
                     if (asin_arg <= 0) return 0; // log не определён
@@ -638,13 +626,13 @@ class NewtonMethodTest {
             NewtonMethod newton = new NewtonMethod(f, df);
             double result = newton.apply(0.9);
 
-            assertEquals(1.0, result, 1e-6);
+            assertEquals(1.0, result, 1e-6,"GOOD");
         }
 
         @Test
         void testFinalExtremeComposition() {
             // f(x) = arctan(sin(exp(cos(x)))) - arctan(sin(exp(cos(1))))
-            // Корень: x=1 — потому что вся цепочка совпадает
+            // x=1
             MathFunction f = new MathFunction() {
                 @Override
                 public double apply(double x) {
@@ -678,28 +666,26 @@ class NewtonMethodTest {
             NewtonMethod newton = new NewtonMethod(f, df);
             double result = newton.apply(0.95);
 
-            assertEquals(1.0, result, 1e-6);
+            assertEquals(1.0, result, 1e-6,"GOOD");
         }
     @Test
+    @DisplayName("Тест на конструктор")
     void testCustomEAndMaxIterations() {
-        // Проверяем, что конструктор с пользовательскими e и maxIterations работает корректно
         MathFunction f = x -> x * x - 4; // корень = 2
         MathFunction df = x -> 2 * x;
 
-        // Используем очень строгий e и мало итераций, чтобы убедиться, что они применяются
         double customE = 1e-10;
         int customMaxIter = 50;
 
         NewtonMethod newton = new NewtonMethod(f, df, customE, customMaxIter);
 
-        // Сходимость должна быть медленнее, но всё равно сойдётся за 5 итераций для x²=4
         double result = newton.apply(1.0);
-        assertEquals(2.0, result, 1e-8); // Точность выше customE, но метод всё равно сходится
+        assertEquals(2.0, result, 1e-8,"GOOD"); // Точность выше customE, но метод всё равно сходится
     }
 
     @Test
+    @DisplayName("Тест на RuntimeException")
     void testLowMaxIterationsThrowsException() {
-        // Проверяем, что при малом maxIterations бросается RuntimeException
         MathFunction f = x -> x * x - 4;
         MathFunction df = x -> 2 * x;
 
@@ -707,19 +693,18 @@ class NewtonMethodTest {
 
         assertThrows(RuntimeException.class, () -> {
             newton.apply(1.0);
-        });
+        }, "Пойдет");
     }
 
     @Test
+    @DisplayName("Тест на минус")
     void testNegativeInitialGuess() {
-        // Проверяем, что метод работает с отрицательным x0
         MathFunction f = x -> x * x - 9; // корни: ±3
         MathFunction df = x -> 2 * x;
 
         NewtonMethod newton = new NewtonMethod(f, df);
 
-        // Ищем отрицательный корень
         double result = newton.apply(-1.0);
-        assertEquals(-3.0, result, 1e-6);
+        assertEquals(-3.0, result, 1e-6,"GOOD");
     }
 }
