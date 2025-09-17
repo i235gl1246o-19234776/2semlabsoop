@@ -39,7 +39,7 @@ public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements
             xFrom = xTo;
             xTo = t;
         }
-        // Дискретизация
+        //Дискретизация
         double step = (xTo - xFrom)/(count - 1);
         for(int i=0; i<count; i++){
             double x = xFrom + i*step;
@@ -87,6 +87,7 @@ public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements
     public int getCount(){
         return count;
     }
+
     @Override
     public double getX(int index){
         if (index < 0 || index >= count){
@@ -151,9 +152,9 @@ public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements
     public CompositeFunction andThen(MathFunction afterFunction) {
         return super.andThen(afterFunction);
     }
+
     //должен возвращать индекс наибольшего элемента массива, который меньше или равен заданному x
     @Override
-
     public int floorIndexOfX(double x) {
         if (x < xVal[0]) {
             return 0; // все больше заданного - 0
@@ -167,11 +168,9 @@ public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements
                 return i;
             }
         }
-        if (x >= xVal[count - 1]) {
-            return count - 1;
-        }
-        return 0;
+        return count - 1;
     }
+
     @Override
     public double apply(double x) {
         if (x < leftBound()) {
@@ -199,10 +198,10 @@ public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements
             yVal[i] = yVal[i + 1];
         }
 
-        // Уменьшаем количество точек
+        //Уменьшаем количество точек
         count--;
 
-        // Опционально: можно обнулить последний элемент для GC (необязательно, но чисто)
+        //Опционально: можно обнулить последний элемент для GC (необязательно, но чисто)
         xVal[count] = Double.NaN;
         yVal[count] = Double.NaN;
     }

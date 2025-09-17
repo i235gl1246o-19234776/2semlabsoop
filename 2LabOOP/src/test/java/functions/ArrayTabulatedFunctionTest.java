@@ -348,7 +348,7 @@ public class ArrayTabulatedFunctionTest {
     @DisplayName("floorIndexOfX на пустой функции (count=0) должен выбрасывать IndexOutOfBoundsException")
     void floorIndexOfXOnEmptyFunctionThrows() {
         ArrayTabulatedFunction f = new ArrayTabulatedFunction(new double[]{1}, new double[]{1});
-        f.remove(0); // count = 0
+        f.remove(0); //count = 0
         assertThrows(IndexOutOfBoundsException.class, () -> f.floorIndexOfX(5.0), "Нельзя вызвать floorIndexOfX на пустой функции GOOD");
     }
 
@@ -359,7 +359,7 @@ public class ArrayTabulatedFunctionTest {
                 new double[]{0, 2},
                 new double[]{0, 4}
         );
-        // Линейно: y = 2x
+        //y = 2x
         assertEquals(2, f.interpolate(1, 0), 1e-10, "Интерполяция между (0,0) и (2,4) в x=1 даёт y=2 GOOD");
     }
 
@@ -443,7 +443,7 @@ public class ArrayTabulatedFunctionTest {
                 new double[]{1, 2},
                 new double[]{1, 3}
         );
-        // Линия: y = 2x - 1
+        //y = 2x - 1
         assertEquals(5, f.extrapolateRight(3), 1e-10, "Экстраполяция вправо от x=3: 2*3 - 1 = 5 GOOD");
     }
 
@@ -479,7 +479,7 @@ public class ArrayTabulatedFunctionTest {
         MathFunction after = x -> x * 2;
         MathFunction composed = f.andThen(after);
 
-        // Проверяем, что f не изменился
+        //Проверяем, что f не изменился
         assertEquals(5, f.getCount(), "Оригинал должен сохранить 5 точек GOOD");
         assertEquals(1.0, f.getX(0), 1e-10, "f.x[0] должен остаться 1.0 GOOD");
         assertEquals(10.0, f.getY(4), 1e-10, "f.y[4] должен остаться 10.0 GOOD");
@@ -494,7 +494,7 @@ public class ArrayTabulatedFunctionTest {
         assertArrayEquals(new double[]{1.0, 2.0, 3.0, 4.0, 5.0}, xCopy, 1e-10, "Копия x должна содержать [1,2,3,4,5]");
         assertEquals(5, xCopy.length, "Длина копии x должна быть 5 GOOD");
 
-        // Изменяем копию — оригинал не должен меняться
+        //Изменяем копию — оригинал не должен меняться
         xCopy[0] = 999;
         assertEquals(1.0, f.getX(0), 1e-10, "Оригинал x[0] не должен измениться GOOD");
     }
@@ -517,8 +517,8 @@ public class ArrayTabulatedFunctionTest {
     @DisplayName("getxVal и getyVal после удаления элементов должны возвращать только первые count элементов")
     void getxValGetyValAfterRemoval() {
         ArrayTabulatedFunction f = createTestFunction();
-        f.remove(2); // удалили x=3.0, y=6.0 → теперь count=4
-        f.remove(3); // удалили x=4.0, y=8.0 → теперь count=3
+        f.remove(2); //удалили x=3.0, y=6.0 → теперь count=4
+        f.remove(3); //удалили x=4.0, y=8.0 → теперь count=3
 
         double[] xCopy = f.getxVal();
         double[] yCopy = f.getyVal();
@@ -536,7 +536,7 @@ public class ArrayTabulatedFunctionTest {
         ArrayTabulatedFunction f = createTestFunction();
         assertEquals(5, f.getCount(), "Изначально 5 точек GOOD");
 
-        f.remove(2); // удаляем x=3.0, y=6.0
+        f.remove(2); //удаляем x=3.0, y=6.0
 
         assertEquals(4, f.getCount(), "После удаления осталось 4 точки GOOD");
 
@@ -558,7 +558,7 @@ public class ArrayTabulatedFunctionTest {
     @DisplayName("remove первого элемента должен корректно удалить первую точку и сдвинуть массив")
     void testRemoveFirstElement() {
         ArrayTabulatedFunction f = createTestFunction();
-        f.remove(0); // удаляем x=1.0, y=1.0
+        f.remove(0); //удаляем x=1.0, y=1.0
 
         assertEquals(4, f.getCount(), "Осталось 4 точки GOOD");
 
@@ -580,7 +580,7 @@ public class ArrayTabulatedFunctionTest {
     @DisplayName("remove последнего элемента должен корректно удалить последнюю точку")
     void testRemoveLastElement() {
         ArrayTabulatedFunction f = createTestFunction();
-        f.remove(4); // удаляем x=5.0, y=10.0
+        f.remove(4); //удаляем x=5.0, y=10.0
 
         assertEquals(4, f.getCount(), "Осталось 4 точки GOOD");
 
@@ -603,9 +603,9 @@ public class ArrayTabulatedFunctionTest {
     void testRemoveMultipleElements() {
         ArrayTabulatedFunction f = createTestFunction();
 
-        f.remove(0); // удаляем (1,1)
-        f.remove(1); // удаляем (3,6) — теперь на позиции 1 был (4,8)
-        f.remove(1); // удаляем (4,8) — теперь осталось (2,4) и (5,10)
+        f.remove(0); //удаляем (1,1)
+        f.remove(1); //удаляем (3,6) — теперь на позиции 1 был (4,8)
+        f.remove(1); //удаляем (4,8) — теперь осталось (2,4) и (5,10)
 
         assertEquals(2, f.getCount(), "Осталось 2 точки GOOD");
 
@@ -739,18 +739,18 @@ public class ArrayTabulatedFunctionTest {
     @Test
     @DisplayName("Композиция ArrayTabulatedFunction с ArrayTabulatedFunction: f(g(x)) = (2x+3)+1 = 2x+4 — точечные значения")
     void testArrayWithArray() {
-        // f(x) = x + 1
+        //f(x) = x + 1
         double[] x1 = {0.0, 1.0, 2.0, 3.0, 4.0};
         double[] y1 = {1.0, 2.0, 3.0, 4.0, 5.0};
         ArrayTabulatedFunction f = new ArrayTabulatedFunction(x1, y1);
 
-        // g(x) = 2x + 3
+        //g(x) = 2x + 3
         double[] x2 = {0.0, 1.0, 2.0, 3.0, 4.0};
         double[] y2 = {3.0, 5.0, 7.0, 9.0, 11.0};
         ArrayTabulatedFunction g = new ArrayTabulatedFunction(x2, y2);
 
         CompositeFunction composition = new CompositeFunction(f, g);
-        // f(g(x)) = g(x) + 1 = (2x + 3) + 1 = 2x + 4
+        //f(g(x)) = g(x) + 1 = (2x + 3) + 1 = 2x + 4
 
         assertEquals(4.0, composition.apply(0.0), 1e-8, "f(g(0)) = f(3) = 4 GOOD");
         assertEquals(6.0, composition.apply(1.0), 1e-8, "f(g(1)) = f(5) = 6 GOOD");
@@ -767,18 +767,18 @@ public class ArrayTabulatedFunctionTest {
     @Test
     @DisplayName("Композиция ArrayTabulatedFunction с andThen(g): f.andThen(g) = g(f(x)) = 2*(x+1)+3 = 2x+5 — проверка значений")
     void testArrayWithArrayAndThen() {
-        // f(x) = x + 1
+        //f(x) = x + 1
         double[] x1 = {0.0, 1.0, 2.0, 3.0, 4.0};
         double[] y1 = {1.0, 2.0, 3.0, 4.0, 5.0};
         ArrayTabulatedFunction f = new ArrayTabulatedFunction(x1, y1);
 
-        // g(x) = 2x + 3
+        //g(x) = 2x + 3
         double[] x2 = {0.0, 1.0, 2.0, 3.0, 4.0};
         double[] y2 = {3.0, 5.0, 7.0, 9.0, 11.0};
         ArrayTabulatedFunction g = new ArrayTabulatedFunction(x2, y2);
 
         MathFunction composition = f.andThen(g);
-        // f.andThen(g) = f(g(x)) = 2*(x+1)+3 = 2x + 5
+        //f.andThen(g) = f(g(x)) = 2*(x+1)+3 = 2x + 5
 
         assertEquals(4.0, composition.apply(0.0), 1e-8, "f(g(0)) = f(1) = 5 GOOD");
         assertEquals(6.0, composition.apply(1.0), 1e-8, "f(g(1)) = f(2) = 7 GOOD");
@@ -795,17 +795,17 @@ public class ArrayTabulatedFunctionTest {
     @Test
     @DisplayName("Композиция f(g(x)) = ln(x+1) + 1 — проверка логарифмической композиции с интерполяцией")
     void testArrayWithArrayExponentialWithLogarithmicComposition() {
-        // f(x) = x + 1
+        //f(x) = x + 1
         double[] x1 = {0.0, 0.5, 1.0, 1.5, 2.0};
         double[] y1 = {1.0, 1.5, 2.0, 2.5, 3.0};
         ArrayTabulatedFunction f = new ArrayTabulatedFunction(x1, y1);
 
-        // g(x) = ln(x + 1)
+        //g(x) = ln(x + 1)
         double[] x2 = {0.0, 1.0, 2.0, 3.0, 4.0};
         double[] y2 = {0.0, 0.6931, 1.0986, 1.3863, 1.6094};
         ArrayTabulatedFunction g = new ArrayTabulatedFunction(x2, y2);
 
-        // h(x) = f(g(x)) = ln(x + 1) + 1
+        //h(x) = f(g(x)) = ln(x + 1) + 1
         CompositeFunction composition = new CompositeFunction(f, g);
 
         assertEquals(1.0, composition.apply(0.0), 0.1, "f(g(0)) = f(0) = 1 GOOD");
@@ -818,17 +818,17 @@ public class ArrayTabulatedFunctionTest {
     @Test
     @DisplayName("Композиция sin(cos(x)) — тригонометрическая композиция с интерполяцией")
     void testArrayWithArrayTrigonometricComposition() {
-        // f(x) = sin(x)
+        //f(x) = sin(x)
         double[] x1 = {0.0, Math.PI/6, Math.PI/4, Math.PI/3, Math.PI/2};
         double[] y1 = {0.0, 0.5, 0.7071, 0.8660, 1.0};
         ArrayTabulatedFunction f = new ArrayTabulatedFunction(x1, y1);
 
-        // g(x) = cos(x)
+        //g(x) = cos(x)
         double[] x2 = {0.0, Math.PI/6, Math.PI/4, Math.PI/3, Math.PI/2};
         double[] y2 = {1.0, 0.8660, 0.7071, 0.5, 0.0};
         ArrayTabulatedFunction g = new ArrayTabulatedFunction(x2, y2);
 
-        // h(x) = f(g(x)) = sin(cos(x))
+        //h(x) = f(g(x)) = sin(cos(x))
         CompositeFunction composition = new CompositeFunction(f, g);
 
         assertEquals(Math.sin(1.0), composition.apply(0.0), 0.1, "sin(cos(0)) = sin(1) GOOD");
@@ -841,17 +841,17 @@ public class ArrayTabulatedFunctionTest {
     @Test
     @DisplayName("Композиция √(x-3) — экстраполяция влево и вправо для составной функции")
     void testArrayWithArrayCompositeWithExtrapolation() {
-        // f(x) = √x
+        //f(x) = √x
         double[] x1 = {0.0, 1.0, 2.0, 3.0, 4.0};
         double[] y1 = {0.0, 1.0, 1.4142, 1.7321, 2.0};
         ArrayTabulatedFunction f = new ArrayTabulatedFunction(x1, y1);
 
-        // g(x) = x - 3
+        //g(x) = x - 3
         double[] x2 = {0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0};
         double[] y2 = {-3.0, -2.0, -1.0, 0.0, 1.0, 2.0, 3.0};
         ArrayTabulatedFunction g = new ArrayTabulatedFunction(x2, y2);
 
-        // h(x) = f(g(x)) = √(x - 3)
+        //h(x) = f(g(x)) = √(x - 3)
         CompositeFunction composition = new CompositeFunction(f, g);
 
         assertTrue(composition.apply(0.0) < 0, "f(g(0)) = f(-3) — экстраполяция влево → результат < 0 GOOD");
@@ -869,18 +869,18 @@ public class ArrayTabulatedFunctionTest {
     @Test
     @DisplayName("Композиция LinkedListTabulatedFunction с ArrayTabulatedFunction: f(g(x)) = (2x+3)+1 = 2x+4 — проверка типов")
     void testArrayWithLinkedList() {
-        // f(x) = x + 1
+        //f(x) = x + 1
         double[] x1 = {0.0, 1.0, 2.0, 3.0, 4.0};
         double[] y1 = {1.0, 2.0, 3.0, 4.0, 5.0};
         ArrayTabulatedFunction f = new ArrayTabulatedFunction(x1, y1);
 
-        // g(x) = 2x + 3
+        //g(x) = 2x + 3
         double[] x2 = {0.0, 1.0, 2.0, 3.0, 4.0};
         double[] y2 = {3.0, 5.0, 7.0, 9.0, 11.0};
         LinkedListTabulatedFunction g = new LinkedListTabulatedFunction(x2, y2);
 
         CompositeFunction composition = new CompositeFunction(f, g);
-        // f(g(x)) = (2x + 3) + 1 = 2x + 4
+        //f(g(x)) = (2x + 3) + 1 = 2x + 4
 
         assertEquals(4.0, composition.apply(0.0), 1e-8, "f(g(0)) = f(3) = 4 GOOD");
         assertEquals(6.0, composition.apply(1.0), 1e-8, "f(g(1)) = f(5) = 6 GOOD");
@@ -897,17 +897,17 @@ public class ArrayTabulatedFunctionTest {
     @Test
     @DisplayName("Композиция LinkedListTabulatedFunction с ArrayTabulatedFunction: ln(x+1)+1 — логарифмическая композиция")
     void testArrayWithLinkedListExponentialWithLogarithmicComposition() {
-        // f(x) = x + 1
+        //f(x) = x + 1
         double[] x1 = {0.0, 0.5, 1.0, 1.5, 2.0};
         double[] y1 = {1.0, 1.5, 2.0, 2.5, 3.0};
         ArrayTabulatedFunction f = new ArrayTabulatedFunction(x1, y1);
 
-        // g(x) = ln(x + 1)
+        //g(x) = ln(x + 1)
         double[] x2 = {0.0, 1.0, 2.0, 3.0, 4.0};
         double[] y2 = {0.0, 0.6931, 1.0986, 1.3863, 1.6094};
         LinkedListTabulatedFunction g = new LinkedListTabulatedFunction(x2, y2);
 
-        // h(x) = f(g(x)) = ln(x + 1) + 1
+        //h(x) = f(g(x)) = ln(x + 1) + 1
         CompositeFunction composition = new CompositeFunction(f, g);
 
         assertEquals(1.0, composition.apply(0.0), 0.1, "f(g(0)) = f(0) = 1 GOOD");
@@ -920,17 +920,17 @@ public class ArrayTabulatedFunctionTest {
     @Test
     @DisplayName("Композиция LinkedListTabulatedFunction с ArrayTabulatedFunction: sin(cos(x)) — тригонометрическая композиция")
     void testArrayWithLinkedListTrigonometricComposition() {
-        // f(x) = sin(x)
+        //f(x) = sin(x)
         double[] x1 = {0.0, Math.PI/6, Math.PI/4, Math.PI/3, Math.PI/2};
         double[] y1 = {0.0, 0.5, 0.7071, 0.8660, 1.0};
         ArrayTabulatedFunction f = new ArrayTabulatedFunction(x1, y1);
 
-        // g(x) = cos(x)
+        //g(x) = cos(x)
         double[] x2 = {0.0, Math.PI/6, Math.PI/4, Math.PI/3, Math.PI/2};
         double[] y2 = {1.0, 0.8660, 0.7071, 0.5, 0.0};
         LinkedListTabulatedFunction g = new LinkedListTabulatedFunction(x2, y2);
 
-        // h(x) = f(g(x)) = sin(cos(x))
+        //h(x) = f(g(x)) = sin(cos(x))
         CompositeFunction composition = new CompositeFunction(f, g);
 
         assertEquals(Math.sin(1.0), composition.apply(0.0), 0.1, "sin(cos(0)) = sin(1) GOOD");
@@ -943,17 +943,17 @@ public class ArrayTabulatedFunctionTest {
     @Test
     @DisplayName("Композиция LinkedListTabulatedFunction с ArrayTabulatedFunction: √(x-3) — экстраполяция влево/вправо")
     void testArrayWithLinkedListCompositeWithExtrapolation() {
-        // f(x) = √x
+        //f(x) = √x
         double[] x1 = {0.0, 1.0, 2.0, 3.0, 4.0};
         double[] y1 = {0.0, 1.0, 1.4142, 1.7321, 2.0};
         ArrayTabulatedFunction f = new ArrayTabulatedFunction(x1, y1);
 
-        // g(x) = x - 3
+        //g(x) = x - 3
         double[] x2 = {0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0};
         double[] y2 = {-3.0, -2.0, -1.0, 0.0, 1.0, 2.0, 3.0};
         LinkedListTabulatedFunction g = new LinkedListTabulatedFunction(x2, y2);
 
-        // h(x) = f(g(x)) = √(x - 3)
+        //h(x) = f(g(x)) = √(x - 3)
         CompositeFunction composition = new CompositeFunction(f, g);
 
         assertTrue(composition.apply(0.0) < 0, "f(g(0)) = f(-3) — экстраполяция влево → результат < 0 GOOD");
@@ -966,5 +966,27 @@ public class ArrayTabulatedFunctionTest {
         assertEquals(1.7321, composition.apply(6.0), 0.1, "f(g(6)) = f(3) = √3 ≈ 1.7321 GOOD");
 
         assertEquals(2.236, composition.apply(8.0), 0.1, "f(g(8)) = f(5) — экстраполяция вправо → √5 ≈ 2.236 GOOD");
+    }
+
+    @Test
+    @DisplayName("floorIndexOfX покрывает все ВОЗМОЖНЫЕ ветки условия в цикле")
+    void floorIndexOfXCoversAllPossibleBranches() {
+        ArrayTabulatedFunction f = new ArrayTabulatedFunction(
+                new double[]{1.0, 2.0, 3.0, 4.0},
+                new double[]{1.0, 4.0, 9.0, 16.0}
+        );
+
+        //true && true - x между элементами
+        assertEquals(0, f.floorIndexOfX(1.5), "x между 1.0 и 2.0 → true&&true GOOD");
+        assertEquals(1, f.floorIndexOfX(2.5), "x между 2.0 и 3.0 → true&&true GOOD");
+        assertEquals(2, f.floorIndexOfX(3.5), "x между 3.0 и 4.0 → true&&true GOOD");
+
+        //true && false - x равен следующему элементу
+        //x=2.0: i=0: 1.0<=2.0(true) && 2.0<2.0(false) → false, i=1: 2.0<=2.0(true) && 2.0<3.0(true) → true
+        assertEquals(1, f.floorIndexOfX(2.0), "x=2.0: проходит две итерации GOOD");
+        assertEquals(2, f.floorIndexOfX(3.0), "x=3.0: проходит итерации GOOD");
+
+        //x равен последнему элементу - все итерации false, возврат count-1
+        assertEquals(3, f.floorIndexOfX(4.0), "x=4.0: все итерации false → count-1 GOOD");
     }
 }
