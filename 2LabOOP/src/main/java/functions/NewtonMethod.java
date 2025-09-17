@@ -1,5 +1,5 @@
 package functions;
-
+// математическая функция численно находит корни уравнениея f(x) = 0
 public class NewtonMethod implements MathFunction {
     private final MathFunction f;
     private final MathFunction df;
