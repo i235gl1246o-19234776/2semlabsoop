@@ -2,7 +2,15 @@ package functions;
 
 import exception.InterpolationException;
 
+import java.awt.*;
+import java.util.Iterator;
+
 public class LinkedListTabulatedFunction extends AbstractTabulatedFunction implements Insertable, Removable {
+
+    @Override
+    public Iterator<Point> iterator() {
+        throw new UnsupportedOperationException("Итерация по точкам не поддерживается");
+    }
 
     public static class Node {
         public Node next;
@@ -26,9 +34,15 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
         if (xVal.length < 2) {
             throw new IllegalArgumentException("Длина таблицы должна быть не менее 2 точек");
         }
-        checkLengthIsTheSame(xVal, yVal);
+        if(xVal.length != yVal.length){
+            throw new IllegalArgumentException("Массивы должны быть одинаковой длины");
+        }
 
-        checkSorted(xVal);
+        for(int i = 1; i < xVal.length; i++){
+            if(xVal[i] <= xVal[i-1]){
+                throw new IllegalArgumentException("Значения должны строго возрастать в xVal");
+            }
+        }
 
         this.count = 0;
         this.head = null;
@@ -153,11 +167,6 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
         }
         Node leftNode = getNode(floorIndex);
         Node rightNode = leftNode.next;
-
-        if (x < leftNode.x || x > rightNode.x) {
-            throw new InterpolationException(
-                    "Значение x = " + x + " не находится в интервале [" +  leftNode.x + ", " + rightNode.x + "]");
-        }
         return interpolate(x, leftNode.x, rightNode.x, leftNode.y, rightNode.y);
     }
 

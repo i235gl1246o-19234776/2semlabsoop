@@ -1,6 +1,8 @@
 package functions;
 
-public interface TabulatedFunction extends MathFunction{
+import java.awt.*;
+
+public interface TabulatedFunction extends MathFunction, Iterable<Point>{
     int getCount();
     double getX(int index);
     double getY(int index);
