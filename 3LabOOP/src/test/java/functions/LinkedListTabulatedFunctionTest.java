@@ -478,7 +478,7 @@ class LinkedListTabulatedFunctionTest {
         double[] yValues = {10.0, 30.0, 50.0};
         LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(xValues, yValues);
 
-        Node node = list.floorNodeOfX(1.0);
+        LinkedListTabulatedFunction.Node node = list.floorNodeOfX(1.0);
         assertEquals(1.0, node.x, delta, "floorNodeOfX(1.0) должен вернуть head, GOOD");
     }
 
@@ -489,7 +489,7 @@ class LinkedListTabulatedFunctionTest {
         double[] yValues = {10.0, 30.0, 50.0};
         LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(xValues, yValues);
 
-        Node node = list.floorNodeOfX(5.0);
+        LinkedListTabulatedFunction.Node node = list.floorNodeOfX(5.0);
         assertEquals(5.0, node.x, delta, "floorNodeOfX(5.0) должен вернуть последний узел, GOOD");
     }
 
@@ -500,7 +500,7 @@ class LinkedListTabulatedFunctionTest {
         double[] yValues = {10.0, 30.0, 50.0};
         LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(xValues, yValues);
 
-        Node node = list.floorNodeOfX(6.0);
+        LinkedListTabulatedFunction.Node node = list.floorNodeOfX(6.0);
         assertEquals(5.0, node.x, delta, "floorNodeOfX(6.0) должен вернуть последний узел, GOOD");
     }
 
@@ -511,7 +511,7 @@ class LinkedListTabulatedFunctionTest {
         double[] yValues = {10.0, 30.0, 50.0};
         LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(xValues, yValues);
 
-        Node node = list.floorNodeOfX(0.5);
+        LinkedListTabulatedFunction.Node node = list.floorNodeOfX(0.5);
         assertEquals(1.0, node.x, delta, "floorNodeOfX(0.5) должен вернуть head, GOOD");
     }
 
