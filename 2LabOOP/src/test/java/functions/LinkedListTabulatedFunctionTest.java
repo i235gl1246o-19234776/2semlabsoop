@@ -36,26 +36,45 @@ class LinkedListTabulatedFunctionTest {
     @Test
     @DisplayName("Тест на проверку с заданной функцией")
     void testConstructorWithFunction() {
-        MathFunction sqr = new SqrFunction();
-        LinkedListTabulatedFunction function = new LinkedListTabulatedFunction(sqr, 0.0, 4.0, 5);
+        MathFunction sqr1 = new SqrFunction();
+        LinkedListTabulatedFunction function1 = new LinkedListTabulatedFunction(sqr1, 0.0, 4.0, 5);
 
-        assertEquals(5, function.getCount(), "Количество точек = 5, GOOD");
-        assertEquals(0.0, function.leftBound(), delta, "Левая граница = 0.0, GOOD");
-        assertEquals(4.0, function.rightBound(), delta, "Правая граница = 4.0, GOOD");
+        MathFunction sqr2 = new SqrFunction();
+        LinkedListTabulatedFunction function2 = new LinkedListTabulatedFunction(sqr2, 4.0, 0.0, 5);
 
-        // Проверка значений
-        assertEquals(0.0, function.getX(0), delta, "x[0], GOOD");
-        assertEquals(1.0, function.getX(1), delta, "x[1], GOOD");
-        assertEquals(2.0, function.getX(2), delta, "x[2], GOOD");
-        assertEquals(3.0, function.getX(3), delta, "x[3], GOOD");
-        assertEquals(4.0, function.getX(4), delta, "x[4], GOOD");
+        assertEquals(5, function1.getCount(), "Количество точек = 5, GOOD");
+        assertEquals(0.0, function1.leftBound(), delta, "Левая граница = 0.0, GOOD");
+        assertEquals(4.0, function1.rightBound(), delta, "Правая граница = 4.0, GOOD");
 
-        assertEquals(0.0, function.getY(0), delta, "y[0], GOOD");
-        assertEquals(1.0, function.getY(1), delta, "y[1], GOOD");
-        assertEquals(4.0, function.getY(2), delta, "y[2], GOOD");
-        assertEquals(9.0, function.getY(3), delta, "y[3], GOOD");
-        assertEquals(16.0, function.getY(4), delta, "y[4], GOOD");
+        assertEquals(0.0, function1.getX(0), delta, "x[0], GOOD");
+        assertEquals(1.0, function1.getX(1), delta, "x[1], GOOD");
+        assertEquals(2.0, function1.getX(2), delta, "x[2], GOOD");
+        assertEquals(3.0, function1.getX(3), delta, "x[3], GOOD");
+        assertEquals(4.0, function1.getX(4), delta, "x[4], GOOD");
+
+        assertEquals(0.0, function1.getY(0), delta, "y[0], GOOD");
+        assertEquals(1.0, function1.getY(1), delta, "y[1], GOOD");
+        assertEquals(4.0, function1.getY(2), delta, "y[2], GOOD");
+        assertEquals(9.0, function1.getY(3), delta, "y[3], GOOD");
+        assertEquals(16.0, function1.getY(4), delta, "y[4], GOOD");
+
+        assertEquals(5, function2.getCount(), "Количество точек = 5, GOOD");
+        assertEquals(0.0, function2.leftBound(), delta, "Левая граница = 0.0, GOOD");
+        assertEquals(4.0, function2.rightBound(), delta, "Правая граница = 4.0, GOOD");
+
+        assertEquals(0.0, function2.getX(0), delta, "x[0], GOOD");
+        assertEquals(1.0, function2.getX(1), delta, "x[1], GOOD");
+        assertEquals(2.0, function2.getX(2), delta, "x[2], GOOD");
+        assertEquals(3.0, function2.getX(3), delta, "x[3], GOOD");
+        assertEquals(4.0, function2.getX(4), delta, "x[4], GOOD");
+
+        assertEquals(0.0, function2.getY(0), delta, "y[0], GOOD");
+        assertEquals(1.0, function2.getY(1), delta, "y[1], GOOD");
+        assertEquals(4.0, function2.getY(2), delta, "y[2], GOOD");
+        assertEquals(9.0, function2.getY(3), delta, "y[3], GOOD");
+        assertEquals(16.0, function2.getY(4), delta, "y[4], GOOD");
     }
+
 
     @Test
     @DisplayName("Тест получения узлов")
@@ -392,7 +411,7 @@ class LinkedListTabulatedFunctionTest {
         assertThrows(IndexOutOfBoundsException.class, () -> list.remove(2), "GOOD");
 
         list.remove(0); //Удалили единственный элемент
-        assertThrows(IndexOutOfBoundsException.class, () -> list.remove(0), "пустой список, GOOD");
+        assertTrue(assertThrows(IllegalStateException.class, () -> list.remove(0)).getMessage().contains("Список пуст, ы"));
     }
 
     @Test
@@ -662,7 +681,7 @@ class LinkedListTabulatedFunctionTest {
 
     @Test
     @DisplayName("Тест композиции LinkedList с LinkedList")
-    void testLinkedListWithLinkedList(){
+    void testLinkedListWithLinkedList() {
         //f(x) = x + 1
         double[] x1 = {0.0, 1.0, 2.0, 3.0, 4.0};
         double[] y1 = {1.0, 2.0, 3.0, 4.0, 5.0};
@@ -689,7 +708,7 @@ class LinkedListTabulatedFunctionTest {
 
     @Test
     @DisplayName("Тест andThen с LinkedList")
-    void testLinkedListWithLinkedListAndThen(){
+    void testLinkedListWithLinkedListAndThen() {
         //f(x) = x + 1
         double[] x1 = {0.0, 1.0, 2.0, 3.0, 4.0};
         double[] y1 = {1.0, 2.0, 3.0, 4.0, 5.0};
@@ -741,12 +760,12 @@ class LinkedListTabulatedFunctionTest {
     @DisplayName("Тест тригонометрической композиции")
     void testLinkedListWithLinkedListTrigonometricComposition() {
         //f(x) = sin(x)
-        double[] x1 = {0.0, java.lang.Math.PI/6, java.lang.Math.PI/4, java.lang.Math.PI/3, java.lang.Math.PI/2};
+        double[] x1 = {0.0, java.lang.Math.PI / 6, java.lang.Math.PI / 4, java.lang.Math.PI / 3, java.lang.Math.PI / 2};
         double[] y1 = {0.0, 0.5, 0.7071, 0.8660, 1.0};
         LinkedListTabulatedFunction f = new LinkedListTabulatedFunction(x1, y1);
 
         //g(x) = cos(x)
-        double[] x2 = {0.0, java.lang.Math.PI/6, java.lang.Math.PI/4, java.lang.Math.PI/3, java.lang.Math.PI/2};
+        double[] x2 = {0.0, java.lang.Math.PI / 6, java.lang.Math.PI / 4, java.lang.Math.PI / 3, java.lang.Math.PI / 2};
         double[] y2 = {1.0, 0.8660, 0.7071, 0.5, 0.0};
         LinkedListTabulatedFunction g = new LinkedListTabulatedFunction(x2, y2);
 
@@ -754,10 +773,10 @@ class LinkedListTabulatedFunctionTest {
         CompositeFunction composition = new CompositeFunction(f, g);
 
         assertEquals(java.lang.Math.sin(1.0), composition.apply(0.0), 0.1, "sin(cos(0)) = sin(1), GOOD");
-        assertEquals(java.lang.Math.sin(0.8660), composition.apply(Math.PI/6), 0.1, "sin(cos(π/6)), GOOD");
-        assertEquals(java.lang.Math.sin(0.7071), composition.apply(Math.PI/4), 0.1, "sin(cos(π/4)), GOOD");
-        assertEquals(java.lang.Math.sin(0.5), composition.apply(Math.PI/3), 0.1, "sin(cos(π/3)), GOOD");
-        assertEquals(java.lang.Math.sin(0.0), composition.apply(Math.PI/2), 0.1, "sin(cos(π/2)) = sin(0), GOOD");
+        assertEquals(java.lang.Math.sin(0.8660), composition.apply(Math.PI / 6), 0.1, "sin(cos(π/6)), GOOD");
+        assertEquals(java.lang.Math.sin(0.7071), composition.apply(Math.PI / 4), 0.1, "sin(cos(π/4)), GOOD");
+        assertEquals(java.lang.Math.sin(0.5), composition.apply(Math.PI / 3), 0.1, "sin(cos(π/3)), GOOD");
+        assertEquals(java.lang.Math.sin(0.0), composition.apply(Math.PI / 2), 0.1, "sin(cos(π/2)) = sin(0), GOOD");
     }
 
     @Test
@@ -792,7 +811,7 @@ class LinkedListTabulatedFunctionTest {
 
     @Test
     @DisplayName("Тест композиции LinkedList с Array")
-    void testLinkedListWithArray(){
+    void testLinkedListWithArray() {
         //f(x) = x + 1
         double[] x1 = {0.0, 1.0, 2.0, 3.0, 4.0};
         double[] y1 = {1.0, 2.0, 3.0, 4.0, 5.0};
@@ -844,12 +863,12 @@ class LinkedListTabulatedFunctionTest {
     @DisplayName("Тест тригонометрической композиции с Array")
     void testLinkedListWithArrayTrigonometricComposition() {
         //f(x) = sin(x)
-        double[] x1 = {0.0, java.lang.Math.PI/6, java.lang.Math.PI/4, java.lang.Math.PI/3, java.lang.Math.PI/2};
+        double[] x1 = {0.0, java.lang.Math.PI / 6, java.lang.Math.PI / 4, java.lang.Math.PI / 3, java.lang.Math.PI / 2};
         double[] y1 = {0.0, 0.5, 0.7071, 0.8660, 1.0};
         LinkedListTabulatedFunction f = new LinkedListTabulatedFunction(x1, y1);
 
         //g(x) = cos(x)
-        double[] x2 = {0.0, java.lang.Math.PI/6, java.lang.Math.PI/4, java.lang.Math.PI/3, java.lang.Math.PI/2};
+        double[] x2 = {0.0, java.lang.Math.PI / 6, java.lang.Math.PI / 4, java.lang.Math.PI / 3, java.lang.Math.PI / 2};
         double[] y2 = {1.0, 0.8660, 0.7071, 0.5, 0.0};
         ArrayTabulatedFunction g = new ArrayTabulatedFunction(x2, y2);
 
@@ -857,10 +876,10 @@ class LinkedListTabulatedFunctionTest {
         CompositeFunction composition = new CompositeFunction(f, g);
 
         assertEquals(java.lang.Math.sin(1.0), composition.apply(0.0), 0.1, "sin(cos(0)) = sin(1), GOOD");
-        assertEquals(java.lang.Math.sin(0.8660), composition.apply(java.lang.Math.PI/6), 0.1, "sin(cos(π/6)), GOOD");
-        assertEquals(java.lang.Math.sin(0.7071), composition.apply(java.lang.Math.PI/4), 0.1, "sin(cos(π/4)), GOOD");
-        assertEquals(java.lang.Math.sin(0.5), composition.apply(java.lang.Math.PI/3), 0.1, "sin(cos(π/3)), GOOD");
-        assertEquals(java.lang.Math.sin(0.0), composition.apply(java.lang.Math.PI/2), 0.1, "sin(cos(π/2)) = sin(0), GOOD");
+        assertEquals(java.lang.Math.sin(0.8660), composition.apply(java.lang.Math.PI / 6), 0.1, "sin(cos(π/6)), GOOD");
+        assertEquals(java.lang.Math.sin(0.7071), composition.apply(java.lang.Math.PI / 4), 0.1, "sin(cos(π/4)), GOOD");
+        assertEquals(java.lang.Math.sin(0.5), composition.apply(java.lang.Math.PI / 3), 0.1, "sin(cos(π/3)), GOOD");
+        assertEquals(java.lang.Math.sin(0.0), composition.apply(java.lang.Math.PI / 2), 0.1, "sin(cos(π/2)) = sin(0), GOOD");
     }
 
     @Test
@@ -891,5 +910,19 @@ class LinkedListTabulatedFunctionTest {
 
         //Экстраполяция вправо (x - 3 > 4)
         assertEquals(2.236, composition.apply(8.0), 0.1, "f(g(8)) = f(5) экстраполяция вправо, GOOD");
+    }
+
+    @Test
+    @DisplayName("Тестирование случаев, когда не нашелся x или y в пустом списке")
+    void testIndexOfXOrYIfHeadEqualsNull() {
+        LinkedListTabulatedFunction function = new LinkedListTabulatedFunction(
+                new double[]{},
+                new double[]{}
+        );
+
+        assertEquals(-1, function.indexOfX(0.5));
+        assertEquals(-1, function.indexOfY(11.0));
+        assertTrue(assertThrows(IllegalStateException.class, () -> function.floorNodeOfX(1.0)).getMessage().contains("Список пуст, ы"));
+        assertTrue(assertThrows(IllegalStateException.class, () -> function.remove(0)).getMessage().contains("Список пуст, ы"));
     }
 }

@@ -119,7 +119,7 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
         if(count == 1){
             return head.y;
         }
-        return interpolate(x, head.x, head.next.x, head.y, head.next.y);
+        return interpolate(x, 0);
     }
 
     @Override
@@ -127,9 +127,7 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
         if(count == 1){
             return head.y;
         }
-        Node last = head.prev;
-        Node prevLast = last.prev;
-        return interpolate(x, prevLast.x, last.x, prevLast.y, last.y);
+        return interpolate(x, count - 2);
     }
 
     @Override
@@ -218,7 +216,7 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
             return head;
         }
 
-        if(x >= head.prev.x){
+        if(x > head.prev.x){
             return head.prev;
         }
 
@@ -241,17 +239,8 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
             return extrapolateRight(x);
         }else{
             Node floorNode = floorNodeOfX(x);
-
             if(java.lang.Math.abs(floorNode.x - x) < 1e-10){
                 return floorNode.y;
-            }
-
-            if(floorNode.next == head && java.lang.Math.abs(floorNode.x - x) < 1e-10){
-                return floorNode.y;
-            }
-
-            if(floorNode.next != head && x >= floorNode.x && x < floorNode.next.x){
-                return interpolate(x, floorNode.x, floorNode.next.x, floorNode.y, floorNode.next.y);
             }
 
             return interpolate(x, floorNode.x, floorNode.next.x, floorNode.y, floorNode.next.y);
@@ -307,12 +296,12 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
 
     @Override
     public void remove(int index) {
-        if (index < 0 || index >= count) {
-            throw new IndexOutOfBoundsException("Индекс: " + index + ", размер: " + count);
+        if (head == null) {
+            throw new IllegalStateException("Список пуст, ы");
         }
 
-        if (head == null) {
-            throw new IllegalStateException("Список пуст");
+        if (index < 0 || index >= count) {
+            throw new IndexOutOfBoundsException("Индекс: " + index + ", размер: " + count);
         }
 
         Node nodeToRemove = getNode(index);

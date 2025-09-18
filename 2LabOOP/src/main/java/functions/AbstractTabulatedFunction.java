@@ -33,7 +33,7 @@ public abstract class AbstractTabulatedFunction implements TabulatedFunction {
         return interpolate(x, floorIndex);
     }
 
-    // Абстрактные методы из интерфейса TabulatedFunction
+    //Абстрактные методы из интерфейса TabulatedFunction
     public abstract int getCount();
     public abstract double getX(int index);
     public abstract double getY(int index);
