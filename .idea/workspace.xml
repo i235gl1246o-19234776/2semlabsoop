@@ -1,0 +1,380 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="1fd2675e-1365-4525-8372-fcc93973cd88" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/src/main/java/Main.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/src/main/java/functions/AbstractTabulatedFunction.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/src/main/java/functions/ArrayTabulatedFunction.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/src/main/java/functions/CompositeFunction.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/src/main/java/functions/ConstantFunction.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/src/main/java/functions/IdentityFunction.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/src/main/java/functions/Insertable.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/src/main/java/functions/LinkedListTabulatedFunction.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/src/main/java/functions/MathFunction.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/src/main/java/functions/MockTabulatedFunction.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/src/main/java/functions/NewtonMethod.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/src/main/java/functions/Node.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/src/main/java/functions/Removable.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/src/main/java/functions/RungeKuttaFunction.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/src/main/java/functions/SqrFunction.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/src/main/java/functions/TabulatedFunction.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/src/main/java/functions/UnitFunction.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/src/main/java/functions/ZeroFunction.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/src/test/java/MainTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/src/test/java/functions/AbstractTabulatedFunctionTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/src/test/java/functions/ArrayTabulatedFunctionTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/src/test/java/functions/CompositeFunctionTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/src/test/java/functions/ConstantFunctionTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/src/test/java/functions/IdentityFunctionTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/src/test/java/functions/LinkedListTabulatedFunctionTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/src/test/java/functions/MathFunction.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/src/test/java/functions/MathFunctionTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/src/test/java/functions/NewtonMethodTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/src/test/java/functions/RungeKuttaFunctionTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/src/test/java/functions/SqrFunctionTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/src/test/java/functions/TabulatedFunctionTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/src/test/java/functions/UnitFunctionTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/src/test/java/functions/ZeroFunctionTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/classes/Main.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/classes/functions/AbstractTabulatedFunction.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/classes/functions/ArrayTabulatedFunction.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/classes/functions/CompositeFunction.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/classes/functions/ConstantFunction.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/classes/functions/IdentityFunction.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/classes/functions/Insertable.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/classes/functions/LinkedListTabulatedFunction.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/classes/functions/MathFunction.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/classes/functions/MockTabulatedFunction.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/classes/functions/NewtonMethod.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/classes/functions/Node.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/classes/functions/Removable.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/classes/functions/RungeKuttaFunction.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/classes/functions/SqrFunction.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/classes/functions/TabulatedFunction.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/classes/functions/UnitFunction.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/classes/functions/ZeroFunction.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/MainTest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/AbstractTabulatedFunctionTest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/ArrayTabulatedFunctionTest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/CompositeFunctionTest$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/CompositeFunctionTest$2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/CompositeFunctionTest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/ConstantFunctionTest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/IdentityFunctionTest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/LinkedListTabulatedFunctionTest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/MathFunction$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/MathFunction.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/MathFunctionTest$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/MathFunctionTest$10.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/MathFunctionTest$11.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/MathFunctionTest$12.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/MathFunctionTest$13.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/MathFunctionTest$14.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/MathFunctionTest$2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/MathFunctionTest$3.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/MathFunctionTest$4.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/MathFunctionTest$5.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/MathFunctionTest$6.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/MathFunctionTest$7.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/MathFunctionTest$8.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/MathFunctionTest$9.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/MathFunctionTest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/NewtonMethodTest$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/NewtonMethodTest$10.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/NewtonMethodTest$11.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/NewtonMethodTest$12.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/NewtonMethodTest$13.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/NewtonMethodTest$14.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/NewtonMethodTest$15.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/NewtonMethodTest$16.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/NewtonMethodTest$17.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/NewtonMethodTest$18.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/NewtonMethodTest$19.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/NewtonMethodTest$2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/NewtonMethodTest$20.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/NewtonMethodTest$21.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/NewtonMethodTest$22.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/NewtonMethodTest$23.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/NewtonMethodTest$24.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/NewtonMethodTest$25.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/NewtonMethodTest$26.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/NewtonMethodTest$27.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/NewtonMethodTest$28.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/NewtonMethodTest$29.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/NewtonMethodTest$3.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/NewtonMethodTest$30.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/NewtonMethodTest$31.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/NewtonMethodTest$32.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/NewtonMethodTest$33.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/NewtonMethodTest$34.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/NewtonMethodTest$35.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/NewtonMethodTest$36.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/NewtonMethodTest$37.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/NewtonMethodTest$38.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/NewtonMethodTest$39.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/NewtonMethodTest$4.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/NewtonMethodTest$40.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/NewtonMethodTest$41.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/NewtonMethodTest$42.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/NewtonMethodTest$43.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/NewtonMethodTest$44.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/NewtonMethodTest$45.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/NewtonMethodTest$46.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/NewtonMethodTest$47.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/NewtonMethodTest$48.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/NewtonMethodTest$49.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/NewtonMethodTest$5.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/NewtonMethodTest$50.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/NewtonMethodTest$51.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/NewtonMethodTest$6.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/NewtonMethodTest$7.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/NewtonMethodTest$8.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/NewtonMethodTest$9.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/NewtonMethodTest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/RungeKuttaFunctionTest$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/RungeKuttaFunctionTest$2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/RungeKuttaFunctionTest$3.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/RungeKuttaFunctionTest$4.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/RungeKuttaFunctionTest$5.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/RungeKuttaFunctionTest$6.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/RungeKuttaFunctionTest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/SqrFunctionTest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/TabulatedFunctionTest$TestTabulatedFunction.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/TabulatedFunctionTest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/UnitFunctionTest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_LabOOP/target/test-classes/functions/ZeroFunctionTest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/htmlReport/css/coverage.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/htmlReport/css/idea.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/htmlReport/img/arrowDown.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/htmlReport/img/arrowUp.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/htmlReport/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/htmlReport/index_SORT_BY_BLOCK.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/htmlReport/index_SORT_BY_BLOCK_DESC.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/htmlReport/index_SORT_BY_CLASS.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/htmlReport/index_SORT_BY_CLASS_DESC.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/htmlReport/index_SORT_BY_LINE.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/htmlReport/index_SORT_BY_LINE_DESC.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/htmlReport/index_SORT_BY_METHOD.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/htmlReport/index_SORT_BY_METHOD_DESC.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/htmlReport/index_SORT_BY_NAME_DESC.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/htmlReport/js/highlight.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/htmlReport/js/highlightjs-line-numbers.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/htmlReport/ns-1/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/htmlReport/ns-1/index_SORT_BY_BLOCK.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/htmlReport/ns-1/index_SORT_BY_BLOCK_DESC.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/htmlReport/ns-1/index_SORT_BY_CLASS.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/htmlReport/ns-1/index_SORT_BY_CLASS_DESC.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/htmlReport/ns-1/index_SORT_BY_LINE.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/htmlReport/ns-1/index_SORT_BY_LINE_DESC.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/htmlReport/ns-1/index_SORT_BY_METHOD.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/htmlReport/ns-1/index_SORT_BY_METHOD_DESC.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/htmlReport/ns-1/index_SORT_BY_NAME_DESC.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/htmlReport/ns-1/sources/source-1.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/htmlReport/ns-2/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/htmlReport/ns-2/index_SORT_BY_BLOCK.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/htmlReport/ns-2/index_SORT_BY_BLOCK_DESC.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/htmlReport/ns-2/index_SORT_BY_CLASS.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/htmlReport/ns-2/index_SORT_BY_CLASS_DESC.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/htmlReport/ns-2/index_SORT_BY_LINE.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/htmlReport/ns-2/index_SORT_BY_LINE_DESC.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/htmlReport/ns-2/index_SORT_BY_METHOD.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/htmlReport/ns-2/index_SORT_BY_METHOD_DESC.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/htmlReport/ns-2/index_SORT_BY_NAME_DESC.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/htmlReport/ns-2/sources/source-1.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/htmlReport/ns-2/sources/source-10.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/htmlReport/ns-2/sources/source-11.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/htmlReport/ns-2/sources/source-2.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/htmlReport/ns-2/sources/source-3.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/htmlReport/ns-2/sources/source-4.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/htmlReport/ns-2/sources/source-5.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/htmlReport/ns-2/sources/source-6.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/htmlReport/ns-2/sources/source-7.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/htmlReport/ns-2/sources/source-8.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/htmlReport/ns-2/sources/source-9.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/htmlReport/ns-2/sources/source-a.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/htmlReport/ns-2/sources/source-b.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/htmlReport/ns-2/sources/source-c.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/htmlReport/ns-2/sources/source-d.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/htmlReport/ns-2/sources/source-e.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/htmlReport/ns-2/sources/source-f.html" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CoverageOptionsProvider">
+    <option name="myAddOrReplace" value="0" />
+  </component>
+  <component name="ExportToHTMLSettings">
+    <option name="OPEN_IN_BROWSER" value="true" />
+    <option name="OUTPUT_DIRECTORY" value="C:\Users\tre2z\IdeaProjects\2kurslabsoop\htmlReport" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="feature/проверка" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;i235gl1246o-19234776&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/i235gl1246o-19234776/2kurslabsoop.git&quot;,
+    &quot;accountId&quot;: &quot;a30d5d70-68e0-47ec-b5fa-643cea875a1a&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 1
+}</component>
+  <component name="ProjectId" id="32hFPK6eSrZpJpvhfjBTUC2RhEQ" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "JUnit.AbstractTabulatedFunctionTest.executor": "Run",
+    "JUnit.All in 2LabOOP.executor": "Coverage",
+    "JUnit.ArrayTabulatedFunctionTest.executor": "Run",
+    "JUnit.LinkedListTabulatedFunctionTest.executor": "Run",
+    "JUnit.MathFunctionTest.executor": "Run",
+    "JUnit.NewtonMethodTest.executor": "Run",
+    "JUnit.TabulatedFunctionTest.executor": "Coverage",
+    "Maven. [org.apache.maven.plugins:maven-archetype-plugin:RELEASE:generate].executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "C:/Users/tre2z/IdeaProjects/2kurslabsoop/3_LabOOP",
+    "settings.editor.selected.configurable": "preferences.pluginManager"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\tre2z\IdeaProjects\2kurslabsoop\3_LabOOP" />
+      <recent name="C:\Users\tre2z\IdeaProjects\2kurslabsoop" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="All in 2LabOOP" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="2LabOOP" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="TEST_OBJECT" value="package" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.All in 2LabOOP" />
+        <item itemvalue="JUnit.All in 2LabOOP" />
+        <item itemvalue="JUnit.All in 2LabOOP" />
+        <item itemvalue="JUnit.All in 2LabOOP" />
+        <item itemvalue="JUnit.All in 2LabOOP" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="1fd2675e-1365-4525-8372-fcc93973cd88" name="Changes" comment="" />
+      <created>1757864873300</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1757864873300</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="RECENT_FILTERS">
+      <map>
+        <entry key="Branch">
+          <value>
+            <list>
+              <RecentGroup>
+                <option name="FILTER_VALUES">
+                  <option value="HEAD" />
+                </option>
+              </RecentGroup>
+              <RecentGroup>
+                <option name="FILTER_VALUES">
+                  <option value="main" />
+                </option>
+              </RecentGroup>
+              <RecentGroup>
+                <option name="FILTER_VALUES">
+                  <option value="origin/main" />
+                </option>
+              </RecentGroup>
+              <RecentGroup>
+                <option name="FILTER_VALUES">
+                  <option value="origin/feature/newtonTests" />
+                </option>
+              </RecentGroup>
+            </list>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="HEAD" />
+                        <option value="main" />
+                        <option value="origin/main" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/2kurslabsoop$AbstractTabulatedFunctionTest.ic" NAME="AbstractTabulatedFunctionTest Coverage Results" MODIFIED="1757953704182" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true">
+      <FILTER>functions.*</FILTER>
+    </SUITE>
+    <SUITE FILE_PATH="coverage/2kurslabsoop$TabulatedFunctionTest.ic" NAME="TabulatedFunctionTest Coverage Results" MODIFIED="1758040239940" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true">
+      <FILTER>functions.*</FILTER>
+    </SUITE>
+    <SUITE FILE_PATH="coverage/2kurslabsoop$All_in_2LabOOP.ic" NAME="All in 2LabOOP Coverage Results" MODIFIED="1758168629766" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
+    <SUITE FILE_PATH="coverage/2kurslabsoop$LinkedListTabulatedFunctionTest.ic" NAME="LinkedListTabulatedFunctionTest Coverage Results" MODIFIED="1757955106770" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true">
+      <FILTER>functions.*</FILTER>
+    </SUITE>
+    <SUITE FILE_PATH="coverage/2kurslabsoop$ArrayTabulatedFunctionTest.ic" NAME="ArrayTabulatedFunctionTest Coverage Results" MODIFIED="1757956667514" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true">
+      <FILTER>functions.*</FILTER>
+    </SUITE>
+  </component>
+</project>
