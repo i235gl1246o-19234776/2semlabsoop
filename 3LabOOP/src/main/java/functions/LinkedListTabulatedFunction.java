@@ -1,5 +1,7 @@
 package functions;
 
+import exception.InterpolationException;
+
 public class LinkedListTabulatedFunction extends AbstractTabulatedFunction implements Insertable, Removable {
 
     public static class Node {
@@ -24,15 +26,9 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
         if (xVal.length < 2) {
             throw new IllegalArgumentException("Длина таблицы должна быть не менее 2 точек");
         }
-        if(xVal.length != yVal.length){
-            throw new IllegalArgumentException("Массивы должны быть одинаковой длины");
-        }
+        checkLengthIsTheSame(xVal, yVal);
 
-        for(int i = 1; i < xVal.length; i++){
-            if(xVal[i] <= xVal[i-1]){
-                throw new IllegalArgumentException("Значения должны строго возрастать в xVal");
-            }
-        }
+        checkSorted(xVal);
 
         this.count = 0;
         this.head = null;
@@ -157,6 +153,11 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
         }
         Node leftNode = getNode(floorIndex);
         Node rightNode = leftNode.next;
+
+        if (x < leftNode.x || x > rightNode.x) {
+            throw new InterpolationException(
+                    "Значение x = " + x + " не находится в интервале [" +  leftNode.x + ", " + rightNode.x + "]");
+        }
         return interpolate(x, leftNode.x, rightNode.x, leftNode.y, rightNode.y);
     }
 

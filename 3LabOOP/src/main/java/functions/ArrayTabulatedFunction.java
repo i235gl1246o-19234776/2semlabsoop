@@ -1,5 +1,7 @@
 package functions;
 
+import exception.InterpolationException;
+
 import java.util.Arrays;
 
 public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements Removable {
@@ -8,14 +10,11 @@ public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements
     private int count;
 
     public ArrayTabulatedFunction(double[] xVal, double[] yVal){
-        if (xVal.length != yVal.length){
-            throw new IllegalArgumentException("Массивы разной длины");
+        checkLengthIsTheSame(xVal, yVal);
+        if (xVal.length < 2) {
+            throw new IllegalArgumentException("Таблица должна содержать как минимум 2 точки");
         }
-        for (int i = 1; i < xVal.length; i++){
-            if (xVal[i] <= xVal[i-1]){
-                throw new IllegalArgumentException("xVal не упорядочены");
-            }
-        }
+        checkSorted(xVal);
 
         this.count = xVal.length;
         this.xVal = Arrays.copyOf(xVal, count);
@@ -23,9 +22,11 @@ public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements
     }
 
     public ArrayTabulatedFunction(MathFunction s, double xFrom, double xTo, int count){
+
         if(count < 2){
             throw new IllegalArgumentException("Меньше 2х элементов");
         }
+
         this.count = count;
         this.xVal = new double[count];
         this.yVal = new double[count];
@@ -51,18 +52,14 @@ public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements
 
     @Override
     public double extrapolateLeft(double x) {
-        if (count == 1) {
-            return yVal[0];
-        }
-        return interpolate(x, 0);
+        int floorIndex = 0;
+        return interpolate(x, xVal[floorIndex], xVal[floorIndex+1], yVal[floorIndex], yVal[floorIndex+1]);
     }
 
     @Override
     public double extrapolateRight(double x) {
-        if (count == 1) {
-            return yVal[0];
-        }
-        return interpolate(x, count - 2);
+        int floorIndex = count - 2;
+        return interpolate(x, xVal[floorIndex], xVal[floorIndex+1], yVal[floorIndex], yVal[floorIndex+1]);
     }
 
     @Override
@@ -80,6 +77,11 @@ public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements
         double x2 = xVal[floorIndex + 1];
         double y1 = yVal[floorIndex];
         double y2 = yVal[floorIndex + 1];
+
+        if (x < x1 || x > x2) {
+            throw new InterpolationException(
+                    "Значение x = " + x + " не находится в интервале [" + x1 + ", " + x2 + "]");
+        }
 
         return interpolate(x, x1, x2, y1, y2);
     }

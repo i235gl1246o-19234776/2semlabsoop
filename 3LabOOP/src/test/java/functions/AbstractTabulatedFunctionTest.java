@@ -1,5 +1,8 @@
 package functions;
 
+import exception.ArrayIsNotSortedException;
+import exception.DifferentLengthOfArraysException;
+import exception.InterpolationException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -281,4 +284,114 @@ public class AbstractTabulatedFunctionTest {
                 () -> new MockTabulatedFunction(2.0, 1.0, 0, 0));
         assertEquals("x0 > x1, NOT GOOD", thrown.getMessage(), "Ошибка при x0 > x1: 'x0 > x1' ");
     }
+    // ========================
+// Тесты для checkLengthIsTheSame
+// ========================
+
+    @Test
+    @DisplayName("checkLengthIsTheSame: массивы одинаковой длины — не должно выбрасывать исключение")
+    void testCheckLengthIsTheSame_SameLength_Success() {
+        // Должен пройти без ошибок
+        double[] x = {1.0, 2.0, 3.0};
+        double[] y = {1.0, 4.0, 9.0};
+        assertDoesNotThrow(() -> AbstractTabulatedFunction.checkLengthIsTheSame(x, y));
+    }
+
+    @Test
+    @DisplayName("checkLengthIsTheSame: массивы разной длины — должно выбрасывать DifferentLengthOfArraysException")
+    void testCheckLengthIsTheSame_DifferentLength_ThrowsException() {
+        double[] x = {1.0, 2.0};
+        double[] y = {1.0, 2.0, 3.0};
+
+        DifferentLengthOfArraysException exception = assertThrows(
+                DifferentLengthOfArraysException.class,
+                () -> AbstractTabulatedFunction.checkLengthIsTheSame(x, y)
+        );
+    }
+
+
+    @Test
+    @DisplayName("checkSorted: строго возрастающий массив — не должно выбрасывать исключение")
+    void testCheckSorted_StrictlyIncreasing_Success() {
+        // Строго возрастающий массив — должен пройти
+        double[] x = {1.0, 2.0, 3.0, 5.5, 10.0};
+        assertDoesNotThrow(() -> AbstractTabulatedFunction.checkSorted(x));
+    }
+
+    @Test
+    @DisplayName("checkSorted: нарушение строгого возрастания (равные/убывающие элементы) — должно выбрасывать ArrayIsNotSortedException")
+    void testCheckSorted_NotStrictlyIncreasing_ThrowsException() {
+        //Нарушение строгого возрастания — должно бросить исключение
+
+        //Элемент равен предыдущему
+        double[] x1 = {1.0, 2.0, 2.0, 3.0};
+        assertThrows(ArrayIsNotSortedException.class,
+                () -> AbstractTabulatedFunction.checkSorted(x1));
+
+        //Элемент меньше предыдущего
+        double[] x2 = {1.0, 3.0, 2.0, 4.0};
+        assertThrows(ArrayIsNotSortedException.class,
+                () -> AbstractTabulatedFunction.checkSorted(x2));
+
+        //Все элементы одинаковые
+        double[] x3 = {5.0, 5.0, 5.0};
+        assertThrows(ArrayIsNotSortedException.class,
+                () -> AbstractTabulatedFunction.checkSorted(x3));
+    }
+
+
+    @Test
+    @DisplayName("checkSorted: массив с отрицательными и положительными числами в порядке возрастания — не должно выбрасывать исключение")
+    void testCheckSorted_NegativeAndPositive_Success() {
+        double[] x = {-5.0, -2.0, 0.0, 1.5, 10.0};
+        assertDoesNotThrow(() -> AbstractTabulatedFunction.checkSorted(x));
+    }
+
+
+    @Test
+    @DisplayName("interpolate (ArrayTabulatedFunction): точка вне интервала — должно выбрасывать InterpolationException")
+    void testInterpolate_OutsideInterval_ArrayImpl() {
+        double[] x = {1.0, 3.0, 5.0};
+        double[] y = {1.0, 9.0, 25.0};
+        ArrayTabulatedFunction af = new ArrayTabulatedFunction(x, y);
+
+        assertThrows(InterpolationException.class,
+                () -> af.interpolate(6.0, 0));
+
+        assertThrows(InterpolationException.class,
+                () -> af.interpolate(0.5, 0));
+
+        assertThrows(InterpolationException.class,
+                () -> af.interpolate(7.0, 1));
+    }
+
+    @Test
+    @DisplayName("interpolate (LinkedListTabulatedFunction): точка вне интервала — должно выбрасывать InterpolationException")
+    void testInterpolate_OutsideInterval_LinkedListImpl() {
+        double[] x = {1.0, 3.0, 5.0};
+        double[] y = {1.0, 9.0, 25.0};
+        LinkedListTabulatedFunction llf = new LinkedListTabulatedFunction(x, y);
+
+        assertThrows(InterpolationException.class,
+                () -> llf.interpolate(6.0, 0));
+        assertThrows(InterpolationException.class,
+                () -> llf.interpolate(0.5, 0));
+        assertThrows(InterpolationException.class,
+                () -> llf.interpolate(7.0, 1));
+    }
+
+
+    @Test
+    @DisplayName("interpolate: точка внутри интервала — корректный расчёт линейной интерполяции")
+    void testInterpolate_InsideInterval_Success() {
+        double[] x = {1.0, 3.0, 5.0};
+        double[] y = {1.0, 9.0, 25.0};
+        ArrayTabulatedFunction af = new ArrayTabulatedFunction(x, y);
+
+        assertEquals(5.0, af.interpolate(2.0, 0), 1e-10); // (1->3): (2-1)/(3-1)=0.5 → 1 + 0.5*(9-1)=5.0
+
+        assertEquals(17.0, af.interpolate(4.0, 1), 1e-10); // (3->5): (4-3)/2=0.5 → 9 + 0.5*16=17
+    }
+
+
 }
