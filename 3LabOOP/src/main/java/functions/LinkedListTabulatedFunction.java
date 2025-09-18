@@ -21,6 +21,9 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
 
     //конструктор с массивами значений
     public LinkedListTabulatedFunction(double[] xVal, double[] yVal){
+        if (xVal.length < 2) {
+            throw new IllegalArgumentException("Длина таблицы должна быть не менее 2 точек");
+        }
         if(xVal.length != yVal.length){
             throw new IllegalArgumentException("Массивы должны быть одинаковой длины");
         }
@@ -41,6 +44,9 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
 
     //конструктор с дискретизацией функции
     public LinkedListTabulatedFunction(MathFunction s, double xFrom, double xTo, int count){
+        if (count < 2) {
+            throw new IllegalArgumentException("Количество точек должно быть не менее 2");
+        }
 
         if (xFrom > xTo){
             double temp = xFrom;
@@ -111,11 +117,11 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
         if(head == null){
             throw new IllegalArgumentException("Список пуст, ы");
         }
-        if(x < head.x){
-            return 0;
+        if (x < head.x) {
+            throw new IllegalArgumentException("x = " + x + " меньше левой границы " + head.x);
         }
         if(x > head.prev.x){
-            return count;
+            throw new IllegalArgumentException("x = " + x + " больше левой границы " + count);
         }
 
         Node curr = head;
@@ -161,16 +167,25 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
 
     @Override
     public double getX(int index){
+        if (index < 0 || index >= count) {
+            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + count);
+        }
         return getNode(index).x;
     }
 
     @Override
     public double getY(int index){
+        if (index < 0 || index >= count) {
+            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + count);
+        }
         return getNode(index).y;
     }
 
     @Override
     public void setY(int index, double val){
+        if (index < 0 || index >= count) {
+            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + count);
+        }
         getNode(index).y = val;
     }
 
@@ -226,12 +241,12 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
         if (head == null){
             throw new IllegalStateException("Список пуст, ы");
         }
-        if(x < head.x){
-            return head;
+        if (x < head.x) {
+            throw new IllegalArgumentException("x = " + x + " меньше левой границы " + head.x);
         }
 
         if(x > head.prev.x){
-            return head.prev;
+            throw new IllegalArgumentException("x = " + x + " больше левой границы " + head.prev);
         }
 
         Node curr = head;
@@ -315,7 +330,7 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
         }
 
         if (index < 0 || index >= count) {
-            throw new IndexOutOfBoundsException("Индекс: " + index + ", размер: " + count);
+            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + count);
         }
 
         Node nodeToRemove = getNode(index);

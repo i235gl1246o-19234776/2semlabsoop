@@ -73,6 +73,7 @@ public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements
 
         if (floorIndex < 0 || floorIndex >= count - 1) {
             throw new IndexOutOfBoundsException("Аут оф индекс: " + floorIndex);
+
         }
 
         double x1 = xVal[floorIndex];
@@ -91,7 +92,7 @@ public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements
     @Override
     public double getX(int index){
         if (index < 0 || index >= count){
-            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + count);
+            throw new IllegalArgumentException("Index: " + index + ", Size: " + count);
         }
         return xVal[index];
     }
@@ -107,7 +108,7 @@ public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements
     @Override
     public void setY(int index, double value) {
         if (index < 0 || index >= count) {
-            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + count);
+            throw new IllegalArgumentException("Index: " + index + ", Size: " + count);
         }
         yVal[index] = value;
     }
@@ -156,11 +157,11 @@ public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements
     //должен возвращать индекс наибольшего элемента массива, который меньше или равен заданному x
     @Override
     public int floorIndexOfX(double x) {
-        if (x < xVal[0]) {
-            return 0; // все больше заданного - 0
+        if (x < leftBound()) {
+            throw new IllegalArgumentException("Значение x = " + x + " меньше левой границы таблицы ");
         }
-        if (x > xVal[count - 1]) {
-            return count; //все меньше заданного - count
+        if (x >  rightBound()) {
+            throw new IllegalArgumentException("Значение x = " + x + " больше правой границы таблицы ");
         }
 
         for (int i = 0; i < count - 1; i++) {
@@ -200,10 +201,6 @@ public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements
 
         //Уменьшаем количество точек
         count--;
-
-        //Опционально: можно обнулить последний элемент для GC (необязательно, но чисто)
-        xVal[count] = Double.NaN;
-        yVal[count] = Double.NaN;
     }
     public double[] getxVal() {
         return Arrays.copyOf(xVal, count);
