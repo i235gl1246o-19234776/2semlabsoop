@@ -3,6 +3,8 @@ package functions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 import static org.junit.jupiter.api.Assertions.*;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 @DisplayName("Тесты для LinkedListTabulatedFunction")
 class LinkedListTabulatedFunctionTest {
@@ -924,5 +926,44 @@ class LinkedListTabulatedFunctionTest {
         assertEquals(-1, function.indexOfY(11.0));
         assertTrue(assertThrows(IllegalStateException.class, () -> function.floorNodeOfX(1.0)).getMessage().contains("Список пуст, ы"));
         assertTrue(assertThrows(IllegalStateException.class, () -> function.remove(0)).getMessage().contains("Список пуст, ы"));
+    }
+
+    @Test
+    @DisplayName("Итератор должен корректно работать с циклом while")
+    void testIteratorWorksCorrectlyWithWhileLoop(){
+        double[] xVal = {1.0, 2.0, 3.0};
+        double[] yVal = {4.0, 5.0, 6.0};
+        LinkedListTabulatedFunction function = new LinkedListTabulatedFunction(xVal, yVal);
+        Iterator<Point> iterator = function.iterator();
+        int index = 0;
+        double[] xValExp = {1.0, 2.0, 3.0};
+        double[] yValExp = {4.0, 5.0, 6.0};
+        while(iterator.hasNext()){
+            Point point = iterator.next();
+            assertEquals(xValExp[index], point.x, delta, "X координата точки " + index + " должна быть корректной");
+            assertEquals(yValExp[index], point.y, delta, "Y координата точки " + index + " должна быть корректной");
+            index++;
+        }
+        assertEquals(index, 3,delta,"Должны быть пройдены все точки с помощью цикла while");
+    }
+
+    @Test
+    @DisplayName("Итератор должен поддерживать цикл for-each")
+    public void testIteratorSupportsForEachLoop() {
+        double[] xVal = {1.0, 2.0, 3.0};
+        double[] yVal = {4.0, 5.0, 6.0};
+        LinkedListTabulatedFunction function = new LinkedListTabulatedFunction(xVal, yVal);
+        Iterator<Point> iterator = function.iterator();
+        int index = 0;
+        double[] xValExp = {1.0, 2.0, 3.0};
+        double[] yValExp = {4.0, 5.0, 6.0};
+
+        for (Point point : function) {
+            assertEquals(xValExp[index], point.x, delta, "X координата точки " + index + " должна быть корректной");
+            assertEquals(yValExp[index], point.y, delta, "Y координата точки " + index + " должна быть корректной");
+            index++;
+        }
+
+        assertEquals(index, 3,delta,"Должны быть пройдены все точки с помощью цикла for-each");
     }
 }

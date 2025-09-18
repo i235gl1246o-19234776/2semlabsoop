@@ -1,15 +1,33 @@
 package functions;
 
-import exception.InterpolationException;
-
-import java.awt.*;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 public class LinkedListTabulatedFunction extends AbstractTabulatedFunction implements Insertable, Removable {
 
     @Override
     public Iterator<Point> iterator() {
-        throw new UnsupportedOperationException("Итерация по точкам не поддерживается");
+        return new Iterator<Point>() {
+            private Node currNode = head;
+            private int visitedCount = 0;
+
+            @Override
+            public boolean hasNext() {
+                return visitedCount < count;
+            }
+
+            @Override
+            public Point next() {
+                if (!hasNext()){
+                    throw new NoSuchElementException("Элементов больше нет, ы");
+                }
+
+                Point point = new Point(currNode.x, currNode.y);
+                currNode = currNode.next;
+                visitedCount++;
+                return point;
+            }
+        };
     }
 
     public static class Node {
