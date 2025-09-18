@@ -17,8 +17,14 @@ public class ArrayTabulatedFunctionTest {
     }
 
     @Test
-    @DisplayName("Конструктор с разными длинами массивов x и y должен выбрасывать IllegalArgumentException, так как количество точек не совпадает GOOD")
+    @DisplayName("Конструктор с разными длинами массивов x и y должен выбрасывать IllegalArgumentException, так как количество точек не совпадает")
     void constructorDifferentLengthsThrows() {
+        assertThrows(IllegalArgumentException.class, () ->
+                new ArrayTabulatedFunction(new double[]{1, 2}, new double[]{3}), "Длины массивов x и y должны быть равны GOOD");
+    }
+    @Test
+    @DisplayName("Конструктор xFrom > xTo")
+    void constructorXFromMorexTO() {
         assertThrows(IllegalArgumentException.class, () ->
                 new ArrayTabulatedFunction(new double[]{1, 2}, new double[]{3}), "Длины массивов x и y должны быть равны GOOD");
     }
