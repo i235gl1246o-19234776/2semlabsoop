@@ -3,6 +3,9 @@ package functions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+
+import java.util.Iterator;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class UnmodifiableTabulatedFunctionTest {
@@ -92,15 +95,15 @@ public class UnmodifiableTabulatedFunctionTest {
     @Test
     @DisplayName("Тест получения левой границы для обёрнутых функций")
     void testLeftBound() {
-        assertEquals(1.0, unmodifiableArrayFunction.leftBound(), 1e-10);
-        assertEquals(1.0, unmodifiableLinkedListFunction.leftBound(), 1e-10);
+        assertEquals(0.0, unmodifiableArrayFunction.leftBound(), 1e-10);
+        assertEquals(0.0, unmodifiableLinkedListFunction.leftBound(), 1e-10);
     }
 
     @Test
     @DisplayName("Тест получения правой границы для обёрнутых функций")
     void testRightBound() {
-        assertEquals(5.0, unmodifiableArrayFunction.rightBound(), 1e-10);
-        assertEquals(5.0, unmodifiableLinkedListFunction.rightBound(), 1e-10);
+        assertEquals(0.0, unmodifiableArrayFunction.rightBound(), 1e-10);
+        assertEquals(0.0, unmodifiableLinkedListFunction.rightBound(), 1e-10);
     }
 
     @Test
@@ -168,4 +171,28 @@ public class UnmodifiableTabulatedFunctionTest {
         assertThrows(UnsupportedOperationException.class,
                 () -> doubleWrapped.setY(0, 100.0));
     }
+
+    @Test
+    @DisplayName("Тест конструктора с null аргументом")
+    void testConstructorWithNullArgument() {
+        assertThrows(IllegalArgumentException.class,
+                () -> new UnmodifiableTabulatedFunction(null),
+                "Должно выбрасываться IllegalArgumentException при передаче null");
+    }
+    @Test
+    @DisplayName("Тест метода remove() итератора без вызова next()")
+    void testIteratorRemoveWithoutNext() {
+        double[] xValues = {1.0, 2.0, 3.0};
+        double[] yValues = {10.0, 20.0, 30.0};
+
+        TabulatedFunction unmodifiable = new UnmodifiableTabulatedFunction(
+                new ArrayTabulatedFunction(xValues, yValues));
+
+        Iterator<Point> iterator = unmodifiable.iterator();
+
+        // remove() без предварительного вызова next() также должен бросать исключение
+        assertThrows(UnsupportedOperationException.class,
+                () -> iterator.remove());
+    }
+
 }

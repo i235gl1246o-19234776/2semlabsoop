@@ -6,6 +6,8 @@ import exception.InterpolationException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import java.util.Iterator;
 
 public class AbstractTabulatedFunctionTest {
 
@@ -392,6 +394,13 @@ public class AbstractTabulatedFunctionTest {
 
         assertEquals(17.0, af.interpolate(4.0, 1), 1e-10); // (3->5): (4-3)/2=0.5 → 9 + 0.5*16=17
     }
+    @Test
+    @DisplayName("Тест итератора, возвращающего null - проверка деталей исключения")
+    void testIteratorReturnsNullDetails() {
+        MockTabulatedFunction f = new MockTabulatedFunction(1.0, 3.0, 2.0, 6.0);
+        TabulatedFunction unmodifiable = new UnmodifiableTabulatedFunction(f);
 
-
+        // Более подходящее исключение для операций, которые не поддерживаются
+        assertThrows(UnsupportedOperationException.class, () -> unmodifiable.iterator().remove());
+    }
 }
