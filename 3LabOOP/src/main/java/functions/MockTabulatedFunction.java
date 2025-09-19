@@ -1,5 +1,7 @@
 package functions;
 
+import java.util.Iterator;
+
 public class MockTabulatedFunction extends AbstractTabulatedFunction{
     private final double x0;
     private final double x1;
@@ -95,4 +97,8 @@ public class MockTabulatedFunction extends AbstractTabulatedFunction{
         return x1;
     }
 
+    @Override
+    public Iterator<Point> iterator() {
+        return null;
+    }
 }

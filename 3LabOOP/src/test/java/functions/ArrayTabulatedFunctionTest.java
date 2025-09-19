@@ -4,6 +4,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -995,4 +997,73 @@ public class ArrayTabulatedFunctionTest {
         //x равен последнему элементу - все итерации false, возврат count-1
         assertEquals(3, f.floorIndexOfX(4.0), "x=4.0: все итерации false → count-1 GOOD");
     }
+
+    @Test
+    void testIteratorWithWhileLoop() {
+        double[] xValues = {1.0, 2.0, 3.0};
+        double[] yValues = {4.0, 5.0, 6.0};
+        ArrayTabulatedFunction function = new ArrayTabulatedFunction(xValues, yValues);
+
+        Iterator<Point> iterator = function.iterator();
+        int index = 0;
+
+        while (iterator.hasNext()) {
+            Point point = iterator.next();
+            assertEquals(xValues[index], point.x, 1e-10);
+            assertEquals(yValues[index], point.y, 1e-10);
+            index++;
+        }
+
+        assertEquals(xValues.length, index);
+        assertThrows(NoSuchElementException.class, iterator::next);
+    }
+
+    @Test
+    void testIteratorWithForEachLoop() {
+        double[] xValues = {10.0, 20.0, 30.0};
+        double[] yValues = {100.0, 200.0, 300.0};
+        ArrayTabulatedFunction function = new ArrayTabulatedFunction(xValues, yValues);
+
+        int index = 0;
+        for (Point point : function) {
+            assertEquals(xValues[index], point.x, 1e-10);
+            assertEquals(yValues[index], point.y, 1e-10);
+            index++;
+        }
+
+        assertEquals(xValues.length, index);
+    }
+
+    @Test
+    void testIteratorEmptyFunction() {
+        double[] xValues = {};
+        double[] yValues = {};
+        ArrayTabulatedFunction function = new ArrayTabulatedFunction(xValues, yValues);
+
+        Iterator<Point> iterator = function.iterator();
+
+        // Должен сразу вернуть false
+        assertFalse(iterator.hasNext());
+
+        // Должен сразу бросить исключение
+        assertThrows(NoSuchElementException.class, iterator::next);
+    }
+
+    @Test
+    void testIteratorSingleElement() {
+        double[] xValues = {5.5};
+        double[] yValues = {7.7};
+        ArrayTabulatedFunction function = new ArrayTabulatedFunction(xValues, yValues);
+
+        Iterator<Point> iterator = function.iterator();
+
+        assertTrue(iterator.hasNext());
+        Point point = iterator.next();
+        assertEquals(5.5, point.x, 1e-10);
+        assertEquals(7.7, point.y, 1e-10);
+
+        assertFalse(iterator.hasNext());
+        assertThrows(NoSuchElementException.class, iterator::next);
+    }
+
 }
