@@ -1,5 +1,4 @@
 package functions;
-
 import exception.ArrayIsNotSortedException;
 import exception.DifferentLengthOfArraysException;
 

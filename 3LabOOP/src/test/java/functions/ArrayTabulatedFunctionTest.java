@@ -2,7 +2,6 @@ package functions;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
-
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
