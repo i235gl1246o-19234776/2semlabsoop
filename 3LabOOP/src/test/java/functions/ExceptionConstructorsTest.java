@@ -2,6 +2,7 @@ package functions;
 
 import exception.ArrayIsNotSortedException;
 import exception.DifferentLengthOfArraysException;
+import exception.InconsistentFunctionsException;
 import exception.InterpolationException;
 import operations.TabulatedDifferentialOperator;
 import org.junit.jupiter.api.DisplayName;
@@ -128,5 +129,37 @@ class ExceptionConstructorsTest {
         assertEquals(expectedDerivative, derivative.getY(0), DELTA,
                 "Производная в первой точке должна вычисляться как (y1 - y0) / (x1 - x0)");
     }
+    @Test
+    @DisplayName("Тест конструктора по умолчанию")
+    void testDefaultConstructor() {
 
+        InconsistentFunctionsException exception = new InconsistentFunctionsException();
+
+        assertNotNull(exception, "Исключение должно быть создано");
+        assertNull(exception.getMessage(), "Сообщение должно быть null");
+        assertNull(exception.getCause(), "Причина должна быть null");
+
+        assertInstanceOf(RuntimeException.class, exception,
+                "Должно быть RuntimeException");
+        assertInstanceOf(InconsistentFunctionsException.class, exception,
+                "Должно быть InconsistentFunctionsException");
+    }
+
+    @Test
+    @DisplayName("Тест конструктора с сообщением")
+    void testConstructorWithMessage() {
+        String expectedMessage = "Функции имеют несовместимые размеры";
+        InconsistentFunctionsException exception = new InconsistentFunctionsException(expectedMessage);
+        assertNotNull(exception, "Исключение должно быть создано");
+        assertEquals(expectedMessage, exception.getMessage(),
+                "Сообщение должно соответствовать переданному");
+        assertNull(exception.getCause(), "Причина должна быть null");
+
+        // Проверка типа исключения
+        assertInstanceOf(RuntimeException.class, exception,
+                "Должно быть RuntimeException");
+        assertInstanceOf(InconsistentFunctionsException.class, exception,
+                "Должно быть InconsistentFunctionsException");
+    }
 }
+
