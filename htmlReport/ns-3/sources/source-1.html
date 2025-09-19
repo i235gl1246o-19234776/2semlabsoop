@@ -1,0 +1,161 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > AbstractTabulatedFunction</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">functions</a>
+</div>
+
+<h1>Coverage Summary for Class: AbstractTabulatedFunction (functions)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">AbstractTabulatedFunction</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (5/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (12/12)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (16/16)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package functions;
+&nbsp;
+&nbsp;public abstract class AbstractTabulatedFunction implements TabulatedFunction {
+&nbsp;
+&nbsp;    protected int count;
+<b class="fc">&nbsp;</b>
+&nbsp;    protected abstract int floorIndexOfX(double x);
+&nbsp;    protected abstract double extrapolateLeft(double x);
+&nbsp;    protected abstract double extrapolateRight(double x);
+&nbsp;    protected abstract double interpolate(double x, int floorIndex);
+&nbsp;
+&nbsp;    protected double interpolate(double x, double leftX, double rightX,
+&nbsp;                                 double leftY, double rightY) {
+&nbsp;        return leftY + (rightY - leftY) * (x - leftX) / (rightX - leftX);
+&nbsp;    }
+&nbsp;
+<b class="fc">&nbsp;    @Override</b>
+&nbsp;    public double apply(double x) {
+&nbsp;        if (x &lt; getX(0)) {
+&nbsp;            return extrapolateLeft(x);
+&nbsp;        }
+<b class="fc">&nbsp;</b>
+<b class="fc">&nbsp;        if (x &gt; getX(count - 1)) {</b>
+&nbsp;            return extrapolateRight(x);
+&nbsp;        }
+<b class="fc">&nbsp;</b>
+<b class="fc">&nbsp;        int exactIndex = indexOfX(x);</b>
+&nbsp;        if (exactIndex != -1) {
+&nbsp;            return getY(exactIndex);
+<b class="fc">&nbsp;        }</b>
+<b class="fc">&nbsp;</b>
+<b class="fc">&nbsp;        int floorIndex = floorIndexOfX(x);</b>
+&nbsp;        return interpolate(x, floorIndex);
+&nbsp;    }
+<b class="fc">&nbsp;</b>
+<b class="fc">&nbsp;    //Абстрактные методы из интерфейса TabulatedFunction</b>
+&nbsp;    public abstract int getCount();
+&nbsp;    public abstract double getX(int index);
+<b class="fc">&nbsp;    public abstract double getY(int index);</b>
+<b class="fc">&nbsp;    public abstract void setY(int index, double value);</b>
+&nbsp;    public abstract int indexOfX(double x);
+&nbsp;    public abstract int indexOfY(double y);
+&nbsp;    public abstract double leftBound();
+<b class="fc">&nbsp;    public abstract double rightBound();</b>
+<b class="fc">&nbsp;}</b>
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-09-19 18:21</div>
+</div>
+</body>
+</html>

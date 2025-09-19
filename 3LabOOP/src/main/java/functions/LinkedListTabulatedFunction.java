@@ -54,15 +54,8 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
         if (xVal.length < 2) {
             throw new IllegalArgumentException("Длина таблицы должна быть не менее 2 точек");
         }
-        if(xVal.length != yVal.length){
-            throw new IllegalArgumentException("Массивы должны быть одинаковой длины");
-        }
-
-        for(int i = 1; i < xVal.length; i++){
-            if(xVal[i] <= xVal[i-1]){
-                throw new IllegalArgumentException("Значения должны строго возрастать в xVal");
-            }
-        }
+        checkLengthIsTheSame(xVal, yVal);
+        checkSorted(xVal);
 
         this.count = 0;
         this.head = null;
@@ -166,6 +159,7 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
 
     @Override
     protected double extrapolateLeft(double x) {
+        if (count < 2) throw new IllegalArgumentException("Экстраполяция на <2 элемента");
         int floorIndex = 0;
         Node leftNode = getNode(floorIndex);
         Node rightNode = leftNode.next;
@@ -174,6 +168,7 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
 
     @Override
     protected double extrapolateRight(double x) {
+        if (count < 2) throw new IllegalArgumentException("Экстраполяция на <2 элемента");
         int floorIndex = count-2;
         Node leftNode = getNode(floorIndex);
         Node rightNode = leftNode.next;
@@ -228,7 +223,7 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
     @Override
     public int indexOfX(double x){
         if (head == null){
-            throw new IllegalStateException();
+            throw new IllegalStateException("Список пуст, ы");
         }
 
         Node curr = head;

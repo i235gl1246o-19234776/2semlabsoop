@@ -12,10 +12,10 @@ public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements
     private int count;
 
     public ArrayTabulatedFunction(double[] xVal, double[] yVal){
-        checkLengthIsTheSame(xVal, yVal);
         if (xVal.length < 2) {
             throw new IllegalArgumentException("Таблица должна содержать как минимум 2 точки");
         }
+        checkLengthIsTheSame(xVal, yVal);
         checkSorted(xVal);
 
         this.count = xVal.length;
@@ -54,12 +54,14 @@ public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements
 
     @Override
     public double extrapolateLeft(double x) {
+        if (count < 2) throw new IllegalArgumentException();
         int floorIndex = 0;
         return interpolate(x, xVal[floorIndex], xVal[floorIndex+1], yVal[floorIndex], yVal[floorIndex+1]);
     }
 
     @Override
     public double extrapolateRight(double x) {
+        if (count < 2) throw new IllegalArgumentException();
         int floorIndex = count - 2;
         return interpolate(x, xVal[floorIndex], xVal[floorIndex+1], yVal[floorIndex], yVal[floorIndex+1]);
     }

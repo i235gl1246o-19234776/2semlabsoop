@@ -1,0 +1,214 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > MockTabulatedFunction</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">functions</a>
+</div>
+
+<h1>Coverage Summary for Class: MockTabulatedFunction (functions)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">MockTabulatedFunction</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    92,9%
+  </span>
+  <span class="absValue">
+    (13/14)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (26/26)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    97,3%
+  </span>
+  <span class="absValue">
+    (36/37)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package functions;
+&nbsp;
+&nbsp;public class MockTabulatedFunction extends AbstractTabulatedFunction{
+&nbsp;    private final double x0;
+&nbsp;    private final double x1;
+&nbsp;    private final double y0;
+&nbsp;    private final double y1;
+&nbsp;
+&nbsp;    public MockTabulatedFunction(double x0, double x1, double y0, double y1){
+&nbsp;        if(x0 &gt;= x1){
+<b class="fc">&nbsp;            throw new IllegalArgumentException(&quot;x0 &gt; x1, NOT GOOD&quot;);</b>
+<b class="fc">&nbsp;        }</b>
+<b class="fc">&nbsp;        this.x0 = x0;</b>
+&nbsp;        this.x1 = x1;
+<b class="fc">&nbsp;        this.y0 = y0;</b>
+<b class="fc">&nbsp;        this.y1 = y1;</b>
+<b class="fc">&nbsp;        this.count = 2;</b>
+<b class="fc">&nbsp;    }</b>
+<b class="fc">&nbsp;</b>
+&nbsp;    @Override
+&nbsp;    protected int floorIndexOfX(double x){
+&nbsp;        if(x &lt; x0){
+&nbsp;            return 0; // все больше заданного - 0
+<b class="fc">&nbsp;        }else if(x &gt; x1){</b>
+<b class="fc">&nbsp;            return count; //все меньше заданного - count</b>
+<b class="fc">&nbsp;        } else if(x == x0){</b>
+<b class="fc">&nbsp;            return 0;</b>
+<b class="fc">&nbsp;        } else if(x == x1){</b>
+<b class="fc">&nbsp;            return 1;</b>
+<b class="fc">&nbsp;        } else{</b>
+<b class="fc">&nbsp;            return 0;</b>
+&nbsp;        }
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    @Override
+&nbsp;    protected double extrapolateLeft(double x){
+&nbsp;        return interpolate(x, x0, x1, y0, y1);
+&nbsp;    }
+<b class="fc">&nbsp;</b>
+&nbsp;    @Override
+&nbsp;    protected double extrapolateRight(double x){
+&nbsp;        return interpolate(x, x0, x1, y0, y1);
+&nbsp;    }
+<b class="fc">&nbsp;</b>
+&nbsp;    @Override
+&nbsp;    protected double interpolate(double x, int floorIndex){
+&nbsp;        return interpolate(x,x0,x1,y0,y1);
+&nbsp;    }
+<b class="fc">&nbsp;</b>
+&nbsp;    @Override
+&nbsp;    public int getCount(){
+&nbsp;        return count;
+&nbsp;    }
+<b class="fc">&nbsp;</b>
+&nbsp;    @Override
+&nbsp;    public double getX(int index) {
+&nbsp;        if (index == 0) return x0;
+&nbsp;        if (index == 1) return x1;
+<b class="fc">&nbsp;        throw new IllegalArgumentException(&quot;Index out of bounds: &quot; + index);</b>
+<b class="fc">&nbsp;    }</b>
+<b class="fc">&nbsp;</b>
+&nbsp;    @Override
+&nbsp;    public double getY(int index) {
+&nbsp;        if (index == 0) return y0;
+&nbsp;        if (index == 1) return y1;
+<b class="fc">&nbsp;        throw new IllegalArgumentException(&quot;Index out of bounds: &quot; + index);</b>
+<b class="fc">&nbsp;    }</b>
+<b class="fc">&nbsp;</b>
+&nbsp;    @Override
+&nbsp;    public void setY(int index, double value) {
+&nbsp;        throw new UnsupportedOperationException(&quot;Mock object is immutable&quot;);
+&nbsp;    }
+<b class="fc">&nbsp;</b>
+&nbsp;    @Override
+&nbsp;    public int indexOfX(double x) {
+&nbsp;        if (Math.abs(x - x0) &lt;= 1e-10) return 0;
+&nbsp;        if (Math.abs(x - x1) &lt;= 1e-10) return 1;
+<b class="fc">&nbsp;        return -1;</b>
+<b class="fc">&nbsp;    }</b>
+<b class="fc">&nbsp;</b>
+&nbsp;    @Override
+&nbsp;    public int indexOfY(double y) {
+&nbsp;        if (Math.abs(y - y0) &lt;= 1e-10) return 0;
+&nbsp;        if (Math.abs(y - y1) &lt;= 1e-10) return 1;
+<b class="fc">&nbsp;        return -1;</b>
+<b class="fc">&nbsp;    }</b>
+<b class="fc">&nbsp;</b>
+&nbsp;    @Override
+&nbsp;    public double leftBound() {
+&nbsp;        return x0;
+&nbsp;    }
+<b class="fc">&nbsp;</b>
+&nbsp;    @Override
+&nbsp;    public double rightBound() {
+&nbsp;        return x1;
+&nbsp;    }
+<b class="fc">&nbsp;</b>
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-09-19 18:21</div>
+</div>
+</body>
+</html>

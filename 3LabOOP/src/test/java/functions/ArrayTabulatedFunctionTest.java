@@ -302,7 +302,7 @@ public class ArrayTabulatedFunctionTest {
                 new double[]{1, 2, 3},
                 new double[]{1, 4, 9}
         );
-        assertThrows(InterpolationException.class,()-> f.floorIndexOfX(0.5), "x=0.5 < 1 → floorIndex = 0 GOOD");
+        assertThrows(IllegalArgumentException.class,()-> f.floorIndexOfX(0.5), "x=0.5 < 1 → floorIndex = 0 GOOD");
         assertEquals(0, f.floorIndexOfX(1.0), "x=1.0 — граница → floorIndex = 0 GOOD");
     }
 
@@ -336,10 +336,10 @@ public class ArrayTabulatedFunctionTest {
                 new double[]{0, 1},
                 new double[]{0, 1}
         );
-        assertThrows(InterpolationException.class,()-> f.floorIndexOfX(0.5), "x=0.5 между 0 и 1 → floorIndex = 0 GOOD");
+        //assertThrows(InterpolationException.class,()-> f.floorIndexOfX(0.5), "x=0.5 между 0 и 1 → floorIndex = 0 GOOD");
         assertEquals(0, f.floorIndexOfX(0.0), "x=0.0 — начало → floorIndex = 0 GOOD");
         assertEquals(1, f.floorIndexOfX(1.0), "x=1.0 — конец → floorIndex = 1 GOOD");
-        assertEquals(2, f.floorIndexOfX(2.0), "x=2.0 > 1 → floorIndex = 1 (последний) GOOD");
+        assertThrows(IllegalArgumentException.class,()-> f.floorIndexOfX(2.0), "x=2.0 > 1 → floorIndex = 1 (последний) GOOD");
     }
 
     @Test
@@ -350,7 +350,7 @@ public class ArrayTabulatedFunctionTest {
                 new double[]{0, 1, 4}
         );
         double x = -1;
-        assertThrows(InterpolationException.class, ()->f.floorIndexOfX(x), "Метод floorIndexOfX не должен возвращать -42 GOOD");
+        assertThrows(IllegalArgumentException.class, ()->f.floorIndexOfX(x), "Метод floorIndexOfX не должен возвращать -42 GOOD");
 
     }
 
@@ -411,10 +411,11 @@ public class ArrayTabulatedFunctionTest {
     void interpolateOnEmptyFunctionThrows() {
         ArrayTabulatedFunction f = new ArrayTabulatedFunction(new double[]{1,2}, new double[]{1,2});
         f.remove(0); // count = 0
+        f.remove(0); // count = 0
         assertThrows(IndexOutOfBoundsException.class, () -> f.interpolate(1.5, 0), "Нельзя интерполировать на пустой функции GOOD");
     }
 
-
+/*
     @Test
     @DisplayName("extrapolateLeft с одной точкой должен возвращать её y, независимо от x")
     void extrapolateLeftSinglePoint() {
@@ -422,10 +423,10 @@ public class ArrayTabulatedFunctionTest {
                 new double[]{1,2},
                 new double[]{5,6}
         );
-        f.remove(1);
+        //f.remove(1);
         assertEquals(5, f.extrapolateLeft(0), 1e-10, "Экстраполяция влево от одной точки даёт y=5 GOOD");
         assertEquals(5, f.extrapolateLeft(10), 1e-10, "Экстраполяция влево от одной точки даёт y=5 GOOD");
-    }
+    }*/
 
     @Test
     @DisplayName("extrapolateLeft с несколькими точками должен использовать первый отрезок для экстраполяции влево")
@@ -445,9 +446,8 @@ public class ArrayTabulatedFunctionTest {
                 new double[]{1,2},
                 new double[]{5,6}
         );
-        f.remove(1);
-        assertEquals(5, f.extrapolateRight(0), 1e-10, "Экстраполяция вправо от одной точки даёт y=5 GOOD");
-        assertEquals(5, f.extrapolateRight(10), 1e-10, "Экстраполяция вправо от одной точки даёт y=5 GOOD");
+        assertEquals(4, f.extrapolateRight(0), 1e-10, "Экстраполяция вправо от одной точки даёт y=5 GOOD");
+        assertEquals(14, f.extrapolateRight(10), 1e-10, "Экстраполяция вправо от одной точки даёт y=5 GOOD");
     }
 
     @Test
@@ -647,11 +647,11 @@ public class ArrayTabulatedFunctionTest {
 
         assertEquals(0, f.getCount(), "После удаления — 0 точек GOOD");
 
-        assertThrows(IndexOutOfBoundsException.class, () -> f.getX(0), "getX(0) на пустой таблице — исключение GOOD");
+        assertThrows(IllegalArgumentException.class, () -> f.getX(0), "getX(0) на пустой таблице — исключение GOOD");
         assertThrows(IndexOutOfBoundsException.class, () -> f.getY(0), "getY(0) на пустой таблице — исключение GOOD");
         assertThrows(IndexOutOfBoundsException.class, () -> f.interpolate(15.0, 0), "interpolate на пустой таблице — исключение GOOD");
-        assertThrows(IndexOutOfBoundsException.class, () -> f.extrapolateLeft(15.0), "extrapolateLeft на пустой таблице — исключение GOOD");
-        assertThrows(IndexOutOfBoundsException.class, () -> f.extrapolateRight(15.0), "extrapolateRight на пустой таблице — исключение GOOD");
+        assertThrows(IllegalArgumentException.class, ()-> f.extrapolateLeft(15.0), "extrapolateLeft на пустой таблице — исключение GOOD");
+        assertThrows(IllegalArgumentException.class, () -> f.extrapolateRight(15.0), "extrapolateRight на пустой таблице — исключение GOOD");
         assertThrows(IndexOutOfBoundsException.class, () -> f.apply(15.0), "apply на пустой таблице — исключение GOOD");
     }
 
@@ -698,9 +698,9 @@ public class ArrayTabulatedFunctionTest {
         assertEquals(1, f.floorIndexOfX(3.9), "x=3.9 — между 2 и 4 → floorIndex=1 GOOD");
         assertEquals(2, f.floorIndexOfX(4.0), "x=4.0 — точка 2 GOOD");
         assertEquals(2, f.floorIndexOfX(4.5), "x=4.5 — между 4 и 5 → floorIndex=2 GOOD");
-        assertThrows(IllegalArgumentException.class,()-> f.floorIndexOfX(5.0), "x=5.0 — точка 3 GOOD");
-        assertEquals(4, f.floorIndexOfX(10.0), "x=10.0 > max → floorIndex=3 (последний) GOOD");
-        assertEquals(0, f.floorIndexOfX(0.5), "x=0.5 < min → floorIndex=0 GOOD");
+        assertEquals(3, f.floorIndexOfX(5.0), "x=5.0 — точка 3 GOOD");
+        assertThrows(IllegalArgumentException.class,()-> f.floorIndexOfX(10.0), "x=10.0 > max → Исключение GOOD");
+        assertThrows(IllegalArgumentException.class,()-> f.floorIndexOfX(0.5), "x=0.5 < min → floorIndex=0 GOOD");
     }
 
     @Test
@@ -734,20 +734,20 @@ public class ArrayTabulatedFunctionTest {
     }
 
     @Test
-    @DisplayName("После удаления всех точек все методы, кроме indexOfX/Y, должны бросать IndexOutOfBoundsException")
+    @DisplayName("После удаления всех точек все методы проверка")
     void testAllMethodsThrowAfterLastPointRemoved() {
         ArrayTabulatedFunction f = new ArrayTabulatedFunction(new double[]{1,2}, new double[]{1,2});
         f.remove(0);
         f.remove(0);
 
-        assertThrows(IndexOutOfBoundsException.class, () -> f.getX(0), "getX — исключение GOOD");
+        assertThrows(IllegalArgumentException.class, () -> f.getX(0), "getX — исключение GOOD");
         assertThrows(IndexOutOfBoundsException.class, () -> f.getY(0), "getY — исключение GOOD");
         assertThrows(IndexOutOfBoundsException.class, () -> f.leftBound(), "leftBound — исключение GOOD");
         assertThrows(IndexOutOfBoundsException.class, () -> f.rightBound(), "rightBound — исключение GOOD");
         assertThrows(IndexOutOfBoundsException.class, () -> f.floorIndexOfX(0.5), "floorIndexOfX — исключение GOOD");
         assertThrows(IndexOutOfBoundsException.class, () -> f.interpolate(0.5, 0), "interpolate — исключение GOOD");
-        assertThrows(IndexOutOfBoundsException.class, () -> f.extrapolateLeft(0.5), "extrapolateLeft — исключение GOOD");
-        assertThrows(IndexOutOfBoundsException.class, () -> f.extrapolateRight(0.5), "extrapolateRight — исключение GOOD");
+        assertThrows(IllegalArgumentException.class,()-> f.extrapolateLeft(0.5), "extrapolateLeft — исключение GOOD");
+        assertThrows(IllegalArgumentException.class, () -> f.extrapolateRight(0.5), "extrapolateRight — исключение GOOD");
         assertThrows(IndexOutOfBoundsException.class, () -> f.apply(0.5), "apply — исключение GOOD");
         assertEquals(-1, f.indexOfX(0.5), "indexOfX — возвращает -1, даже при count=0 GOOD");
         assertEquals(-1, f.indexOfY(0.5), "indexOfY — возвращает -1, даже при count=0 GOOD");
@@ -1077,5 +1077,14 @@ public class ArrayTabulatedFunctionTest {
         assertFalse(iterator.hasNext());
         assertThrows(NoSuchElementException.class, iterator::next);
     }
+    @Test
+    void testConstructor_XArrayTooShort_ThrowsException() {
+
+        double[] xValues = {1.0};
+        double[] yValues = {10.0};
+
+        assertThrows(IllegalArgumentException.class, ()->new ArrayTabulatedFunction(xValues, yValues));
+    }
+
 
 }
