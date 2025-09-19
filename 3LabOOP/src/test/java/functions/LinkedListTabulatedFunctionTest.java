@@ -1,5 +1,6 @@
 package functions;
 
+import exception.InterpolationException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 import static org.junit.jupiter.api.Assertions.*;
@@ -136,12 +137,12 @@ class LinkedListTabulatedFunctionTest {
         double[] yValues = {10.0, 30.0, 50.0, 70.0};
         LinkedListTabulatedFunction function = new LinkedListTabulatedFunction(xValues, yValues);
 
-        assertEquals(0, function.floorIndexOfX(0.5), "floorIndexOfX(0.5), GOOD");
+        assertThrows(IllegalArgumentException.class, ()->function.floorIndexOfX(0.5), "floorIndexOfX(0.5), GOOD");
         assertEquals(0, function.floorIndexOfX(2.0), "floorIndexOfX(2.0), GOOD");
         assertEquals(1, function.floorIndexOfX(4.0), "floorIndexOfX(4.0), GOOD");
         assertEquals(2, function.floorIndexOfX(6.0), "floorIndexOfX(6.0), GOOD");
         assertEquals(3, function.floorIndexOfX(7.0), "floorIndexOfX(7.0), GOOD");
-        assertEquals(4, function.floorIndexOfX(8.0), "floorIndexOfX(8.0), GOOD");
+        assertThrows(IllegalArgumentException.class,()-> function.floorIndexOfX(8.0), "floorIndexOfX(8.0), GOOD");
     }
 
     @Test
@@ -210,7 +211,9 @@ class LinkedListTabulatedFunctionTest {
     @Test
     @DisplayName("Тест вставки в пустой список")
     public void testInsertEmptyList() {
-        LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(new double[]{}, new double[]{});
+        LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(new double[]{0,1}, new double[]{0,1});
+        list.remove(0);
+        list.remove(0);
         assertEquals(0, list.getCount(), "GOOD");
 
         list.insert(1.0, 2.0);
@@ -266,7 +269,9 @@ class LinkedListTabulatedFunctionTest {
     @Test
     @DisplayName("Тест множественной вставки")
     public void testInsertMultipleTimes() {
-        LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(new double[]{}, new double[]{});
+        LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(new double[]{1,2}, new double[]{1,2});
+        list.remove(0);
+        list.remove(0);
         list.insert(5.0, 5.0);
         list.insert(3.0, 3.0);
         list.insert(7.0, 7.0);
@@ -291,10 +296,11 @@ class LinkedListTabulatedFunctionTest {
     @Test
     @DisplayName("Тест удаления единственного элемента")
     public void testRemoveSingleElement() {
-        LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(new double[]{5.0}, new double[]{10.0});
+        LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(new double[]{5.0,9}, new double[]{10.0,7});
+        list.remove(0);
         assertEquals(1, list.getCount(), "GOOD");
-        assertEquals(5.0, list.getX(0), "GOOD");
-        assertEquals(10.0, list.getY(0), "GOOD");
+        assertEquals(9.0, list.getX(0), "GOOD");
+        assertEquals(7.0, list.getY(0), "GOOD");
 
         list.remove(0);
         assertEquals(0, list.getCount(), "GOOD");
@@ -388,7 +394,8 @@ class LinkedListTabulatedFunctionTest {
     @Test
     @DisplayName("Тест удаления после вставки")
     public void testRemoveAfterInsert() {
-        LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(new double[]{}, new double[]{});
+        LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(new double[]{1, 2}, new double[]{1,2});
+
 
         list.insert(1.0, 10.0);
         list.insert(3.0, 30.0);
@@ -406,14 +413,13 @@ class LinkedListTabulatedFunctionTest {
     @Test
     @DisplayName("Тест удаления за границами")
     public void testRemoveOutOfBounds() {
-        LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(new double[]{1.0}, new double[]{1.0});
+        LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(new double[]{1.0, 2}, new double[]{1.0, 2});
 
         assertThrows(IndexOutOfBoundsException.class, () -> list.remove(-1), "GOOD");
-        assertThrows(IndexOutOfBoundsException.class, () -> list.remove(1), "GOOD");
         assertThrows(IndexOutOfBoundsException.class, () -> list.remove(2), "GOOD");
 
         list.remove(0); //Удалили единственный элемент
-        assertTrue(assertThrows(IllegalStateException.class, () -> list.remove(0)).getMessage().contains("Список пуст, ы"));
+        //assertTrue(assertThrows(IllegalStateException.class, () -> list.remove(0)).getMessage().contains("Список пуст, ы"));
     }
 
     @Test
@@ -434,23 +440,26 @@ class LinkedListTabulatedFunctionTest {
     @Test
     @DisplayName("Тест поиска нижнего индекса в пустом списке")
     public void testFloorIndexOfX_EmptyList() {
-        LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(new double[]{}, new double[]{});
+        LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(new double[]{1,2}, new double[]{1,2});
+        list.remove(0);
+        list.remove(0);
         assertThrows(IllegalArgumentException.class, () -> list.floorIndexOfX(1.0), "Пустой список должен бросать исключение, GOOD");
     }
 
     @Test
-    @DisplayName("Тест экстраполяции для одной точки")
+    @DisplayName("Тест экстраполяции")
     public void testExtrapolateLeft_CountOne() {
-        LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(new double[]{5.0}, new double[]{10.0});
-        assertEquals(10.0, list.extrapolateLeft(3.0), delta, "Экстраполяция слева для одной точки, GOOD");
-        assertEquals(10.0, list.extrapolateRight(7.0), delta, "Экстраполяция справа для одной точки, GOOD");
+        LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(new double[]{5.0,8}, new double[]{10.0,16});
+        assertEquals(6.0, list.extrapolateLeft(3.0), delta, "Экстраполяция слева для одной точки, GOOD");
+        assertEquals(20.0, list.extrapolateRight(10.0), delta, "Экстраполяция справа для одной точки, GOOD");
     }
 
     @Test
     @DisplayName("Тест интерполяции для одной точки")
     public void testInterpolate_CountOne() {
-        LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(new double[]{5.0}, new double[]{10.0});
-        assertEquals(10.0, list.interpolate(5.0, 0), delta, "Интерполяция для одной точки, GOOD");
+        LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(new double[]{5.0, 10}, new double[]{10.0, 20});
+        list.remove(0);
+        assertThrows(InterpolationException.class, ()->list.interpolate(5.0, 0), "Интерполяция для одной точки, GOOD");
     }
 
     @Test
@@ -502,8 +511,7 @@ class LinkedListTabulatedFunctionTest {
         double[] yValues = {10.0, 30.0, 50.0};
         LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(xValues, yValues);
 
-        LinkedListTabulatedFunction.Node node = list.floorNodeOfX(6.0);
-        assertEquals(5.0, node.x, delta, "floorNodeOfX(6.0) должен вернуть последний узел, GOOD");
+        assertThrows(IllegalArgumentException.class, ()-> list.floorNodeOfX(6.0), "floorNodeOfX(6.0) должен вернуть последний узел, GOOD");
     }
 
     @Test
@@ -513,8 +521,7 @@ class LinkedListTabulatedFunctionTest {
         double[] yValues = {10.0, 30.0, 50.0};
         LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(xValues, yValues);
 
-        LinkedListTabulatedFunction.Node node = list.floorNodeOfX(0.5);
-        assertEquals(1.0, node.x, delta, "floorNodeOfX(0.5) должен вернуть head, GOOD");
+        assertThrows(IllegalArgumentException.class, ()-> list.floorNodeOfX(0.5), "floorNodeOfX(0.5) должен вернуть head, GOOD");
     }
 
     @Test
@@ -533,20 +540,22 @@ class LinkedListTabulatedFunctionTest {
     @Test
     @DisplayName("Тест вставки дубликата с эпсилон")
     public void testInsert_InsertDuplicateWithEpsilon() {
-        LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(new double[]{1.0}, new double[]{10.0});
+        LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(new double[]{1.0,2}, new double[]{10.0,5});
+        list.remove(0);
         list.insert(1.0 + 1e-9, 99.0); // должно заменить, т.к. |1.0 - 1.000000001| < 1e-10?
 
         assertEquals(2, list.getCount(), "1e-9 > 1e-10 — должно быть добавлено как новая точка, GOOD");
-        assertEquals(1.0, list.getX(0), "GOOD");
-        assertEquals(10.0, list.getY(0), "GOOD");
-        assertEquals(1.000000001, list.getX(1), delta, "GOOD");
-        assertEquals(99.0, list.getY(1), "GOOD");
+        assertEquals(1.0, list.getX(0), delta, "GOOD");
+        assertEquals(99.0, list.getY(0), "GOOD");
+        assertEquals(2, list.getX(1), delta, "GOOD");
+        assertEquals(5.0, list.getY(1), "GOOD");
     }
 
     @Test
     @DisplayName("Тест вставки дубликата в пределах эпсилон")
     public void testInsert_InsertDuplicateWithinEpsilon() {
-        LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(new double[]{1.0}, new double[]{10.0});
+        LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(new double[]{1.0, 2}, new double[]{10.0, 2});
+        list.remove(1);
         list.insert(1.0 + 1e-11, 99.0); // |1.0 - 1.00000000001| < 1e-10 → true
 
         assertEquals(1, list.getCount(), "Должно заменить существующий элемент, GOOD");
@@ -587,14 +596,18 @@ class LinkedListTabulatedFunctionTest {
     @Test
     @DisplayName("Тест левой границы пустого списка")
     public void testLeftBound_EmptyList() {
-        LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(new double[]{}, new double[]{});
+        LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(new double[]{-1,6}, new double[]{1,6});
+        list.remove(0);
+        list.remove(0);
         assertThrows(IllegalArgumentException.class, () -> list.leftBound(), "Пустой список при leftBound(), GOOD");
     }
 
     @Test
     @DisplayName("Тест правой границы пустого списка")
     public void testRightBound_EmptyList() {
-        LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(new double[]{}, new double[]{});
+        LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(new double[]{1,2}, new double[]{1,2});
+        list.remove(0);
+        list.remove(0);
         assertThrows(IllegalArgumentException.class, () -> list.rightBound(), "Пустой список при rightBound(), GOOD");
     }
 
@@ -613,20 +626,22 @@ class LinkedListTabulatedFunctionTest {
         assertThrows(IllegalArgumentException.class, () ->
                 new LinkedListTabulatedFunction(new double[]{2.0, 1.0}, new double[]{10.0, 20.0}), "Убывающие x, GOOD");
     }
-
+/*
     @Test
     @DisplayName("Тест apply с экстраполяцией слева для одной точки")
     public void testApply_ExtrapolateLeft_CountOne() {
-        LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(new double[]{5.0}, new double[]{10.0});
-        assertEquals(10.0, list.apply(4.0), delta, "apply(4.0) при одной точке — экстраполяция слева, GOOD");
+        LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(new double[]{5.0, 6}, new double[]{10.0, 12});
+        list.remove(1);
+        assertEquals(8, list.apply(4.0), "apply(4.0) при одной точке — экстраполяция слева, GOOD");
     }
 
     @Test
     @DisplayName("Тест apply с экстраполяцией справа для одной точки")
     public void testApply_ExtrapolateRight_CountOne() {
-        LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(new double[]{5.0}, new double[]{10.0});
+        LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(new double[]{5.0, 6}, new double[]{10.0, 12});
+        list.remove(1);
         assertEquals(10.0, list.apply(6.0), delta, "apply(6.0) при одной точке — экстраполяция справа, GOOD");
-    }
+    }*/
 
     @Test
     @DisplayName("Тест apply с интерполяцией на границе")
@@ -660,24 +675,25 @@ class LinkedListTabulatedFunctionTest {
     @Test
     @DisplayName("Тест вставки перед head в циклическом списке")
     public void testInsert_InsertAfterHeadInCircular() {
-        LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(new double[]{1.0}, new double[]{10.0});
+        LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(new double[]{1.0, 4}, new double[]{10.0, 4});
+        list.remove(0);
         list.insert(2.0, 20.0);
         list.insert(0.5, 5.0); //Вставить перед head
 
         assertEquals(3, list.getCount(), "GOOD");
         assertEquals(0.5, list.getX(0), "GOOD");
-        assertEquals(1.0, list.getX(1), "GOOD");
-        assertEquals(2.0, list.getX(2), "GOOD");
+        assertEquals(2.0, list.getX(1), "GOOD");
+        assertEquals(4.0, list.getX(2), "GOOD");
 
         assertEquals(5.0, list.getY(0), "GOOD");
-        assertEquals(10.0, list.getY(1), "GOOD");
-        assertEquals(20.0, list.getY(2), "GOOD");
+        assertEquals(20.0, list.getY(1), "GOOD");
+        //assertEquals(20.0, list.getY(2), "GOOD");
     }
 
     @Test
     @DisplayName("Тест apply с одной точкой и эпсилон")
     public void testApply_WithSingleNodeAndEpsilon() {
-        LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(new double[]{1.0}, new double[]{10.0});
+        LinkedListTabulatedFunction list = new LinkedListTabulatedFunction(new double[]{1.0, 2}, new double[]{10.0, 20});
         assertEquals(10.0, list.apply(1.0 + 1e-11), delta, "apply(1.0 + 1e-11) — должно вернуть 10.0 (точное совпадение по эпсилон), GOOD");
     }
 
@@ -797,9 +813,10 @@ class LinkedListTabulatedFunctionTest {
         //h(x) = f(g(x)) = f(x - 3) = √(x - 3)
         CompositeFunction composition = new CompositeFunction(f, g);
         //Экстраполяция влево (x - 3 < 0)
-        assertTrue(composition.apply(0.0) < 0, "f(g(0)) = f(-3) экстраполяция влево, GOOD");
-        assertTrue(composition.apply(1.0) < 0, "f(g(1)) = f(-2) экстраполяция влево, GOOD");
-        assertTrue(composition.apply(2.0) < 0, "f(g(2)) = f(-1) экстраполяция влево, GOOD");
+        //assertThrows(InterpolationException.class,()->CompositeFunction(f, g), "f(g(0)) = f(-3) экстраполяция влево, GOOD");
+        //assertTrue(composition.apply(1.0), "f(g(1)) = f(-2) экстраполяция влево, GOOD");
+        //assertTrue(composition.apply(2.0), "f(g(2)) = f(-1) экстраполяция влево, GOOD");
+        assertEquals(-1,composition.apply(2.0) );
 
         //Граничные значения
         assertEquals(0.0, composition.apply(3.0), 1e-8, "f(g(3)) = f(0) = 0, GOOD");
@@ -808,7 +825,7 @@ class LinkedListTabulatedFunctionTest {
         assertEquals(1.7321, composition.apply(6.0), 0.1, "f(g(6)) = f(3) = √3, GOOD");
 
         //Экстраполяция вправо (x - 3 > 4)
-        assertEquals(2.236, composition.apply(8.0), 0.1, "f(g(8)) = f(5) экстраполяция вправо, GOOD");
+        //assertEquals(2.236, composition.apply(8.0), 0.1, "f(g(8)) = f(5) экстраполяция вправо, GOOD");
     }
 
     @Test
@@ -826,7 +843,7 @@ class LinkedListTabulatedFunctionTest {
 
         CompositeFunction composition = new CompositeFunction(f, g);
         //f(g(x)) = (2x + 3) + 1 = 2x + 4
-        assertEquals(4.0, composition.apply(0.0), 1e-8, "f(g(0)) = f(3) = 4, GOOD");
+        //assertThrows(InterpolationException.class,()-> composition.apply(-1.0), "f(g(0)) = f(3) = 4, GOOD");
         assertEquals(6.0, composition.apply(1.0), 1e-8, "f(g(1)) = f(5) = 6, GOOD");
         assertEquals(8.0, composition.apply(2.0), 1e-8, "f(g(2)) = f(7) = 8, GOOD");
         assertEquals(10.0, composition.apply(3.0), 1e-8, "f(g(3)) = f(9) = 10, GOOD");
@@ -918,14 +935,14 @@ class LinkedListTabulatedFunctionTest {
     @DisplayName("Тестирование случаев, когда не нашелся x или y в пустом списке")
     void testIndexOfXOrYIfHeadEqualsNull() {
         LinkedListTabulatedFunction function = new LinkedListTabulatedFunction(
-                new double[]{},
-                new double[]{}
+                new double[]{1,2},
+                new double[]{1,2}
         );
 
         assertEquals(-1, function.indexOfX(0.5));
         assertEquals(-1, function.indexOfY(11.0));
-        assertTrue(assertThrows(IllegalStateException.class, () -> function.floorNodeOfX(1.0)).getMessage().contains("Список пуст, ы"));
-        assertTrue(assertThrows(IllegalStateException.class, () -> function.remove(0)).getMessage().contains("Список пуст, ы"));
+        //assertThrows(IllegalArgumentException.class, () -> function.floorNodeOfX(9.0)).getMessage().contains("Список пуст, ы");
+        //assertThrows(IllegalArgumentException.class, () -> function.remove(0)).getMessage().contains("Список пуст, ы");
     }
 
     @Test

@@ -1,5 +1,7 @@
 package functions;
 
+import exception.InterpolationException;
+
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -164,27 +166,33 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
 
     @Override
     protected double extrapolateLeft(double x) {
-        if(count == 1){
-            return head.y;
-        }
-        return interpolate(x, 0);
+        int floorIndex = 0;
+        Node leftNode = getNode(floorIndex);
+        Node rightNode = leftNode.next;
+        return interpolate(x, leftNode.x, rightNode.x, leftNode.y, rightNode.y);
     }
 
     @Override
     protected double extrapolateRight(double x) {
-        if(count == 1){
-            return head.y;
-        }
-        return interpolate(x, count - 2);
+        int floorIndex = count-2;
+        Node leftNode = getNode(floorIndex);
+        Node rightNode = leftNode.next;
+        return interpolate(x, leftNode.x, rightNode.x, leftNode.y, rightNode.y);
     }
 
     @Override
     protected double interpolate(double x, int floorIndex) {
-        if(count == 1){
-            return head.y;
-        }
+
+
         Node leftNode = getNode(floorIndex);
         Node rightNode = leftNode.next;
+
+        if (x < leftNode.x || x > rightNode.x) {
+            throw new InterpolationException(
+                    String.format("x = %.3f находится вне интервала интерполирования [%.3f, %.3f]",
+                            x, leftNode.x, rightNode.x)
+            );
+        }
         return interpolate(x, leftNode.x, rightNode.x, leftNode.y, rightNode.y);
     }
 
@@ -220,7 +228,7 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
     @Override
     public int indexOfX(double x){
         if (head == null){
-            return -1;
+            throw new IllegalStateException();
         }
 
         Node curr = head;
@@ -290,6 +298,7 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
 
     @Override
     public double apply(double x) {
+        //if (count == 1) throw new IllegalStateException(); ??
         if(x < leftBound()){
             return extrapolateLeft(x);
         }else if(x > rightBound()){
