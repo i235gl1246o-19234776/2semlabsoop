@@ -2,11 +2,15 @@ package functions;
 
 import exception.InterpolationException;
 import java.awt.*;
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 
-public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements Removable {
+
+public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements Removable, Serializable {
+    private static final long serialVersionUID = -8739091323528891524L;
+
     private double[] xVal;
     private double[] yVal;
     private int count;
