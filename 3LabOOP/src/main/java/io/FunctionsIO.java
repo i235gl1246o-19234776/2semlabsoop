@@ -6,6 +6,7 @@ import functions.ArrayTabulatedFunction;
 import functions.TabulatedFunction;
 import functions.Point;
 import functions.factory.TabulatedFunctionFactory;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -28,6 +29,18 @@ public final class FunctionsIO {
         }
 
         printWriter.flush();
+    }
+
+    public static void serializeJson(BufferedWriter writer, ArrayTabulatedFunction function) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        String json = mapper.writeValueAsString(function);
+        writer.write(json);
+        writer.newLine(); // опционально, если хочешь разделение строк
+    }
+
+    public static ArrayTabulatedFunction deserializeJson(BufferedReader reader) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.readerFor(ArrayTabulatedFunction.class).readValue(reader);
     }
 
     public static void writeTabulatedFunction(BufferedOutputStream outputStream, TabulatedFunction function) throws IOException {

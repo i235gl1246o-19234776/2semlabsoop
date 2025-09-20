@@ -1,17 +1,22 @@
 package functions;
 
 import exception.InterpolationException;
-import java.awt.*;
+
 import java.io.Serializable;
 import java.util.Iterator;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
-
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements Removable, Serializable {
     private static final long serialVersionUID = -2407695699800373971L;
 
+    @JsonFormat(shape = JsonFormat.Shape.ARRAY)
     private double[] xVal;
+
+    @JsonFormat(shape = JsonFormat.Shape.ARRAY)
     private double[] yVal;
     private int count;
 
@@ -54,6 +59,26 @@ public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements
             yVal[i] = s.apply(x);
         }
 
+    }
+
+    @JsonCreator
+    public void JsonArrayTabulatedFunction(
+            @JsonProperty("xVal") double[] xVal,
+            @JsonProperty("yVal") double[] yVal) {
+        if (xVal.length != yVal.length) {
+            throw new IllegalArgumentException("Массивы имеют разные длины");
+        }
+        if (xVal.length < 2) {
+            throw new IllegalArgumentException("Меньше 2х элементов");
+        }
+        for (int i = 1; i < xVal.length; i++) {
+            if (xVal[i] <= xVal[i - 1]) {
+                throw new IllegalArgumentException("X values must be strictly increasing");
+            }
+        }
+
+        this.xVal = xVal.clone();
+        this.yVal = yVal.clone();
     }
 
     @Override
