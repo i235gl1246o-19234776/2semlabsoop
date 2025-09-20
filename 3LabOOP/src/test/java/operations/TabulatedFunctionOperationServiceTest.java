@@ -1,13 +1,12 @@
 package operations;
 
 import exception.InconsistentFunctionsException;
-import functions.TabulatedFunction;
-import functions.Point;
-import functions.ArrayTabulatedFunction;
-import functions.LinkedListTabulatedFunction;
+import functions.*;
 import functions.factory.*;
 import functions.factory.TabulatedFunctionFactory;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.stream.Stream;
 
@@ -196,165 +195,165 @@ class TabulatedFunctionOperationServiceTest {
             i++;
         }
     }
-        private static final double DELTA = 1e-10;
 
-        private static final double[] X1 = {0.0, 1.0, 2.0, 3.0};
-        private static final double[] Y1 = {1.0, 3.0, 5.0, 7.0}; // f(x) = 2x + 1
-        private static final double[] Y2 = {0.0, 1.0, 4.0, 9.0}; // f(x) = x^2
+    private static final double DELTA = 1e-10;
 
-        private static Stream<TabulatedFunctionFactory> provideFactories() {
-            return Stream.of(
-                    new ArrayTabulatedFunctionFactory(),
-                    new LinkedListTabulatedFunctionFactory()
-            );
+    private static final double[] X1 = {0.0, 1.0, 2.0, 3.0};
+    private static final double[] Y1 = {1.0, 3.0, 5.0, 7.0}; // f(x) = 2x + 1
+    private static final double[] Y2 = {0.0, 1.0, 4.0, 9.0}; // f(x) = x^2
+
+    private static Stream<TabulatedFunctionFactory> provideFactories() {
+        return Stream.of(
+                new ArrayTabulatedFunctionFactory(),
+                new LinkedListTabulatedFunctionFactory()
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideFactories")
+    @DisplayName("Сложение двух одинаковых функций")
+    void testAddSameTypeFunctions(TabulatedFunctionFactory factory) {
+        TabulatedFunctionOperationService service = new TabulatedFunctionOperationService(factory);
+
+        TabulatedFunction f1 = factory.create(X1, Y1);
+        TabulatedFunction f2 = factory.create(X1, Y2);
+
+        TabulatedFunction result = service.add(f1, f2);
+
+        assertEquals(X1.length, result.getCount());
+        for (int i = 0; i < X1.length; i++) {
+            double expected = Y1[i] + Y2[i];
+            assertEquals(expected, result.getY(i), DELTA,
+                    "Неверный результат сложения в точке " + i);
         }
 
-        @Test
-        @DisplayName("Сложение двух одинаковых функций")
-        void testAddSameTypeFunctions(TabulatedFunctionFactory factory) {
-            TabulatedFunctionOperationService service = new TabulatedFunctionOperationService(factory);
-
-            TabulatedFunction f1 = factory.create(X1, Y1);
-            TabulatedFunction f2 = factory.create(X1, Y2);
-
-            TabulatedFunction result = service.add(f1, f2);
-
-            assertEquals(X1.length, result.getCount());
-            for (int i = 0; i < X1.length; i++) {
-                double expected = Y1[i] + Y2[i];
-                assertEquals(expected, result.getY(i), DELTA,
-                        "Неверный результат сложения в точке " + i);
-            }
-
-            // Проверка типа результата
-            if (factory instanceof ArrayTabulatedFunctionFactory) {
-                assertTrue(result instanceof ArrayTabulatedFunction);
-            } else if (factory instanceof LinkedListTabulatedFunctionFactory) {
-                assertTrue(result instanceof LinkedListTabulatedFunction);
-            }
-        }
-
-        @Test
-        @DisplayName("Вычитание функций разных типов (Array - LinkedList)")
-        void testSubtractDifferentTypes() {
-            TabulatedFunctionOperationService service = new TabulatedFunctionOperationService();
-
-            TabulatedFunction f1 = new ArrayTabulatedFunction(X1, Y1);
-            TabulatedFunction f2 = new LinkedListTabulatedFunction(X1, Y2);
-
-            TabulatedFunction result = service.subtract(f1, f2);
-
-            assertEquals(X1.length, result.getCount());
-            for (int i = 0; i < X1.length; i++) {
-                double expected = Y1[i] - Y2[i];
-                assertEquals(expected, result.getY(i), DELTA,
-                        "Неверный результат вычитания в точке " + i);
-            }
-
-            // По умолчанию используется Array фабрика
+        // Проверка типа результата
+        if (factory instanceof ArrayTabulatedFunctionFactory) {
             assertTrue(result instanceof ArrayTabulatedFunction);
-        }
-
-        @Test
-        @DisplayName("Сложение функций разных типов (LinkedList + Array)")
-        void testAddDifferentTypes() {
-            TabulatedFunctionFactory factory = new LinkedListTabulatedFunctionFactory();
-            TabulatedFunctionOperationService service = new TabulatedFunctionOperationService(factory);
-
-            TabulatedFunction f1 = new LinkedListTabulatedFunction(X1, Y1);
-            TabulatedFunction f2 = new ArrayTabulatedFunction(X1, Y2);
-
-            TabulatedFunction result = service.add(f1, f2);
-
-            assertEquals(X1.length, result.getCount());
-            for (int i = 0; i < X1.length; i++) {
-                double expected = Y1[i] + Y2[i];
-                assertEquals(expected, result.getY(i), DELTA);
-            }
-
+        } else if (factory instanceof LinkedListTabulatedFunctionFactory) {
             assertTrue(result instanceof LinkedListTabulatedFunction);
         }
+    }
 
-        // ========== Тест: разное количество точек ==========
-        @Test
-        @DisplayName("Исключение при разном количестве точек")
-        void testInconsistentCountThrowsException() {
-            TabulatedFunctionOperationService service = new TabulatedFunctionOperationService();
+    @Test
+    @DisplayName("Вычитание функций разных типов (Array - LinkedList)")
+    void testSubtractDifferentTypes() {
+        TabulatedFunctionOperationService service = new TabulatedFunctionOperationService();
 
-            TabulatedFunction f1 = new ArrayTabulatedFunction(X1, Y1);
-            TabulatedFunction f2 = new ArrayTabulatedFunction(
-                    new double[]{0.0, 1.0}, // только 2 точки
-                    new double[]{1.0, 2.0}
-            );
+        TabulatedFunction f1 = new ArrayTabulatedFunction(X1, Y1);
+        TabulatedFunction f2 = new LinkedListTabulatedFunction(X1, Y2);
 
-            InconsistentFunctionsException exception = assertThrows(
-                    InconsistentFunctionsException.class,
-                    () -> service.add(f1, f2),
-                    "Должно бросаться исключение при разном количестве точек"
-            );
+        TabulatedFunction result = service.subtract(f1, f2);
 
-            assertTrue(exception.getMessage().contains("differ"),
-                    "Сообщение должно содержать информацию о несовпадении количества");
+        assertEquals(X1.length, result.getCount());
+        for (int i = 0; i < X1.length; i++) {
+            double expected = Y1[i] - Y2[i];
+            assertEquals(expected, result.getY(i), DELTA,
+                    "Неверный результат вычитания в точке " + i);
         }
 
-        // ========== Тест: разные значения X ==========
-        @Test
-        @DisplayName("Исключение при несовпадении X-значений")
-        void testInconsistentXValuesThrowsException() {
-            TabulatedFunctionOperationService service = new TabulatedFunctionOperationService();
+        // По умолчанию используется Array фабрика
+        assertTrue(result instanceof ArrayTabulatedFunction);
+    }
 
-            TabulatedFunction f1 = new ArrayTabulatedFunction(X1, Y1);
-            double[] x2 = {0.0, 1.0, 2.0, 4.0}; // Последнее значение отличается!
-            TabulatedFunction f2 = new ArrayTabulatedFunction(x2, Y2);
+    @Test
+    @DisplayName("Сложение функций разных типов (LinkedList + Array)")
+    void testAddDifferentTypes() {
+        TabulatedFunctionFactory factory = new LinkedListTabulatedFunctionFactory();
+        TabulatedFunctionOperationService service = new TabulatedFunctionOperationService(factory);
 
-            InconsistentFunctionsException exception = assertThrows(
-                    InconsistentFunctionsException.class,
-                    () -> service.add(f1, f2),
-                    "Должно бросаться исключение при несовпадении X-значений"
-            );
+        TabulatedFunction f1 = new LinkedListTabulatedFunction(X1, Y1);
+        TabulatedFunction f2 = new ArrayTabulatedFunction(X1, Y2);
 
-            assertTrue(exception.getMessage().contains("X values differ at index 3"),
-                    "Сообщение должно указывать на индекс и значения");
+        TabulatedFunction result = service.add(f1, f2);
+
+        assertEquals(X1.length, result.getCount());
+        for (int i = 0; i < X1.length; i++) {
+            double expected = Y1[i] + Y2[i];
+            assertEquals(expected, result.getY(i), DELTA);
         }
 
-        // ========== Тест: null функции ==========
-        @Test
-        @DisplayName("Исключение при передаче null")
-        void testNullFunctionThrowsException() {
-            TabulatedFunctionOperationService service = new TabulatedFunctionOperationService();
+        assertTrue(result instanceof LinkedListTabulatedFunction);
+    }
 
-            TabulatedFunction f = new ArrayTabulatedFunction(X1, Y1);
+    // ========== Тест: разное количество точек ==========
+    @Test
+    @DisplayName("Исключение при разном количестве точек")
+    void testInconsistentCountThrowsException() {
+        TabulatedFunctionOperationService service = new TabulatedFunctionOperationService();
 
-            assertThrows(IllegalArgumentException.class,
-                    () -> service.add(null, f),
-                    "Должно бросаться исключение при null первой функции");
+        TabulatedFunction f1 = new ArrayTabulatedFunction(X1, Y1);
+        TabulatedFunction f2 = new ArrayTabulatedFunction(
+                new double[]{0.0, 1.0}, // только 2 точки
+                new double[]{1.0, 2.0}
+        );
 
-            assertThrows(IllegalArgumentException.class,
-                    () -> service.add(f, null),
-                    "Должно бросаться исключение при null второй функции");
-        }
+        InconsistentFunctionsException exception = assertThrows(
+                InconsistentFunctionsException.class,
+                () -> service.add(f1, f2),
+                "Должно бросаться исключение при разном количестве точек"
+        );
 
-        // ========== Тест: сеттер и геттер фабрики ==========
-        @Test
-        @DisplayName("Проверка сеттера и геттера фабрики")
-        void testFactorySetterGetter() {
-            TabulatedFunctionOperationService service = new TabulatedFunctionOperationService();
+    }
 
-            TabulatedFunctionFactory newFactory = new LinkedListTabulatedFunctionFactory();
-            service.setFactory(newFactory);
+    // ========== Тест: разные значения X ==========
+    @Test
+    @DisplayName("Исключение при несовпадении X-значений")
+    void testInconsistentXValuesThrowsException() {
+        TabulatedFunctionOperationService service = new TabulatedFunctionOperationService();
 
-            assertSame(newFactory, service.getFactory(),
-                    "Геттер должен возвращать установленную фабрику");
-        }
+        TabulatedFunction f1 = new ArrayTabulatedFunction(X1, Y1);
+        double[] x2 = {0.0, 1.0, 2.0, 4.0}; // Последнее значение отличается!
+        TabulatedFunction f2 = new ArrayTabulatedFunction(x2, Y2);
 
-        // ========== Тест: конструктор по умолчанию ==========
-        @Test
-        @DisplayName("Конструктор по умолчанию использует ArrayTabulatedFunctionFactory")
-        void testDefaultConstructorUsesArrayFactory() {
-            TabulatedFunctionOperationService service = new TabulatedFunctionOperationService();
-            assertTrue(service.getFactory() instanceof ArrayTabulatedFunctionFactory,
-                    "По умолчанию должна использоваться Array фабрика");
-        }
+        InconsistentFunctionsException exception = assertThrows(
+                InconsistentFunctionsException.class,
+                () -> service.add(f1, f2),
+                "Должно бросаться исключение при несовпадении X-значений"
+        );
+
+        assertTrue(exception.getMessage().contains("X values differ at index 3"),
+                "Сообщение должно указывать на индекс и значения");
+    }
+
+    // ========== Тест: null функции ==========
+    @Test
+    @DisplayName("Исключение при передаче null")
+    void testNullFunctionThrowsException() {
+        TabulatedFunctionOperationService service = new TabulatedFunctionOperationService();
+
+        TabulatedFunction f = new ArrayTabulatedFunction(X1, Y1);
+
+        assertThrows(IllegalArgumentException.class,
+                () -> service.add(null, f),
+                "Должно бросаться исключение при null первой функции");
+
+        assertThrows(IllegalArgumentException.class,
+                () -> service.add(f, null),
+                "Должно бросаться исключение при null второй функции");
+    }
+
+    // ========== Тест: сеттер и геттер фабрики ==========
+    @Test
+    @DisplayName("Проверка сеттера и геттера фабрики")
+    void testFactorySetterGetter() {
+        TabulatedFunctionOperationService service = new TabulatedFunctionOperationService();
+
+        TabulatedFunctionFactory newFactory = new LinkedListTabulatedFunctionFactory();
+        service.setFactory(newFactory);
+
+        assertSame(newFactory, service.getFactory(),
+                "Геттер должен возвращать установленную фабрику");
+    }
+
+    // ========== Тест: конструктор по умолчанию ==========
+    @Test
+    @DisplayName("Конструктор по умолчанию использует ArrayTabulatedFunctionFactory")
+    void testDefaultConstructorUsesArrayFactory() {
+        TabulatedFunctionOperationService service = new TabulatedFunctionOperationService();
+        assertTrue(service.getFactory() instanceof ArrayTabulatedFunctionFactory,
+                "По умолчанию должна использоваться Array фабрика");
+    }
 
     private TabulatedFunctionOperationService service;
     private TabulatedFunction a;
@@ -526,4 +525,110 @@ class TabulatedFunctionOperationServiceTest {
         }
     }
 
+
+        @ParameterizedTest
+        @MethodSource("provideFactories")
+        @DisplayName("createUnmodifiable возвращает обёрнутую в UnmodifiableTabulatedFunction")
+        void testCreateUnmodifiableReturnsUnmodifiable(TabulatedFunctionFactory factory) {
+            double[] x = {1.0, 2.0, 3.0};
+            double[] y = {4.0, 5.0, 6.0};
+
+            var result = factory.createUnmodifiable(x, y);
+
+            assertTrue(result instanceof UnmodifiableTabulatedFunction,
+                    "Результат должен быть обёрнут в UnmodifiableTabulatedFunction");
+        }
+
+        @ParameterizedTest
+        @MethodSource("provideFactories")
+        @DisplayName("createUnmodifiable сохраняет значения x и y")
+        void testCreateUnmodifiablePreservesValues(TabulatedFunctionFactory factory) {
+            double[] x = {0.0, 1.0, 2.0};
+            double[] y = {1.0, 3.0, 5.0};
+
+            var unmodifiable = factory.createUnmodifiable(x, y);
+
+            assertEquals(3, unmodifiable.getCount());
+            for (int i = 0; i < 3; i++) {
+                assertEquals(x[i], unmodifiable.getX(i), 1e-10);
+                assertEquals(y[i], unmodifiable.getY(i), 1e-10);
+            }
+        }
+
+        @ParameterizedTest
+        @MethodSource("provideFactories")
+        @DisplayName("createUnmodifiable запрещает изменение через setY")
+        void testCreateUnmodifiableBlocksModification(TabulatedFunctionFactory factory) {
+            double[] x = {1.0, 2.0};
+            double[] y = {3.0, 4.0};
+
+            var unmodifiable = factory.createUnmodifiable(x, y);
+
+            UnsupportedOperationException exception = assertThrows(
+                    UnsupportedOperationException.class,
+                    () -> unmodifiable.setY(0, 999.0),
+                    "Должно запрещать изменение"
+            );
+
+            assertEquals("Нельзя это использовать", exception.getMessage());
+        }
+
+        @ParameterizedTest
+        @MethodSource("provideFactories")
+        @DisplayName("createUnmodifiable работает с пустыми массивами")
+        void testCreateUnmodifiableWithEmptyArrays(TabulatedFunctionFactory factory) {
+            double[] x = {};
+            double[] y = {};
+            assertThrows(IllegalArgumentException.class, ()->factory.createUnmodifiable(x, y));
+        }
+
+        @ParameterizedTest
+        @MethodSource("provideFactories")
+        @DisplayName("createUnmodifiable бросает исключение при null-массивах")
+        void testCreateUnmodifiableThrowsOnNullArrays(TabulatedFunctionFactory factory) {
+            double[] valid = {1.0, 2.0};
+
+            assertThrows(IllegalArgumentException.class,
+                    () -> factory.createUnmodifiable(null, valid),
+                    "Должно бросаться исключение при null xValues");
+
+            assertThrows(IllegalArgumentException.class,
+                    () -> factory.createUnmodifiable(valid, null),
+                    "Должно бросаться исключение при null yValues");
+        }
+
+        @ParameterizedTest
+        @MethodSource("provideFactories")
+        @DisplayName("createUnmodifiable бросает исключение при разных длинах массивов")
+        void testCreateUnmodifiableThrowsOnDifferentLengths(TabulatedFunctionFactory factory) {
+            double[] x = {1.0, 2.0};
+            double[] y = {3.0};
+
+            assertThrows(IllegalArgumentException.class,
+                    () -> factory.createUnmodifiable(x, y),
+                    "Должно бросаться исключение при несовпадении длин");
+        }
+
+
+        @Test
+        void constructorThrowsOnNullFactory() {
+            IllegalArgumentException exception = assertThrows(
+                    IllegalArgumentException.class,
+                    () -> new TabulatedFunctionOperationService(null)
+            );
+            assertEquals("Factory cannot be null", exception.getMessage());
+        }
+
+        @Test
+        void setFactoryThrowsOnNull() {
+            TabulatedFunctionOperationService service = new TabulatedFunctionOperationService(
+                    new ArrayTabulatedFunctionFactory() // или любая валидная фабрика
+            );
+
+            IllegalArgumentException exception = assertThrows(
+                    IllegalArgumentException.class,
+                    () -> service.setFactory(null)
+            );
+            assertEquals("Factory cannot be null", exception.getMessage());
+        }
 }

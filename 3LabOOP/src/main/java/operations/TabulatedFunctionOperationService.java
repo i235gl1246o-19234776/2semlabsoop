@@ -28,12 +28,10 @@ public class TabulatedFunctionOperationService {
     }
     private TabulatedFunctionFactory factory;
 
-    // Конструктор по умолчанию — использует ArrayTabulatedFunctionFactory
     public TabulatedFunctionOperationService() {
         this.factory = new ArrayTabulatedFunctionFactory();
     }
 
-    // Конструктор с фабрикой
     public TabulatedFunctionOperationService(TabulatedFunctionFactory factory) {
         if (factory == null) {
             throw new IllegalArgumentException("Factory cannot be null");
@@ -41,12 +39,11 @@ public class TabulatedFunctionOperationService {
         this.factory = factory;
     }
 
-    // Геттер
     public TabulatedFunctionFactory getFactory() {
         return factory;
     }
 
-    // Сеттер
+
     public void setFactory(TabulatedFunctionFactory factory) {
         if (factory == null) {
             throw new IllegalArgumentException("Factory cannot be null");
@@ -58,7 +55,6 @@ public class TabulatedFunctionOperationService {
         double apply(double u, double v);
     }
 
-    // Приватный метод — ядро логики операций
     private TabulatedFunction doOperation(
             TabulatedFunction a,
             TabulatedFunction b,
