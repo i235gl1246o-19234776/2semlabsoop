@@ -33,10 +33,10 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
         };
     }
 
-    private static final long serialVersionUID = -8449110724588951160L;
+    private static final long serialVersionUID = 8720509751947980864L;
 
     public static class Node implements Serializable{
-        private static final long serialVersionUID = 8298327362657377979L;
+        private static final long serialVersionUID = -5791952235901357690L;
 
         public Node next;
         public Node prev;
