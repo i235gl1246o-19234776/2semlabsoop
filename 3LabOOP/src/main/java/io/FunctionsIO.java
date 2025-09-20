@@ -112,4 +112,9 @@ public final class FunctionsIO {
         // Не закрываем поток, так как мы его не создавали
         objectOutputStream.flush();
     }
+
+    public static TabulatedFunction deserialize(BufferedInputStream stream) throws IOException, ClassNotFoundException {
+        ObjectInputStream objectInputStream = new ObjectInputStream(stream);
+        return (TabulatedFunction) objectInputStream.readObject();
+    }
 }
