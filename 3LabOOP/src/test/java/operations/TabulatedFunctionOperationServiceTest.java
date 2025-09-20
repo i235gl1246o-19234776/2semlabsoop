@@ -196,17 +196,12 @@ class TabulatedFunctionOperationServiceTest {
             i++;
         }
     }
-    // package test;
+        private static final double DELTA = 1e-10;
 
-
-    private static final double DELTA = 1e-10;
-
-        // ========== Тестовые данные ==========
         private static final double[] X1 = {0.0, 1.0, 2.0, 3.0};
         private static final double[] Y1 = {1.0, 3.0, 5.0, 7.0}; // f(x) = 2x + 1
         private static final double[] Y2 = {0.0, 1.0, 4.0, 9.0}; // f(x) = x^2
 
-        // ========== Фабрики ==========
         private static Stream<TabulatedFunctionFactory> provideFactories() {
             return Stream.of(
                     new ArrayTabulatedFunctionFactory(),
@@ -214,7 +209,6 @@ class TabulatedFunctionOperationServiceTest {
             );
         }
 
-        // ========== Тест: сложение одинаковых функций ==========
         @Test
         @DisplayName("Сложение двух одинаковых функций")
         void testAddSameTypeFunctions(TabulatedFunctionFactory factory) {
@@ -240,7 +234,6 @@ class TabulatedFunctionOperationServiceTest {
             }
         }
 
-        // ========== Тест: вычитание разных типов функций ==========
         @Test
         @DisplayName("Вычитание функций разных типов (Array - LinkedList)")
         void testSubtractDifferentTypes() {
@@ -262,7 +255,6 @@ class TabulatedFunctionOperationServiceTest {
             assertTrue(result instanceof ArrayTabulatedFunction);
         }
 
-        // ========== Тест: сложение разных типов функций ==========
         @Test
         @DisplayName("Сложение функций разных типов (LinkedList + Array)")
         void testAddDifferentTypes() {
@@ -363,5 +355,175 @@ class TabulatedFunctionOperationServiceTest {
             assertTrue(service.getFactory() instanceof ArrayTabulatedFunctionFactory,
                     "По умолчанию должна использоваться Array фабрика");
         }
+
+    private TabulatedFunctionOperationService service;
+    private TabulatedFunction a;
+    private TabulatedFunction b;
+
+    @BeforeEach
+    void setUp() {
+        service = new TabulatedFunctionOperationService();
+        double[] xValues = {1.0, 2.0, 3.0, 4.0};
+        double[] yValuesA = {2.0, 4.0, 6.0, 8.0};
+        double[] yValuesB = {1.0, 2.0, 3.0, 4.0};
+
+        a = new ArrayTabulatedFunction(xValues, yValuesA);
+        b = new ArrayTabulatedFunction(xValues, yValuesB);
+    }
+
+    @Test
+    @DisplayName("Умножение двух функций (Array)")
+    void testMultiplyArrayFunctions() {
+        TabulatedFunction result = service.multiply(a, b);
+
+        assertEquals(4, result.getCount());
+        assertEquals(2.0, result.getY(0), 0.0001);  // 2 * 1 = 2
+        assertEquals(8.0, result.getY(1), 0.0001);  // 4 * 2 = 8
+        assertEquals(18.0, result.getY(2), 0.0001); // 6 * 3 = 18
+        assertEquals(32.0, result.getY(3), 0.0001); // 8 * 4 = 32
+    }
+
+    @Test
+    @DisplayName("Умножение двух функций (LinkedList)")
+    void testMultiplyLinkedListFunctions() {
+        service.setFactory(new LinkedListTabulatedFunctionFactory());
+        double[] xValues = {1.0, 2.0, 3.0};
+        double[] yValuesA = {3.0, 6.0, 9.0};
+        double[] yValuesB = {2.0, 4.0, 6.0};
+
+        TabulatedFunction a = new LinkedListTabulatedFunction(xValues, yValuesA);
+        TabulatedFunction b = new LinkedListTabulatedFunction(xValues, yValuesB);
+
+        TabulatedFunction result = service.multiply(a, b);
+
+        assertTrue(result instanceof LinkedListTabulatedFunction);
+        assertEquals(6.0, result.getY(0), 0.0001);  // 3 * 2 = 6
+        assertEquals(24.0, result.getY(1), 0.0001); // 6 * 4 = 24
+        assertEquals(54.0, result.getY(2), 0.0001); // 9 * 6 = 54
+    }
+
+    @Test
+    @DisplayName("Деление двух функций")
+    void testDivideFunctions() {
+        TabulatedFunction result = service.divide(a, b);
+
+        assertEquals(4, result.getCount());
+        assertEquals(2.0, result.getY(0), 0.0001);  // 2 / 1 = 2
+        assertEquals(2.0, result.getY(1), 0.0001);  // 4 / 2 = 2
+        assertEquals(2.0, result.getY(2), 0.0001);  // 6 / 3 = 2
+        assertEquals(2.0, result.getY(3), 0.0001);  // 8 / 4 = 2
+    }
+
+    @Test
+    @DisplayName("Деление с дробными результатами")
+    void testDivideWithFractionalResults() {
+        double[] yValuesC = {1.0, 3.0, 5.0, 7.0};
+        TabulatedFunction c = new ArrayTabulatedFunction(new double[]{1.0, 2.0, 3.0, 4.0}, yValuesC);
+
+        TabulatedFunction result = service.divide(c, b);
+
+        assertEquals(1.0, result.getY(0), 0.0001);  // 1 / 1 = 1
+        assertEquals(1.5, result.getY(1), 0.0001);  // 3 / 2 = 1.5
+        assertEquals(1.6667, result.getY(2), 0.001); // 5 / 3 ≈ 1.6667
+        assertEquals(1.75, result.getY(3), 0.0001);  // 7 / 4 = 1.75
+    }
+
+    @Test
+    @DisplayName("Деление на ноль должно бросать исключение")
+    void testDivideByZeroThrowsException() {
+        double[] yValuesZero = {1.0, 0.0, 3.0, 4.0};
+        TabulatedFunction zeroFunction = new ArrayTabulatedFunction(new double[]{1.0, 2.0, 3.0, 4.0}, yValuesZero);
+
+        assertThrows(ArithmeticException.class, () -> {
+            service.divide(a, zeroFunction);
+        });
+    }
+
+    @Test
+    @DisplayName("Умножение функций с отрицательными значениями")
+    void testMultiplyWithNegativeValues() {
+        double[] yValuesNeg = {-1.0, -2.0, -3.0, -4.0};
+        TabulatedFunction negFunction = new ArrayTabulatedFunction(new double[]{1.0, 2.0, 3.0, 4.0}, yValuesNeg);
+
+        TabulatedFunction result = service.multiply(a, negFunction);
+
+        assertEquals(-2.0, result.getY(0), 0.0001);  // 2 * -1 = -2
+        assertEquals(-8.0, result.getY(1), 0.0001);  // 4 * -2 = -8
+        assertEquals(-18.0, result.getY(2), 0.0001); // 6 * -3 = -18
+        assertEquals(-32.0, result.getY(3), 0.0001); // 8 * -4 = -32
+    }
+
+    @Test
+    @DisplayName("Умножение и деление с разными фабриками")
+    void testOperationsWithDifferentFactories() {
+        // Тестируем с Array фабрикой
+        service.setFactory(new ArrayTabulatedFunctionFactory());
+        TabulatedFunction result1 = service.multiply(a, b);
+        assertTrue(result1 instanceof ArrayTabulatedFunction);
+
+        // Тестируем с LinkedList фабрикой
+        service.setFactory(new LinkedListTabulatedFunctionFactory());
+        TabulatedFunction result2 = service.divide(a, b);
+        assertTrue(result2 instanceof LinkedListTabulatedFunction);
+    }
+
+    @Test
+    @DisplayName("Несовпадение размеров функций при умножении/делении")
+    void testInconsistentSizesForMultiplyDivide() {
+        TabulatedFunction smallFunction = new ArrayTabulatedFunction(
+                new double[]{1.0, 2.0}, new double[]{1.0, 2.0}
+        );
+
+        assertThrows(InconsistentFunctionsException.class, () -> {
+            service.multiply(a, smallFunction);
+        });
+
+        assertThrows(InconsistentFunctionsException.class, () -> {
+            service.divide(a, smallFunction);
+        });
+    }
+
+    @Test
+    @DisplayName("Несовпадение X-координат при умножении/делении")
+    void testInconsistentXValuesForMultiplyDivide() {
+        TabulatedFunction differentX = new ArrayTabulatedFunction(
+                new double[]{1.0, 2.5, 3.0, 4.0}, new double[]{1.0, 2.0, 3.0, 4.0}
+        );
+
+        assertThrows(InconsistentFunctionsException.class, () -> {
+            service.multiply(a, differentX);
+        });
+
+        assertThrows(InconsistentFunctionsException.class, () -> {
+            service.divide(a, differentX);
+        });
+    }
+
+    @Test
+    @DisplayName("Комбинированные операции: (a * b) / a = b")
+    void testCombinedOperations() {
+        TabulatedFunction product = service.multiply(a, b);
+        TabulatedFunction result = service.divide(product, a);
+
+        // Проверяем, что (a * b) / a = b
+        for (int i = 0; i < b.getCount(); i++) {
+            assertEquals(b.getY(i), result.getY(i), 0.0001);
+        }
+    }
+
+    @Test
+    @DisplayName("Умножение на нулевую функцию")
+    void testMultiplyByZeroFunction() {
+        double[] yValuesZero = {0.0, 0.0, 0.0, 0.0};
+        TabulatedFunction zeroFunction = new ArrayTabulatedFunction(
+                new double[]{1.0, 2.0, 3.0, 4.0}, yValuesZero
+        );
+
+        TabulatedFunction result = service.multiply(a, zeroFunction);
+
+        for (int i = 0; i < result.getCount(); i++) {
+            assertEquals(0.0, result.getY(i), 0.0001);
+        }
+    }
 
 }

@@ -113,4 +113,18 @@ public class TabulatedFunctionOperationService {
         return doOperation(a, b, (u, v) -> u - v);
     }
 
+    // Публичный метод: умножение
+    public TabulatedFunction multiply(TabulatedFunction a, TabulatedFunction b){
+        return doOperation(a, b, (u,v) -> u * v);
+    }
+
+    public TabulatedFunction divide(TabulatedFunction a, TabulatedFunction b) {
+        return doOperation(a, b, (u, v) -> {
+            if (v == 0.0) {
+                throw new ArithmeticException("Делить на ноль нельзя, айайай"); // Более точное сообщение можно получить в цикле
+            }
+            return u / v;
+        });
+    }
+
 }
