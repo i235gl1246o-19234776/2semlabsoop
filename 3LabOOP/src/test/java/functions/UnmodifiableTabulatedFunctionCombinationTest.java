@@ -17,20 +17,20 @@ public class UnmodifiableTabulatedFunctionCombinationTest {
 
         TabulatedFunction strictUnmodifiable = new UnmodifiableTabulatedFunction(strictFunction);
 
-        // Проверяем, что значения читаются корректно
+        //Проверяем, что значения читаются корректно
         assertEquals(3, strictUnmodifiable.getCount());
         assertEquals(1.0, strictUnmodifiable.getX(0), 1e-10);
         assertEquals(10.0, strictUnmodifiable.getY(0), 1e-10);
 
-        // Проверяем, что модификация запрещена (Unmodifiable поведение)
+        //Проверяем, что модификация запрещена (Unmodifiable поведение)
         assertThrows(UnsupportedOperationException.class,
                 () -> strictUnmodifiable.setY(0, 100.0));
 
-        // Проверяем, что интерполяция запрещена (Strict поведение)
+        //Проверяем, что интерполяция запрещена (Strict поведение)
         assertThrows(UnsupportedOperationException.class,
                 () -> strictUnmodifiable.apply(1.5));
 
-        // Проверяем, что работают точные значения
+        //Проверяем, что работают точные значения
         assertEquals(10.0, strictUnmodifiable.apply(1.0), 1e-10);
         assertEquals(20.0, strictUnmodifiable.apply(2.0), 1e-10);
         assertEquals(30.0, strictUnmodifiable.apply(3.0), 1e-10);
@@ -47,16 +47,16 @@ public class UnmodifiableTabulatedFunctionCombinationTest {
 
         TabulatedFunction unmodifiableStrict = new StrictTabulatedFunction(unmodifiableFunction);
 
-        // Проверяем, что значения читаются корректно
+        //Проверяем, что значения читаются корректно
         assertEquals(3, unmodifiableStrict.getCount());
         assertEquals(1.0, unmodifiableStrict.getX(0), 1e-10);
         assertEquals(10.0, unmodifiableStrict.getY(0), 1e-10);
 
-        // Проверяем, что модификация запрещена (Unmodifiable поведение)
+        //Проверяем, что модификация запрещена (Unmodifiable поведение)
         assertThrows(UnsupportedOperationException.class,
                 () -> unmodifiableStrict.setY(0, 100.0));
 
-        // Проверяем, что интерполяция запрещена (Strict поведение)
+        //Проверяем, что интерполяция запрещена (Strict поведение)
         assertThrows(UnsupportedOperationException.class,
                 () -> unmodifiableStrict.apply(1.5));
 
@@ -77,20 +77,20 @@ public class UnmodifiableTabulatedFunctionCombinationTest {
                         new StrictTabulatedFunction(
                                 new ArrayTabulatedFunction(xValues, yValues))));
 
-        // Проверяем базовую функциональность
+        //Проверяем базовую функциональность
         assertEquals(3, tripleWrapped.getCount());
         assertEquals(1.0, tripleWrapped.getX(0), 1e-10);
         assertEquals(10.0, tripleWrapped.getY(0), 1e-10);
 
-        // Проверяем запрет модификации
+        //Проверяем запрет модификации
         assertThrows(UnsupportedOperationException.class,
                 () -> tripleWrapped.setY(0, 100.0));
 
-        // Проверяем запрет интерполяции
+        //Проверяем запрет интерполяции
         assertThrows(UnsupportedOperationException.class,
                 () -> tripleWrapped.apply(1.5));
 
-        // Проверяем работу точных значений
+        //Проверяем работу точных значений
         assertEquals(10.0, tripleWrapped.apply(1.0), 1e-10);
         assertEquals(20.0, tripleWrapped.apply(2.0), 1e-10);
         assertEquals(30.0, tripleWrapped.apply(3.0), 1e-10);

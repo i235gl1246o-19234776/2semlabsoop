@@ -4,7 +4,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 public class StrictTabulatedFunction implements TabulatedFunction{
-    private TabulatedFunction function;
+    private final TabulatedFunction function;
 
     public StrictTabulatedFunction(TabulatedFunction function){
         this.function = function;
