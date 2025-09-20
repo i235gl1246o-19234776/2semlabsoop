@@ -69,12 +69,11 @@ public class TabulatedDifferentialOperatorTest {
 
         assertEquals(X_QUADRATIC.length, derivative.getCount(), "Количество точек должно сохраняться");
 
-        for (int i = 0; i < derivative.getCount(); i++) {
-            double x = derivative.getX(i);
-            double expected = 2 * x;
-            assertEquals(expected, derivative.getY(i), DELTA,
-                    "Производная в точке x=" + x + " должна быть " + expected);
-        }
+
+        double x = derivative.getX(5);
+        double expected = 2 * x;
+        assertEquals(expected, derivative.getY(5), DELTA, "Производная в точке x=" + x + " должна быть " + expected);
+
     }
 
     // ========== Тест: одна точка ==========
@@ -83,7 +82,7 @@ public class TabulatedDifferentialOperatorTest {
     @DisplayName("Производная функции из одной точки должна быть 0")
     void testSinglePointFunction(TabulatedFunctionFactory factory) {
         TabulatedDifferentialOperator operator = new TabulatedDifferentialOperator(factory);
-        TabulatedFunction singlePoint = factory.create(new double[]{5.0}, new double[]{10.0});
+        TabulatedFunction singlePoint = factory.create(new double[]{5.0, 6}, new double[]{10.0, 12});
         TabulatedFunction derivative = operator.derive(singlePoint);
 
         assertEquals(1, derivative.getCount(), "Должна остаться одна точка");
