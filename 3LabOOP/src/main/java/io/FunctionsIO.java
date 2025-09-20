@@ -45,7 +45,6 @@ public final class FunctionsIO {
             throws IOException {
 
         try {
-            // Читаем первую строку - количество точек
             String countLine = reader.readLine();
             if (countLine == null) {
                 throw new IOException("Файл пустой");
@@ -53,21 +52,17 @@ public final class FunctionsIO {
 
             int count = Integer.parseInt(countLine.trim());
 
-            // Создаем массивы для значений
             double[] xValues = new double[count];
             double[] yValues = new double[count];
 
-            // Создаем форматтер для чисел с запятой как разделителем
             NumberFormat formatter = NumberFormat.getInstance(Locale.forLanguageTag("ru"));
 
-            // Читаем остальные строки
             for (int i = 0; i < count; i++) {
                 String line = reader.readLine();
                 if (line == null) {
                     throw new IOException("Неожиданный конец файла");
                 }
 
-                // Разделяем строку по пробелу
                 String[] parts = line.split(" ");
                 if (parts.length != 2) {
                     throw new IOException("Некорректный формат данных в строке: " + line);
@@ -82,12 +77,27 @@ public final class FunctionsIO {
                 }
             }
 
-            // Создаем функцию через фабрику
             return factory.create(xValues, yValues);
 
         } catch (NumberFormatException e) {
             throw new IOException("Некорректный формат числа", e);
         }
+    }
+
+    public static TabulatedFunction readTabulatedFunction(BufferedInputStream inputStream, TabulatedFunctionFactory factory) throws IOException {
+        DataInputStream dataInputStream = new DataInputStream(inputStream);
+
+        int count = dataInputStream.readInt();
+
+        double[] xValues = new double[count];
+        double[] yValues = new double[count];
+
+        for (int i = 0; i < count; i++) {
+            xValues[i] = dataInputStream.readDouble();
+            yValues[i] = dataInputStream.readDouble();
+        }
+
+        return factory.create(xValues, yValues);
     }
 
 }
