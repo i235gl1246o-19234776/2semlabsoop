@@ -4,8 +4,9 @@ import exception.InterpolationException;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.io.Serializable;
 
-public class LinkedListTabulatedFunction extends AbstractTabulatedFunction implements Insertable, Removable {
+public class LinkedListTabulatedFunction extends AbstractTabulatedFunction implements Insertable, Removable, Serializable {
 
     @Override
     public Iterator<Point> iterator() {
@@ -32,7 +33,11 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
         };
     }
 
-    public static class Node {
+    private static final long serialVersionUID = -8449110724588951160L;
+
+    public static class Node implements Serializable{
+        private static final long serialVersionUID = 8298327362657377979L;
+
         public Node next;
         public Node prev;
         public double x;
