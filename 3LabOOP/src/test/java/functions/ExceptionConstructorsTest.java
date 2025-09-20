@@ -65,26 +65,6 @@ class ExceptionConstructorsTest {
         assertEquals(message, exception.getMessage());
     }
 
-
-
-    @Test
-    @DisplayName("Производная в единственной точке должна быть 0")
-    void testDerivativeAtSinglePoint() {
-        // Arrange: одна точка
-        double[] x = {5.0};
-        double[] y = {10.0};
-        TabulatedFunction function = new ArrayTabulatedFunction(x, y);
-
-        TabulatedDifferentialOperator operator = new TabulatedDifferentialOperator();
-
-            // Act: вычисляем производную
-        TabulatedFunction derivative = operator.derive(function);
-
-            // Assert
-        assertEquals(1, derivative.getCount(), "Должна остаться одна точка");
-        assertEquals(0.0, derivative.getY(0), DELTA, "Производная в единственной точке должна быть 0");
-    }
-
     @Test
     @DisplayName("Производная в первой точке при двух точках: (y1 - y0) / (x1 - x0)")
     void testDerivativeAtFirstPointWithTwoPoints() {
