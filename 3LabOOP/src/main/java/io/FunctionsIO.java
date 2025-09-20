@@ -99,5 +99,4 @@ public final class FunctionsIO {
 
         return factory.create(xValues, yValues);
     }
-
 }
