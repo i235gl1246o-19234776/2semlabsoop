@@ -1,5 +1,8 @@
 package io;
 
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.DomDriver;
+import functions.ArrayTabulatedFunction;
 import functions.TabulatedFunction;
 import functions.Point;
 import functions.factory.TabulatedFunctionFactory;
@@ -116,5 +119,30 @@ public final class FunctionsIO {
     public static TabulatedFunction deserialize(BufferedInputStream stream) throws IOException, ClassNotFoundException {
         ObjectInputStream objectInputStream = new ObjectInputStream(stream);
         return (TabulatedFunction) objectInputStream.readObject();
+    }
+
+
+    public static void serializeXml(BufferedWriter writer, ArrayTabulatedFunction function) throws IOException {
+        // Используем DomDriver — не требует xmlpull!
+        XStream xstream = new XStream(new DomDriver());
+        xstream.allowTypesByWildcard(new String[] { "functions.**" });
+
+        String xml = xstream.toXML(function);
+        writer.write(xml);
+        writer.flush();
+    }
+
+    public static ArrayTabulatedFunction deserializeXml(BufferedReader reader) throws IOException {
+        StringBuilder xmlBuilder = new StringBuilder();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            xmlBuilder.append(line).append("\n");
+        }
+
+        // И здесь тоже DomDriver!
+        XStream xstream = new XStream(new DomDriver());
+        xstream.allowTypesByWildcard(new String[] { "functions.**" });
+
+        return (ArrayTabulatedFunction) xstream.fromXML(xmlBuilder.toString());
     }
 }

@@ -44,5 +44,6 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="Maven: com.thoughtworks.xstream:xstream:1.4.21" level="project" />
   </component>
 </module>
