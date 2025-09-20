@@ -100,4 +100,18 @@ public final class FunctionsIO {
         return factory.create(xValues, yValues);
     }
 
+    public static void serialize(BufferedOutputStream stream, TabulatedFunction function)
+            throws IOException {
+
+        // Создаем ObjectOutputStream для сериализации объекта
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(stream);
+
+        // Сериализуем функцию
+        objectOutputStream.writeObject(function);
+
+        // Пробрасываем все данные из буфера в основной поток
+        // Не закрываем поток, так как мы его не создавали
+        objectOutputStream.flush();
+    }
+
 }
