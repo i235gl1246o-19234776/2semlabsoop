@@ -27,6 +27,9 @@ public class TabulatedDifferentialOperator implements DifferentialOperator<Tabul
 
     // Сеттер для фабрики
     public void setFactory(TabulatedFunctionFactory factory) {
+        if (factory == null) {
+            throw new IllegalArgumentException("TabulatedFunctionFactory не может быть равна null");
+        }
         this.factory = factory;
     }
 
