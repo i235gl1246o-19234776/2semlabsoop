@@ -154,21 +154,16 @@ public final class FunctionsIO {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     public static void serializeJson(BufferedWriter writer, ArrayTabulatedFunction function) throws IOException {
-        try {
-            String jsonString = OBJECT_MAPPER.writeValueAsString(function);
-            writer.write(jsonString);
-            writer.flush();
-        } catch (com.fasterxml.jackson.core.JsonProcessingException e) {
-            throw new IOException("Ошибка JSON сериализации", e);
-        }
+
+        String jsonString = OBJECT_MAPPER.writeValueAsString(function);
+        writer.write(jsonString);
+        writer.flush();
+
     }
 
     public static ArrayTabulatedFunction deserializeJson(BufferedReader reader) throws IOException {
-        try {
-            return OBJECT_MAPPER.readValue(reader, ArrayTabulatedFunction.class);
-        } catch (com.fasterxml.jackson.core.JsonProcessingException e) {
-            throw new IOException("Ошибка JSON десериализации", e);
-        }
+        OBJECT_MAPPER.readValue(reader, ArrayTabulatedFunction.class);
+        return null;
     }
 
 

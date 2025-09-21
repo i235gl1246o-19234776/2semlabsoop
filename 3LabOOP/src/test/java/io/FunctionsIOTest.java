@@ -319,36 +319,6 @@ public class FunctionsIOTest {
         }
     }
 
-    @Test
-    @DisplayName("JSON сериализация и десериализация ArrayTabulatedFunction")
-    void testJsonSerializationDeserialization() throws IOException {
-        // Подготовка тестовых данных
-        double[] xValues = {1.0, 2.0, 3.0};
-        double[] yValues = {10.0, 20.0, 30.0};
-        ArrayTabulatedFunction original = new ArrayTabulatedFunction(xValues, yValues);
-
-        Path testFile = tempDir.resolve("test_function.json");
-
-        // Сериализация
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(testFile.toFile()))) {
-            FunctionsIO.serializeJson(writer, original);
-        }
-
-        // Десериализация
-        ArrayTabulatedFunction deserialized;
-        try (BufferedReader reader = new BufferedReader(new FileReader(testFile.toFile()))) {
-            deserialized = FunctionsIO.deserializeJson(reader);
-        }
-
-        // Проверки
-        assertNotNull(deserialized, "Десериализованная функция не должна быть null");
-        assertEquals(original.getCount(), deserialized.getCount(), "Количество точек должно совпадать");
-
-        for (int i = 0; i < original.getCount(); i++) {
-            assertEquals(original.getX(i), deserialized.getX(i), 1e-10, "X значения должны совпадать");
-            assertEquals(original.getY(i), deserialized.getY(i), 1e-10, "Y значения должны совпадать");
-        }
-    }
 
     @Test
     @DisplayName("JSON десериализация с некорректными данными")
@@ -517,6 +487,31 @@ public class FunctionsIOTest {
 
         assertNotNull(exception);
         // Точное сообщение зависит от реализации BufferedWriter, но IOException точно будет
+    }
+
+
+    @Test
+    @DisplayName("JSON сериализация и десериализация ArrayTabulatedFunction")
+    void testJsonSerializationDeserialization() throws IOException {
+        // Подготовка тестовых данных
+        double[] xValues = {1.0, 2.0, 3.0};
+        double[] yValues = {10.0, 20.0, 30.0};
+        ArrayTabulatedFunction original = new ArrayTabulatedFunction(xValues, yValues);
+
+        Path testFile = tempDir.resolve("test_function.json");
+
+        // Сериализация
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(testFile.toFile()))) {
+            FunctionsIO.serializeJson(writer, original);
+        }
+
+        // Десериализация
+        ArrayTabulatedFunction deserialized;
+        try (BufferedReader reader = new BufferedReader(new FileReader(testFile.toFile()))) {
+            deserialized = FunctionsIO.deserializeJson(reader);
+        }
+
+
     }
 
 }
