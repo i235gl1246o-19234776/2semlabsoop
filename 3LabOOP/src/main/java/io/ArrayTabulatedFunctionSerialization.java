@@ -13,7 +13,7 @@ public class ArrayTabulatedFunctionSerialization{
 
 
     public static void main(String[] args) {
-        String filePath = "output/serialized array functions.bin";
+        String filePath = "3LabOOP/output/serialized array functions.bin";
 
         // Создаём директорию output, если её ещё нет
         File outputDir = new File("output");
