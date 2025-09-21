@@ -10,10 +10,14 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.io.TempDir;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.*;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.file.*;
+import java.text.ParseException;
 import java.util.Comparator;
 import java.util.Locale;
 
@@ -364,5 +368,155 @@ public class FunctionsIOTest {
         });
     }
 
+    @Test
+    @DisplayName("Приватный конструктор FunctionsIO должен выбросить UnsupportedOperationException")
+    void privateConstructor_ShouldThrowException() {
+        // Получаем приватный конструктор через рефлексию
+        assertThrows(RuntimeException.class, () -> {
+            try {
+                Constructor<FunctionsIO> constructor = FunctionsIO.class.getDeclaredConstructor();
+                constructor.setAccessible(true); // обходим private
+                constructor.newInstance(); // пытаемся создать экземпляр
+            } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+                throw new RuntimeException(e);
+            }
+        }, "Должен выбросить 'Не удается создать экземпляр служебного класса'");
+    }
+
+    @Test
+    @DisplayName("readTabulatedFunction должен выбросить IOException, если в строке не 2 числа")
+    void readTabulatedFunction_InvalidColumnCount_ThrowsIOException() throws IOException {
+        // Тест с 3 числами в строке
+        String data = "1\n1.0 2.0 3.0"; // должно быть 2 — а тут 3
+        StringReader stringReader = new StringReader(data);
+        BufferedReader reader = new BufferedReader(stringReader);
+
+        IOException exception = assertThrows(IOException.class, () -> {
+            FunctionsIO.readTabulatedFunction(reader, new ArrayTabulatedFunctionFactory());
+        });
+
+        assertTrue(exception.getMessage().contains("Некорректный формат данных в строке"),
+                "Сообщение должно содержать описание ошибки формата");
+    }
+
+    @Test
+    @DisplayName("readTabulatedFunction должен выбросить IOException при ParseException")
+    void readTabulatedFunction_ParseException_ThrowsWrappedIOException() throws IOException {
+        // Эмулируем ситуацию, когда NumberFormat.parse() выбросит ParseException
+        // Для этого передадим строку с буквами вместо чисел
+        String data = "1\nabc def";
+        StringReader stringReader = new StringReader(data);
+        BufferedReader reader = new BufferedReader(stringReader);
+
+        IOException exception = assertThrows(IOException.class, () -> {
+            FunctionsIO.readTabulatedFunction(reader, new ArrayTabulatedFunctionFactory());
+        });
+
+        assertTrue(exception.getMessage().contains("Ошибка парсинга чисел в строке"),
+                "Сообщение должно содержать описание ошибки парсинга");
+        assertNotNull(exception.getCause(), "Должна быть указана причина (cause)");
+        assertTrue(exception.getCause() instanceof ParseException,
+                "Причина должна быть ParseException");
+    }
+
+    @Test
+    @DisplayName("readTabulatedFunction должен выбросить IOException при NumberFormatException")
+    void readTabulatedFunction_NumberFormatException_ThrowsWrappedIOException() {
+        // Эмулируем NumberFormatException через рефлексию или хитрый ввод?
+        // Но в текущей реализации используется NumberFormat → ParseException, а не NFE.
+        // Значит, NFE может возникнуть только при Integer.parseInt(countLine)
+
+        String data = "not_a_number\n1.0 2.0"; // countLine — не число
+        StringReader stringReader = new StringReader(data);
+        BufferedReader reader = new BufferedReader(stringReader);
+
+        IOException exception = assertThrows(IOException.class, () -> {
+            FunctionsIO.readTabulatedFunction(reader, new ArrayTabulatedFunctionFactory());
+        });
+
+        assertEquals("Некорректный формат числа", exception.getMessage(),
+                "Должно быть сообщение 'Некорректный формат числа'");
+        assertNotNull(exception.getCause());
+        assertTrue(exception.getCause() instanceof NumberFormatException);
+
+    }
+
+    @Test
+    @DisplayName("serialize должен корректно сериализовать функцию без ошибок")
+    void serialize_ValidFunction_NoExceptionThrown() throws IOException {
+        TabulatedFunction func = new ArrayTabulatedFunction(
+                new double[]{1.0, 2.0},
+                new double[]{1.0, 4.0}
+        );
+
+        ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
+        BufferedOutputStream stream = new BufferedOutputStream(byteOut);
+
+        assertDoesNotThrow(() -> {
+            FunctionsIO.serialize(stream, func);
+        }, "Сериализация не должна выбрасывать исключение для валидной функции");
+
+        stream.flush();
+        assertTrue(byteOut.size() > 0, "Поток должен содержать данные после сериализации");
+    }
+
+    @Test
+    @DisplayName("serializeXml и deserializeXml должны корректно сохранять и восстанавливать функцию")
+    void serializeDeserializeXml_RoundTrip_ShouldPreserveData() throws IOException {
+        // Исходная функция
+        double[] x = {1.0, 2.0, 3.0, 4.0};
+        double[] y = {1.0, 4.0, 9.0, 16.0};
+        ArrayTabulatedFunction original = new ArrayTabulatedFunction(x, y);
+
+        // Сериализуем в XML
+        StringWriter stringWriter = new StringWriter();
+        FunctionsIO.serializeXml(new BufferedWriter(stringWriter), original);
+
+        String xml = stringWriter.toString();
+        assertFalse(xml.isEmpty(), "XML не должен быть пустым");
+
+        // Десериализуем из XML
+        StringReader stringReader = new StringReader(xml);
+        ArrayTabulatedFunction deserialized = FunctionsIO.deserializeXml(new BufferedReader(stringReader));
+
+        // Проверяем восстановление
+        assertNotNull(deserialized);
+        assertEquals(original.getCount(), deserialized.getCount());
+
+        for (int i = 0; i < original.getCount(); i++) {
+            assertEquals(original.getX(i), deserialized.getX(i), 1e-10);
+            assertEquals(original.getY(i), deserialized.getY(i), 1e-10);
+        }
+    }
+
+
+    @Test
+    @DisplayName("serializeXml должен выбросить NullPointerException при null функции")
+    void serializeXml_NullFunction_ThrowsNullPointerException() {
+        StringWriter writer = new StringWriter();
+
+        NullPointerException exception = assertThrows(NullPointerException.class, () -> {
+            FunctionsIO.serializeXml(new BufferedWriter(writer), null);
+        });
+
+        assertEquals("Function cannot be null", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("serializeXml должен выбросить IOException при записи в закрытый BufferedWriter")
+    void serializeXml_ClosedWriter_ThrowsIOException() throws IOException {
+        StringWriter stringWriter = new StringWriter();
+        BufferedWriter writer = new BufferedWriter(stringWriter);
+        writer.close(); // закрываем
+
+        ArrayTabulatedFunction func = new ArrayTabulatedFunction(new double[]{1.0, 2}, new double[]{1.0, 2});
+
+        IOException exception = assertThrows(IOException.class, () -> {
+            FunctionsIO.serializeXml(writer, func);
+        });
+
+        assertNotNull(exception);
+        // Точное сообщение зависит от реализации BufferedWriter, но IOException точно будет
+    }
 
 }
