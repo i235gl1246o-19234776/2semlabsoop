@@ -27,8 +27,8 @@ public class TabulatedFunctionJsonIO {
         try (BufferedReader reader = new BufferedReader(new FileReader("3LabOOP/output/function.json"))) {
             ArrayTabulatedFunction loadedFunction = FunctionsIO.deserializeJson(reader);
             System.out.println("✅ Функция успешно десериализована из JSON:");
-            System.out.println("xValues: " + java.util.Arrays.toString(loadedFunction.getXValues()));
-            System.out.println("yValues: " + java.util.Arrays.toString(loadedFunction.getYValues()));
+            System.out.println("xValues: " + java.util.Arrays.toString(loadedFunction.getXVal()));
+            System.out.println("yValues: " + java.util.Arrays.toString(loadedFunction.getYVal()));
         } catch (IOException e) {
             System.err.println("❌ Ошибка при чтении JSON:");
             e.printStackTrace();
