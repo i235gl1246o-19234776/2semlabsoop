@@ -45,23 +45,32 @@ public class TabulatedDifferentialOperator implements DifferentialOperator<Tabul
             xValues[i] = points[i].x;
         }
 
-        // Вычисляем производные (численное дифференцирование)
-        // Для первой точки используем правостороннюю разность
-        if (count > 1) {
-            yValues[0] = (points[1].y - points[0].y) / (points[1].x - points[0].x);
+        // Обработка разных случаев по количеству точек
+        if (count == 1) {
+            // Одна точка — производная не определена, возвращаем 0
+            yValues[0] = 0;
+        } else if (count == 2) {
+            // Две точки — используем одинаковую производную (линейная аппроксимация)
+            double h = points[1].x - points[0].x;
+            double deriv = (points[1].y - points[0].y) / h;
+            yValues[0] = deriv;
+            yValues[1] = deriv;
         } else {
-            yValues[0] = 0; // Если только одна точка, производная не определена
-        }
+            // Три и более точки — используем формулы второго порядка на краях и центральную внутри
 
-        // Для внутренних точек используем центральную разность
-        for (int i = 1; i < count - 1; i++) {
-            yValues[i] = (points[i + 1].y - points[i - 1].y) / (points[i + 1].x - points[i - 1].x);
-        }
+            // Предполагаем, что сетка равномерная (шаг h постоянный)
+            double h = points[1].x - points[0].x;
 
-        // Для последней точки используем левостороннюю разность
-        if (count > 1) {
-            yValues[count - 1] = (points[count - 1].y - points[count - 2].y) /
-                    (points[count - 1].x - points[count - 2].x);
+            // Первая точка — правосторонняя разность второго порядка
+            yValues[0] = (-3 * points[0].y + 4 * points[1].y - points[2].y) / (2 * h);
+
+            // Внутренние точки — центральная разность (второго порядка)
+            for (int i = 1; i < count - 1; i++) {
+                yValues[i] = (points[i + 1].y - points[i - 1].y) / (2 * h);
+            }
+
+            // Последняя точка — левосторонняя разность второго порядка
+            yValues[count - 1] = (3 * points[count - 1].y - 4 * points[count - 2].y + points[count - 3].y) / (2 * h);
         }
 
         // Создаем новую табулированную функцию через фабрику
