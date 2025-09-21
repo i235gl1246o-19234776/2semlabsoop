@@ -1,9 +1,6 @@
 package functions.factory;
 
-import functions.TabulatedFunction;
-import functions.ArrayTabulatedFunction;
-import functions.LinkedListTabulatedFunction;
-import functions.StrictTabulatedFunction;
+import functions.*;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
@@ -403,4 +400,269 @@ class TabulatedFunctionFactoryTest {
         assertThrows(UnsupportedOperationException.class, () -> strictUnmodifiable.setY(0, 100.0)); // Запрещено
     }
 
+    @Test
+    @DisplayName("ArrayTabulatedFunctionFactory.createUnmodifiable должен создавать UnmodifiableTabulatedFunction")
+    void testArrayFactoryCreateUnmodifiable() {
+        TabulatedFunctionFactory factory = new ArrayTabulatedFunctionFactory();
+        double[] xValues = {1.0, 2.0, 3.0};
+        double[] yValues = {10.0, 20.0, 30.0};
+
+        TabulatedFunction function = factory.createUnmodifiable(xValues, yValues);
+
+        assertNotNull(function);
+        assertTrue(function instanceof UnmodifiableTabulatedFunction);
+        assertEquals(3, function.getCount());
+        assertEquals(1.0, function.getX(0), 0.0001);
+        assertEquals(10.0, function.getY(0), 0.0001);
+    }
+
+    @Test
+    @DisplayName("LinkedListTabulatedFunctionFactory.createUnmodifiable должен создавать UnmodifiableTabulatedFunction")
+    void testLinkedListFactoryCreateUnmodifiable() {
+        TabulatedFunctionFactory factory = new LinkedListTabulatedFunctionFactory();
+        double[] xValues = {1.0, 2.0, 3.0};
+        double[] yValues = {10.0, 20.0, 30.0};
+
+        TabulatedFunction function = factory.createUnmodifiable(xValues, yValues);
+
+        assertNotNull(function);
+        assertTrue(function instanceof UnmodifiableTabulatedFunction);
+        assertEquals(3, function.getCount());
+        assertEquals(1.0, function.getX(0), 0.0001);
+        assertEquals(10.0, function.getY(0), 0.0001);
+    }
+
+    @Test
+    @DisplayName("createUnmodifiable должен разрешать интерполяцию")
+    void testCreateUnmodifiableAllowsInterpolation() {
+        TabulatedFunctionFactory factory = new ArrayTabulatedFunctionFactory();
+        double[] xValues = {1.0, 2.0, 3.0};
+        double[] yValues = {10.0, 20.0, 30.0};
+
+        TabulatedFunction function = factory.createUnmodifiable(xValues, yValues);
+
+        // Интерполяция должна работать
+        assertEquals(15.0, function.apply(1.5), 0.0001);
+        assertEquals(5.0, function.apply(0.5), 0.0001); // экстраполяция слева
+        assertEquals(35.0, function.apply(3.5), 0.0001); // экстраполяция справа
+    }
+
+    @Test
+    @DisplayName("createUnmodifiable должен запрещать модификацию Y значений")
+    void testCreateUnmodifiableNoModification() {
+        TabulatedFunctionFactory factory = new ArrayTabulatedFunctionFactory();
+        double[] xValues = {1.0, 2.0, 3.0};
+        double[] yValues = {10.0, 20.0, 30.0};
+
+        TabulatedFunction function = factory.createUnmodifiable(xValues, yValues);
+
+        // Попытка изменить значение должна бросать исключение
+        assertThrows(UnsupportedOperationException.class, () -> {
+            function.setY(1, 25.0);
+        });
+
+        // Проверяем, что значение не изменилось
+        assertEquals(20.0, function.getY(1), 0.0001);
+    }
+
+    @Test
+    @DisplayName("createUnmodifiable должен быть полностью неизменяемым")
+    void testCreateUnmodifiableCompleteImmutability() {
+        TabulatedFunctionFactory factory = new ArrayTabulatedFunctionFactory();
+        double[] xValues = {1.0, 2.0, 3.0};
+        double[] yValues = {10.0, 20.0, 30.0};
+
+        TabulatedFunction function = factory.createUnmodifiable(xValues, yValues);
+
+        // Все операции модификации должны бросать исключение
+        assertThrows(UnsupportedOperationException.class, () -> function.setY(0, 100.0));
+
+        // Данные должны остаться неизменными
+        assertEquals(10.0, function.getY(0), 0.0001);
+        assertEquals(20.0, function.getY(1), 0.0001);
+        assertEquals(30.0, function.getY(2), 0.0001);
+    }
+
+    @Test
+    @DisplayName("createUnmodifiable должен сохранять независимость от исходных массивов")
+    void testCreateUnmodifiableIndependence() {
+        TabulatedFunctionFactory factory = new ArrayTabulatedFunctionFactory();
+        double[] xValues = {1.0, 2.0, 3.0};
+        double[] yValues = {10.0, 20.0, 30.0};
+
+        TabulatedFunction function = factory.createUnmodifiable(xValues, yValues);
+
+        // Изменяем исходные массивы
+        xValues[0] = 100.0;
+        yValues[0] = 200.0;
+
+        // Функция должна остаться неизменной
+        assertEquals(1.0, function.getX(0), 0.0001);
+        assertEquals(10.0, function.getY(0), 0.0001);
+    }
+
+    @Test
+    @DisplayName("createUnmodifiable итератор должен быть неизменяемым")
+    void testCreateUnmodifiableIterator() {
+        TabulatedFunctionFactory factory = new ArrayTabulatedFunctionFactory();
+        double[] xValues = {1.0, 2.0, 3.0};
+        double[] yValues = {10.0, 20.0, 30.0};
+
+        TabulatedFunction function = factory.createUnmodifiable(xValues, yValues);
+
+        // Итератор должен работать для чтения
+        int count = 0;
+        for (var point : function) {
+            assertNotNull(point);
+            count++;
+        }
+        assertEquals(3, count);
+
+        // Итератор должен запрещать remove
+        var iterator = function.iterator();
+        iterator.next(); // Переходим к первому элементу
+        assertThrows(UnsupportedOperationException.class, () -> iterator.remove());
+    }
+
+    @Test
+    @DisplayName("createUnmodifiable с пустыми массивами должен бросать исключение")
+    void testCreateUnmodifiableEmptyArrays() {
+        TabulatedFunctionFactory factory = new ArrayTabulatedFunctionFactory();
+        double[] emptyX = {};
+        double[] emptyY = {};
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            factory.createUnmodifiable(emptyX, emptyY);
+        });
+    }
+
+    @Test
+    @DisplayName("createUnmodifiable с null массивами должен бросать исключение")
+    void testCreateUnmodifiableNullArrays() {
+        TabulatedFunctionFactory factory = new ArrayTabulatedFunctionFactory();
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            factory.createUnmodifiable(null, new double[]{1.0});
+        });
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            factory.createUnmodifiable(new double[]{1.0}, null);
+        });
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            factory.createUnmodifiable(null, null);
+        });
+    }
+
+    @Test
+    @DisplayName("createUnmodifiable с разными длинами массивов должен бросать исключение")
+    void testCreateUnmodifiableDifferentLengthArrays() {
+        TabulatedFunctionFactory factory = new ArrayTabulatedFunctionFactory();
+        double[] xValues = {1.0, 2.0};
+        double[] yValues = {10.0, 20.0, 30.0}; // Разная длина
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            factory.createUnmodifiable(xValues, yValues);
+        });
+    }
+
+    @Test
+    @DisplayName("createUnmodifiable с большими массивами")
+    void testCreateUnmodifiableWithLargeArrays() {
+        TabulatedFunctionFactory factory = new ArrayTabulatedFunctionFactory();
+        int size = 1000;
+        double[] xValues = new double[size];
+        double[] yValues = new double[size];
+
+        for (int i = 0; i < size; i++) {
+            xValues[i] = i;
+            yValues[i] = i * i;
+        }
+
+        TabulatedFunction function = factory.createUnmodifiable(xValues, yValues);
+
+        assertNotNull(function);
+        assertEquals(size, function.getCount());
+        assertEquals(0.0, function.getX(0), 0.0001);
+        assertEquals(0.0, function.getY(0), 0.0001);
+        assertEquals(999.0, function.getX(999), 0.0001);
+        assertEquals(998001.0, function.getY(999), 0.0001); // 999^2
+    }
+
+    @Test
+    @DisplayName("Сравнение create и createUnmodifiable")
+    void testCompareCreateAndCreateUnmodifiable() {
+        TabulatedFunctionFactory factory = new ArrayTabulatedFunctionFactory();
+        double[] xValues = {1.0, 2.0, 3.0};
+        double[] yValues = {10.0, 20.0, 30.0};
+
+        TabulatedFunction normal = factory.create(xValues, yValues);
+        TabulatedFunction unmodifiable = factory.createUnmodifiable(xValues, yValues);
+
+        // Обе функции должны иметь одинаковые данные
+        for (int i = 0; i < xValues.length; i++) {
+            assertEquals(normal.getX(i), unmodifiable.getX(i), 0.0001);
+            assertEquals(normal.getY(i), unmodifiable.getY(i), 0.0001);
+        }
+
+        // Обе должны поддерживать интерполяцию
+        assertEquals(15.0, normal.apply(1.5), 0.0001);
+        assertEquals(15.0, unmodifiable.apply(1.5), 0.0001);
+
+        // Разное поведение при модификации
+        normal.setY(0, 100.0); // Модификация работает
+        assertThrows(UnsupportedOperationException.class, () -> {
+            unmodifiable.setY(0, 100.0); // Модификация запрещена
+        });
+
+        // Проверяем, что unmodifiable не изменился
+        assertEquals(10.0, unmodifiable.getY(0), 0.0001);
+    }
+
+    @Test
+    @DisplayName("createUnmodifiable должен оборачивать StrictTabulatedFunction корректно")
+    void testCreateUnmodifiableWrapsStrictCorrectly() {
+        TabulatedFunctionFactory factory = new ArrayTabulatedFunctionFactory();
+        double[] xValues = {1.0, 2.0, 3.0};
+        double[] yValues = {10.0, 20.0, 30.0};
+
+        // Создаем strict функцию и затем unmodifiable
+        TabulatedFunction strictFunction = factory.createStrict(xValues, yValues);
+        TabulatedFunction unmodifiableFunction = factory.createUnmodifiable(xValues, yValues);
+
+        // Unmodifiable не должен быть strict
+        assertEquals(15.0, unmodifiableFunction.apply(1.5), 0.0001); // Интерполяция работает
+
+        // Но strict функция должна бросать исключение
+        assertThrows(UnsupportedOperationException.class, () -> {
+            strictFunction.apply(1.5);
+        });
+    }
+
+    @Test
+    @DisplayName("createUnmodifiable должен корректно работать с LinkedListFactory")
+    void testLinkedListCreateUnmodifiableProperties() {
+        TabulatedFunctionFactory factory = new LinkedListTabulatedFunctionFactory();
+        double[] xValues = {1.0, 2.0, 3.0};
+        double[] yValues = {10.0, 20.0, 30.0};
+
+        TabulatedFunction function = factory.createUnmodifiable(xValues, yValues);
+
+        // Проверяем основные свойства
+        assertNotNull(function);
+        assertTrue(function instanceof UnmodifiableTabulatedFunction);
+        assertEquals(3, function.getCount());
+
+        // Интерполяция должна работать
+        assertEquals(15.0, function.apply(1.5), 0.0001);
+
+        // Модификация должна быть запрещена
+        assertThrows(UnsupportedOperationException.class, () -> {
+            function.setY(1, 25.0);
+        });
+
+        // Данные должны быть корректными
+        assertEquals(1.0, function.getX(0), 0.0001);
+        assertEquals(10.0, function.getY(0), 0.0001);
+    }
 }

@@ -25,12 +25,6 @@ public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements
     @JsonProperty("count")
     private int count;
 
-    public ArrayTabulatedFunction() {
-        this.xVal = new double[0];
-        this.yVal = new double[0];
-        this.count = 0;
-    }
-
     @JsonCreator
     public ArrayTabulatedFunction(@JsonProperty(value = "xVal") double[] xVal, @JsonProperty(value = "yVal") double[] yVal) {
         if (xVal.length < 2) {

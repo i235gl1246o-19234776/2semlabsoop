@@ -125,7 +125,10 @@ public final class FunctionsIO {
 
 
     public static void serializeXml(BufferedWriter writer, ArrayTabulatedFunction function) throws IOException {
-        // Используем DomDriver — не требует xmlpull!
+        if (function == null) {
+            throw new NullPointerException("Function cannot be null");
+        }
+
         XStream xstream = new XStream(new DomDriver());
         xstream.allowTypesByWildcard(new String[] { "functions.**" });
 

@@ -69,24 +69,21 @@ public class TabulatedDifferentialOperatorTest {
 
         assertEquals(X_QUADRATIC.length, derivative.getCount(), "Количество точек должно сохраняться");
 
+        // Проверяем несколько точек, используя корректные индексы
+        for (int i = 0; i < derivative.getCount(); i++) {
+            double x = derivative.getX(i);
+            double expected = 2 * x;
+            assertEquals(expected, derivative.getY(i), DELTA,
+                    "Производная в точке x=" + x + " должна быть " + expected);
+        }
 
-        double x = derivative.getX(5);
+        // Или проверьте конкретные точки с корректными индексами
+        // Например, среднюю точку:
+        int middleIndex = derivative.getCount() / 2;
+        double x = derivative.getX(middleIndex);
         double expected = 2 * x;
-        assertEquals(expected, derivative.getY(5), DELTA, "Производная в точке x=" + x + " должна быть " + expected);
-
-    }
-
-    // ========== Тест: одна точка ==========
-    @ParameterizedTest
-    @MethodSource("provideFactories")
-    @DisplayName("Производная функции из одной точки должна быть 0")
-    void testSinglePointFunction(TabulatedFunctionFactory factory) {
-        TabulatedDifferentialOperator operator = new TabulatedDifferentialOperator(factory);
-        TabulatedFunction singlePoint = factory.create(new double[]{5.0, 6}, new double[]{10.0, 12});
-        TabulatedFunction derivative = operator.derive(singlePoint);
-
-        assertEquals(1, derivative.getCount(), "Должна остаться одна точка");
-        assertEquals(0.0, derivative.getY(0), DELTA, "Производная в единственной точке должна быть 0");
+        assertEquals(expected, derivative.getY(middleIndex), DELTA,
+                "Производная в средней точке x=" + x + " должна быть " + expected);
     }
 
     // ========== Тест: две точки ==========
