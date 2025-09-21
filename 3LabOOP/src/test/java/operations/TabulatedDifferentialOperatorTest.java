@@ -69,7 +69,15 @@ public class TabulatedDifferentialOperatorTest {
 
             assertEquals(X_QUADRATIC.length, derivative.getCount(), "Количество точек должно сохраняться");
 
+        // Проверяем несколько точек, используя корректные индексы
+        for (int i = 0; i < derivative.getCount(); i++) {
+            double x = derivative.getX(i);
+            double expected = 2 * x;
+            assertEquals(expected, derivative.getY(i), DELTA,
+                    "Производная в точке x=" + x + " должна быть " + expected);
+        }
 
+<<<<<<< HEAD
             double x = derivative.getX(0);
             double expected = 2 * x;
             assertEquals(expected, derivative.getY(0), DELTA, "Производная в точке x=" + x + " должна быть " + expected);
@@ -88,6 +96,16 @@ public class TabulatedDifferentialOperatorTest {
         assertEquals(1, derivative.getCount(), "Должна остаться одна точка");
         assertEquals(0.0, derivative.getY(0), DELTA, "Производная в единственной точке должна быть 0");
     }*/
+=======
+        // Или проверьте конкретные точки с корректными индексами
+        // Например, среднюю точку:
+        int middleIndex = derivative.getCount() / 2;
+        double x = derivative.getX(middleIndex);
+        double expected = 2 * x;
+        assertEquals(expected, derivative.getY(middleIndex), DELTA,
+                "Производная в средней точке x=" + x + " должна быть " + expected);
+    }
+>>>>>>> 203a6a36d88f6d5c0b8245f3c177720f1f3d78ef
 
     // ========== Тест: две точки ==========
     @ParameterizedTest

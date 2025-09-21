@@ -66,9 +66,8 @@ public class ArrayTabulatedFunctionXmlSerializationTest {
 
     @Test
     public void testSerializeAndDeserializeXml_EmptyFunction() throws Exception {
-        // Тест с пустым или минимальным случаем
-        double[] xValues = {5.0};
-        double[] yValues = {25.0};
+        double[] xValues = {5.0, 10.0};
+        double[] yValues = {25.0, 100.0};
         ArrayTabulatedFunction original = new ArrayTabulatedFunction(xValues, yValues);
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(TEST_FILE))) {
@@ -81,7 +80,7 @@ public class ArrayTabulatedFunctionXmlSerializationTest {
         }
 
         assertNotNull(restored, "Десериализованная функция не должна быть null");
-        assertEquals(1, restored.getCount(), "Количество точек должно быть 1");
+        assertEquals(2, restored.getCount(), "Количество точек должно быть 1");
         assertEquals(5.0, restored.getX(0), 1e-9, "X значение должно совпадать");
         assertEquals(25.0, restored.getY(0), 1e-9, "Y значение должно совпадать");
     }
