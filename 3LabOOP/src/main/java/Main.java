@@ -8,11 +8,11 @@ public class Main {
         ArrayTabulatedFunctionSerialization.main(args);
         ArrayTabulatedFunctionXmlSerialization.main(args);
         LinkedListTabulatedFunctionSerialization.main(args);
-        TabulatedFunctionFileInputStream.main(args);
-        TabulatedFunctionFileOutputStream.main(args);
-        TabulatedFunctionFileReader.main(args);
-        TabulatedFunctionFileWriter.main(args);
-        TabulatedFunctionJsonIO.main(args);
+        //TabulatedFunctionFileInputStream.main(args);
+        //TabulatedFunctionFileOutputStream.main(args);
+        //TabulatedFunctionFileReader.main(args);
+        //TabulatedFunctionFileWriter.main(args);
+        //TabulatedFunctionJsonIO.main(args);
     }
 
 }
