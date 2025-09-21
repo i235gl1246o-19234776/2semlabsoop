@@ -1,22 +1,21 @@
 package io;
 
-import static org.junit.jupiter.api.Assertions.*;
 import functions.ArrayTabulatedFunction;
-import org.junit.*;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ArrayTabulatedFunctionXmlSerializationTest {
 
     private static final String TEST_FILE = "test_function.xml";
 
-    @Before
+    @BeforeEach
     public void setUp() {
         // Удаляем файл перед каждым тестом, если существует
         File file = new File(TEST_FILE);
@@ -25,7 +24,7 @@ public class ArrayTabulatedFunctionXmlSerializationTest {
         }
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         // Удаляем файл после каждого теста
         File file = new File(TEST_FILE);
@@ -47,7 +46,7 @@ public class ArrayTabulatedFunctionXmlSerializationTest {
         }
 
         // Проверяем, что файл создан
-        assertTrue("Файл XML должен существовать после сериализации", Files.exists(Paths.get(TEST_FILE)));
+        assertTrue(Files.exists(Paths.get(TEST_FILE)), "Файл XML должен существовать после сериализации");
 
         // Act: десериализуем из файла
         ArrayTabulatedFunction restored;
@@ -56,12 +55,12 @@ public class ArrayTabulatedFunctionXmlSerializationTest {
         }
 
         // Assert: проверяем, что данные совпадают
-        assertNotNull("Восстановленный объект не должен быть null", restored);
-        assertEquals("Количество точек должно совпадать", original.getCount(), restored.getCount());
+        assertNotNull(restored, "Восстановленный объект не должен быть null");
+        assertEquals(original.getCount(), restored.getCount(), "Количество точек должно совпадать");
 
         for (int i = 0; i < original.getCount(); i++) {
-            assertEquals("Значение X[" + i + "] должно совпадать", original.getX(i), restored.getX(i), 1e-9);
-            assertEquals("Значение Y[" + i + "] должно совпадать", original.getY(i), restored.getY(i), 1e-9);
+            assertEquals(original.getX(i), restored.getX(i), 1e-9, "Значение X[" + i + "] должно совпадать");
+            assertEquals(original.getY(i), restored.getY(i), 1e-9, "Значение Y[" + i + "] должно совпадать");
         }
     }
 
@@ -81,33 +80,29 @@ public class ArrayTabulatedFunctionXmlSerializationTest {
             restored = FunctionsIO.deserializeXml(reader);
         }
 
-        assertNotNull(restored);
-        assertEquals(1, restored.getCount());
-        assertEquals(5.0, restored.getX(0), 1e-9);
-        assertEquals(25.0, restored.getY(0), 1e-9);
+        assertNotNull(restored, "Десериализованная функция не должна быть null");
+        assertEquals(1, restored.getCount(), "Количество точек должно быть 1");
+        assertEquals(5.0, restored.getX(0), 1e-9, "X значение должно совпадать");
+        assertEquals(25.0, restored.getY(0), 1e-9, "Y значение должно совпадать");
     }
 
-    @Test(expected = IOException.class)
+    @Test
     public void testDeserializeXml_FileNotFound() throws Exception {
         // Попытка прочитать из несуществующего файла
-        try (BufferedReader reader = new BufferedReader(new FileReader("nonexistent.xml"))) {
-            FunctionsIO.deserializeXml(reader);
-        }
+        assertThrows(IOException.class, () -> {
+            try (BufferedReader reader = new BufferedReader(new FileReader("nonexistent.xml"))) {
+                FunctionsIO.deserializeXml(reader);
+            }
+        }, "Должно выбрасываться IOException для несуществующего файла");
     }
 
     @Test
     public void testSerializeXml_NullFunction() throws Exception {
         // Проверка, что сериализация null вызывает исключение (или обрабатывается)
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(TEST_FILE))) {
-            FunctionsIO.serializeXml(writer, null);
+            assertThrows(NullPointerException.class, () -> {
+                FunctionsIO.serializeXml(writer, null);
+            }, "Сериализация null должна выбрасывать исключение");
         }
-
-        // Чтение и проверка, что десериализуется null (если XStream так делает)
-        ArrayTabulatedFunction restored;
-        try (BufferedReader reader = new BufferedReader(new FileReader(TEST_FILE))) {
-            restored = FunctionsIO.deserializeXml(reader);
-        }
-
-        assertNull("Должен десериализоваться null", restored);
     }
 }

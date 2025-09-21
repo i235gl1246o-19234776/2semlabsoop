@@ -1,5 +1,6 @@
 package io;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 import functions.ArrayTabulatedFunction;
@@ -145,4 +146,26 @@ public final class FunctionsIO {
 
         return (ArrayTabulatedFunction) xstream.fromXML(xmlBuilder.toString());
     }
+
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
+    public static void serializeJson(BufferedWriter writer, ArrayTabulatedFunction function) throws IOException {
+        try {
+            String jsonString = OBJECT_MAPPER.writeValueAsString(function);
+            writer.write(jsonString);
+            writer.flush();
+        } catch (com.fasterxml.jackson.core.JsonProcessingException e) {
+            throw new IOException("Ошибка JSON сериализации", e);
+        }
+    }
+
+    public static ArrayTabulatedFunction deserializeJson(BufferedReader reader) throws IOException {
+        try {
+            return OBJECT_MAPPER.readValue(reader, ArrayTabulatedFunction.class);
+        } catch (com.fasterxml.jackson.core.JsonProcessingException e) {
+            throw new IOException("Ошибка JSON десериализации", e);
+        }
+    }
+
+
 }

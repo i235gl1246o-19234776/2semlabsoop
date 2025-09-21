@@ -20,7 +20,7 @@ public class ArrayTabulatedFunctionXmlTest {
         BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outStream));
 
         // Act: serialize
-        FunctionsIO.serialize(writer, original);
+        FunctionsIO.serializeXml(writer, original);
         writer.close();
 
         // Deserialize

@@ -6,16 +6,33 @@ import java.io.Serializable;
 import java.util.Iterator;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 
 public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements Removable, Serializable {
     private static final long serialVersionUID = -2407695699800373971L;
 
+    @JsonProperty("xVal")
+    @JsonFormat(shape = JsonFormat.Shape.ARRAY)
     private double[] xVal;
+
+    @JsonProperty("yVal")
+    @JsonFormat(shape = JsonFormat.Shape.ARRAY)
     private double[] yVal;
+
+    @JsonProperty("count")
     private int count;
 
-    public ArrayTabulatedFunction(double[] xVal, double[] yVal){
+    public ArrayTabulatedFunction() {
+        this.xVal = new double[0];
+        this.yVal = new double[0];
+        this.count = 0;
+    }
+
+    @JsonCreator
+    public ArrayTabulatedFunction(@JsonProperty(value = "xVal") double[] xVal, @JsonProperty(value = "yVal") double[] yVal) {
         if (xVal.length < 2) {
             throw new IllegalArgumentException("Таблица должна содержать как минимум 2 точки");
         }
@@ -26,6 +43,7 @@ public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements
         this.xVal = Arrays.copyOf(xVal, count);
         this.yVal = Arrays.copyOf(yVal, count);
     }
+
 
     public ArrayTabulatedFunction(MathFunction s, double xFrom, double xTo, int count){
 
@@ -46,6 +64,7 @@ public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements
             xFrom = xTo;
             xTo = t;
         }
+
         //Дискретизация
         double step = (xTo - xFrom)/(count - 1);
         for(int i=0; i<count; i++){
@@ -55,6 +74,17 @@ public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements
         }
 
     }
+
+    @JsonProperty("xVal")
+    public double[] getXVal() {
+        return Arrays.copyOf(xVal, count);
+    }
+
+    @JsonProperty("yVal")
+    public double[] getYVal() {
+        return Arrays.copyOf(yVal, count);
+    }
+
 
     @Override
     public double extrapolateLeft(double x) {
