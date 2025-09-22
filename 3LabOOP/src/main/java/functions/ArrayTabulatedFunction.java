@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 
-public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements Removable, Serializable {
+public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements Insertable, Removable, Serializable {
     private static final long serialVersionUID = -2407695699800373971L;
 
     @JsonProperty("xVal")
@@ -221,6 +221,40 @@ public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements
             }
         }
     }
+
+    @Override
+    public void insert(double x, double y) {
+        int existingIndex = indexOfX(x);
+        if (existingIndex != -1) {
+            yVal[existingIndex] = y;
+            return;
+        }
+
+        int insertIndex = 0;
+        while (insertIndex < count && xVal[insertIndex] < x) {
+            insertIndex++;
+        }
+
+        if (count >= xVal.length) {
+            increaseCapacity();
+        }
+
+        if (insertIndex < count) {
+            System.arraycopy(xVal, insertIndex, xVal, insertIndex + 1, count - insertIndex);
+            System.arraycopy(yVal, insertIndex, yVal, insertIndex + 1, count - insertIndex);
+        }
+
+        xVal[insertIndex] = x;
+        yVal[insertIndex] = y;
+        count++;
+    }
+
+    private void increaseCapacity() {
+        int newCapacity = (int) (xVal.length) + 1;
+        xVal = Arrays.copyOf(xVal, newCapacity);
+        yVal = Arrays.copyOf(yVal, newCapacity);
+    }
+
 
     @Override
     public void remove(int index) {
