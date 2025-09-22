@@ -201,7 +201,9 @@ public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements
         }
 
         if (count >= xVal.length) {
-            increaseCapacity();
+            int newCapacity = (int) (xVal.length) + 1;
+            xVal = Arrays.copyOf(xVal, newCapacity);
+            yVal = Arrays.copyOf(yVal, newCapacity);
         }
 
         if (insertIndex < count) {
@@ -212,12 +214,6 @@ public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements
         xVal[insertIndex] = x;
         yVal[insertIndex] = y;
         count++;
-    }
-
-    private void increaseCapacity() {
-        int newCapacity = (int) (xVal.length) + 1;
-        xVal = Arrays.copyOf(xVal, newCapacity);
-        yVal = Arrays.copyOf(yVal, newCapacity);
     }
 
     @Override
