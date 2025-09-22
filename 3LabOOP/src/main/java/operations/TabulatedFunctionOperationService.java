@@ -50,6 +50,7 @@ public class TabulatedFunctionOperationService {
         }
         this.factory = factory;
     }
+
     @FunctionalInterface
     private interface BiOperation {
         double apply(double u, double v);
@@ -67,25 +68,21 @@ public class TabulatedFunctionOperationService {
         int countA = a.getCount();
         int countB = b.getCount();
 
-        // Проверка на одинаковое количество точек
         if (countA != countB) {
             throw new InconsistentFunctionsException(
                     "Inconsistent function sizes: " + countA + " vs " + countB
             );
         }
-        // Получаем точки обеих функций
         Point[] pointsA = asPoints(a);
         Point[] pointsB = asPoints(b);
 
         double[] xValues = new double[countA];
         double[] yValues = new double[countA];
 
-        // Выполняем поэлементную операцию
         for (int i = 0; i < countA; i++) {
             double xA = pointsA[i].x;
             double xB = pointsB[i].x;
 
-            // Проверка на совпадение X-координат
             if (xA != xB) {
                 throw new InconsistentFunctionsException(
                         "X values differ at index " + i + ": " + xA + " != " + xB
@@ -96,20 +93,16 @@ public class TabulatedFunctionOperationService {
             yValues[i] = operation.apply(pointsA[i].y, pointsB[i].y);
         }
 
-        // Создаем новую функцию через фабрику
         return factory.create(xValues, yValues);
     }
-    // Публичный метод: сложение
     public TabulatedFunction add(TabulatedFunction a, TabulatedFunction b) {
         return doOperation(a, b, (u, v) -> u + v);
     }
 
-    // Публичный метод: вычитание
     public TabulatedFunction subtract(TabulatedFunction a, TabulatedFunction b) {
         return doOperation(a, b, (u, v) -> u - v);
     }
 
-    // Публичный метод: умножение
     public TabulatedFunction multiply(TabulatedFunction a, TabulatedFunction b){
         return doOperation(a, b, (u,v) -> u * v);
     }
