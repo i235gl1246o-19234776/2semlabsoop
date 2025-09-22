@@ -16,7 +16,7 @@ public class ArrayTabulatedFunctionSerialization{
         String filePath = "3LabOOP/output/serialized array functions.bin";
 
         // Создаём директорию output, если её ещё нет
-        File outputDir = new File("output");
+        File outputDir = new File("3LabOOP/output");
         if (!outputDir.exists()) {
             outputDir.mkdirs();
         }
