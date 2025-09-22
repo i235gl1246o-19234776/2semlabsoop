@@ -24,11 +24,7 @@ class UnitFunctionTest {
     @DisplayName("Тест на проверку наследования от постоянной функции")
     void testInheritanceFromConstantFunction() {
         UnitFunction unit = new UnitFunction();
-
-        //Проверяем, что UnitFunction является наследником ConstantFunction
         assertTrue(unit instanceof ConstantFunction, "UnitFunction должен наследовать от ConstantFunction, GOOD");
-
-        //Проверяем, что UnitFunction реализует MathFunction
         assertTrue(unit instanceof MathFunction, "UnitFunction должен реализовывать MathFunction, GOOD");
     }
 
@@ -36,19 +32,14 @@ class UnitFunctionTest {
     @DisplayName("Тест на проверку метода getConstant")
     void testGetConstantReturnsOne() {
         UnitFunction unit = new UnitFunction();
-
-        //Проверяем, что метод getConstant возвращает 1.0
         assertEquals(1.0, unit.getConstant(), 1e-10, "getConstant() должен возвращать 1.0, GOOD");
     }
 
     @Test
     @DisplayName("Тест на проверку без аргументов")
     void testConstructorNoArguments() {
-        //Проверяем, что конструктор без аргументов существует и работает
         UnitFunction unit = new UnitFunction();
         assertNotNull(unit, "Конструктор без аргументов должен создавать объект, GOOD");
-
-        //Проверяем, что созданный объект корректно работает
         assertEquals(1.0, unit.apply(5.0), 1e-10, "Должен возвращать 1.0 после создания через конструктор без аргументов, GOOD");
     }
 
@@ -56,9 +47,6 @@ class UnitFunctionTest {
     @DisplayName("Тест на проверку дополнительных полей")
     void testNoAdditionalFields() {
         UnitFunction unit = new UnitFunction();
-
-        //Проверяем, что у UnitFunction нет дополнительных полей (только унаследованные)
-        //Это можно проверить через рефлексию, но для простоты проверяем поведение
         assertEquals(1.0, unit.getConstant(), 1e-10, "Должен вести себя как ConstantFunction(1.0), GOOD");
     }
 

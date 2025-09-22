@@ -2,6 +2,7 @@ package functions;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class UnmodifiableTabulatedFunctionCombinationTest {
@@ -17,20 +18,16 @@ public class UnmodifiableTabulatedFunctionCombinationTest {
 
         TabulatedFunction strictUnmodifiable = new UnmodifiableTabulatedFunction(strictFunction);
 
-        //Проверяем, что значения читаются корректно
         assertEquals(3, strictUnmodifiable.getCount());
         assertEquals(1.0, strictUnmodifiable.getX(0), 1e-10);
         assertEquals(10.0, strictUnmodifiable.getY(0), 1e-10);
 
-        //Проверяем, что модификация запрещена (Unmodifiable поведение)
         assertThrows(UnsupportedOperationException.class,
                 () -> strictUnmodifiable.setY(0, 100.0));
 
-        //Проверяем, что интерполяция запрещена (Strict поведение)
         assertThrows(UnsupportedOperationException.class,
                 () -> strictUnmodifiable.apply(1.5));
 
-        //Проверяем, что работают точные значения
         assertEquals(10.0, strictUnmodifiable.apply(1.0), 1e-10);
         assertEquals(20.0, strictUnmodifiable.apply(2.0), 1e-10);
         assertEquals(30.0, strictUnmodifiable.apply(3.0), 1e-10);
@@ -47,20 +44,16 @@ public class UnmodifiableTabulatedFunctionCombinationTest {
 
         TabulatedFunction unmodifiableStrict = new StrictTabulatedFunction(unmodifiableFunction);
 
-        //Проверяем, что значения читаются корректно
         assertEquals(3, unmodifiableStrict.getCount());
         assertEquals(1.0, unmodifiableStrict.getX(0), 1e-10);
         assertEquals(10.0, unmodifiableStrict.getY(0), 1e-10);
 
-        //Проверяем, что модификация запрещена (Unmodifiable поведение)
         assertThrows(UnsupportedOperationException.class,
                 () -> unmodifiableStrict.setY(0, 100.0));
 
-        //Проверяем, что интерполяция запрещена (Strict поведение)
         assertThrows(UnsupportedOperationException.class,
                 () -> unmodifiableStrict.apply(1.5));
 
-        // Проверяем, что работают точные значения
         assertEquals(10.0, unmodifiableStrict.apply(1.0), 1e-10);
         assertEquals(20.0, unmodifiableStrict.apply(2.0), 1e-10);
         assertEquals(30.0, unmodifiableStrict.apply(3.0), 1e-10);
@@ -77,20 +70,16 @@ public class UnmodifiableTabulatedFunctionCombinationTest {
                         new StrictTabulatedFunction(
                                 new ArrayTabulatedFunction(xValues, yValues))));
 
-        //Проверяем базовую функциональность
         assertEquals(3, tripleWrapped.getCount());
         assertEquals(1.0, tripleWrapped.getX(0), 1e-10);
         assertEquals(10.0, tripleWrapped.getY(0), 1e-10);
 
-        //Проверяем запрет модификации
         assertThrows(UnsupportedOperationException.class,
                 () -> tripleWrapped.setY(0, 100.0));
 
-        //Проверяем запрет интерполяции
         assertThrows(UnsupportedOperationException.class,
                 () -> tripleWrapped.apply(1.5));
 
-        //Проверяем работу точных значений
         assertEquals(10.0, tripleWrapped.apply(1.0), 1e-10);
         assertEquals(20.0, tripleWrapped.apply(2.0), 1e-10);
         assertEquals(30.0, tripleWrapped.apply(3.0), 1e-10);
@@ -107,20 +96,17 @@ public class UnmodifiableTabulatedFunctionCombinationTest {
                         new UnmodifiableTabulatedFunction(
                                 new ArrayTabulatedFunction(xValues, yValues))));
 
-        // Проверяем базовую функциональность
         assertEquals(3, tripleWrapped.getCount());
         assertEquals(1.0, tripleWrapped.getX(0), 1e-10);
         assertEquals(10.0, tripleWrapped.getY(0), 1e-10);
 
-        // Проверяем запрет модификации
+
         assertThrows(UnsupportedOperationException.class,
                 () -> tripleWrapped.setY(0, 100.0));
 
-        // Проверяем запрет интерполяции
         assertThrows(UnsupportedOperationException.class,
                 () -> tripleWrapped.apply(1.5));
 
-        // Проверяем работу точных значений
         assertEquals(10.0, tripleWrapped.apply(1.0), 1e-10);
         assertEquals(20.0, tripleWrapped.apply(2.0), 1e-10);
         assertEquals(30.0, tripleWrapped.apply(3.0), 1e-10);
@@ -136,20 +122,16 @@ public class UnmodifiableTabulatedFunctionCombinationTest {
                 new UnmodifiableTabulatedFunction(
                         new LinkedListTabulatedFunction(xValues, yValues)));
 
-        // Проверяем базовую функциональность
         assertEquals(3, strictUnmodifiable.getCount());
         assertEquals(1.0, strictUnmodifiable.getX(0), 1e-10);
         assertEquals(10.0, strictUnmodifiable.getY(0), 1e-10);
 
-        // Проверяем запрет модификации
         assertThrows(UnsupportedOperationException.class,
                 () -> strictUnmodifiable.setY(0, 100.0));
 
-        // Проверяем запрет интерполяции
         assertThrows(UnsupportedOperationException.class,
                 () -> strictUnmodifiable.apply(1.5));
 
-        // Проверяем работу точных значений
         assertEquals(10.0, strictUnmodifiable.apply(1.0), 1e-10);
         assertEquals(20.0, strictUnmodifiable.apply(2.0), 1e-10);
         assertEquals(30.0, strictUnmodifiable.apply(3.0), 1e-10);
@@ -165,20 +147,16 @@ public class UnmodifiableTabulatedFunctionCombinationTest {
                 new StrictTabulatedFunction(
                         new LinkedListTabulatedFunction(xValues, yValues)));
 
-        // Проверяем базовую функциональность
         assertEquals(3, unmodifiableStrict.getCount());
         assertEquals(1.0, unmodifiableStrict.getX(0), 1e-10);
         assertEquals(10.0, unmodifiableStrict.getY(0), 1e-10);
 
-        // Проверяем запрет модификации
         assertThrows(UnsupportedOperationException.class,
                 () -> unmodifiableStrict.setY(0, 100.0));
 
-        // Проверяем запрет интерполяции
         assertThrows(UnsupportedOperationException.class,
                 () -> unmodifiableStrict.apply(1.5));
 
-        // Проверяем работу точных значений
         assertEquals(10.0, unmodifiableStrict.apply(1.0), 1e-10);
         assertEquals(20.0, unmodifiableStrict.apply(2.0), 1e-10);
         assertEquals(30.0, unmodifiableStrict.apply(3.0), 1e-10);
@@ -194,7 +172,6 @@ public class UnmodifiableTabulatedFunctionCombinationTest {
                 new UnmodifiableTabulatedFunction(
                         new ArrayTabulatedFunction(xValues, yValues)));
 
-        // Проверяем работу итератора
         int count = 0;
         for (Point point : combined) {
             assertEquals(xValues[count], point.x, 1e-10);
@@ -214,11 +191,9 @@ public class UnmodifiableTabulatedFunctionCombinationTest {
                 new StrictTabulatedFunction(
                         new ArrayTabulatedFunction(xValues, yValues)));
 
-        // Проверяем граничные значения
         assertEquals(0.0, combined.leftBound(), 1e-10);
         assertEquals(0.0, combined.rightBound(), 1e-10);
 
-        // Проверяем поиск по граничным значениям
         assertEquals(0, combined.indexOfX(1.0));
         assertEquals(2, combined.indexOfX(3.0));
         assertEquals(0, combined.indexOfY(10.0));
@@ -237,11 +212,9 @@ public class UnmodifiableTabulatedFunctionCombinationTest {
 
         double originalY = original.getY(0);
 
-        // Попытка модификации через комбинированную обёртку
         assertThrows(UnsupportedOperationException.class,
                 () -> combined.setY(0, 999.0));
 
-        // Оригинальная функция должна остаться неизменной
         assertEquals(originalY, original.getY(0), 1e-10);
     }
 }

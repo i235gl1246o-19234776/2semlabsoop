@@ -3,8 +3,6 @@ package functions;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.Arrays;
-
 class StrictTabulatedFunctionTest {
 
     private ArrayTabulatedFunction arrayFunction;

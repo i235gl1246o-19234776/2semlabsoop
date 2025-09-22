@@ -2,7 +2,6 @@ package operations;
 
 import functions.MathFunction;
 import functions.SqrFunction;
-import operations.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -10,8 +9,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class SteppingDifferentialOperatorsTest {
 
-    private static final double DELTA = 1e-6; // Точность для сравнения
-    private static final double STEP = 0.001; // Маленький шаг для точности
+    private static final double DELTA = 1e-6;
+    private static final double STEP = 0.001;
 
     @Test
     @DisplayName("LeftSteppingDifferentialOperator: f(x) = x² → f'(x) ≈ 2x")
@@ -20,7 +19,6 @@ class SteppingDifferentialOperatorsTest {
         LeftSteppingDifferentialOperator operator = new LeftSteppingDifferentialOperator(STEP);
         MathFunction derivative = operator.derive(sqr);
 
-        // Тестируем в нескольких точках
         assertDerivative(derivative, 1.0, 2.0);
         assertDerivative(derivative, 2.0, 4.0);
         assertDerivative(derivative, 0.0, 0.0);
@@ -120,10 +118,9 @@ class SteppingDifferentialOperatorsTest {
         assertNull(operator.derive(f), "Метод должен возвращать null");
     }
 
-    // Вспомогательный метод для проверки производной
     private void assertDerivative(MathFunction derivative, double x, double expected) {
         double actual = derivative.apply(x);
-        assertEquals(expected, actual, 0.01, // Допускаем погрешность до 0.01 из-за численного дифференцирования
+        assertEquals(expected, actual, 0.01,
                 "Производная в точке x=" + x + " должна быть ≈ " + expected + ", получено: " + actual);
     }
 }

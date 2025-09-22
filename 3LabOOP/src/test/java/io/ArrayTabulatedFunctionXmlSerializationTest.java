@@ -17,7 +17,6 @@ public class ArrayTabulatedFunctionXmlSerializationTest {
 
     @BeforeEach
     public void setUp() {
-        // Удаляем файл перед каждым тестом, если существует
         File file = new File(TEST_FILE);
         if (file.exists()) {
             file.delete();
@@ -26,7 +25,6 @@ public class ArrayTabulatedFunctionXmlSerializationTest {
 
     @AfterEach
     public void tearDown() {
-        // Удаляем файл после каждого теста
         File file = new File(TEST_FILE);
         if (file.exists()) {
             file.delete();
@@ -35,26 +33,21 @@ public class ArrayTabulatedFunctionXmlSerializationTest {
 
     @Test
     public void testSerializeAndDeserializeXml() throws Exception {
-        // Arrange: создаём тестовую функцию
         double[] xValues = {1.0, 2.0, 3.0, 4.0};
         double[] yValues = {1.0, 4.0, 9.0, 16.0};
         ArrayTabulatedFunction original = new ArrayTabulatedFunction(xValues, yValues);
 
-        // Act: сериализуем в XML-файл
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(TEST_FILE))) {
             FunctionsIO.serializeXml(writer, original);
         }
 
-        // Проверяем, что файл создан
         assertTrue(Files.exists(Paths.get(TEST_FILE)), "Файл XML должен существовать после сериализации");
 
-        // Act: десериализуем из файла
         ArrayTabulatedFunction restored;
         try (BufferedReader reader = new BufferedReader(new FileReader(TEST_FILE))) {
             restored = FunctionsIO.deserializeXml(reader);
         }
 
-        // Assert: проверяем, что данные совпадают
         assertNotNull(restored, "Восстановленный объект не должен быть null");
         assertEquals(original.getCount(), restored.getCount(), "Количество точек должно совпадать");
 
@@ -87,7 +80,6 @@ public class ArrayTabulatedFunctionXmlSerializationTest {
 
     @Test
     public void testDeserializeXml_FileNotFound() throws Exception {
-        // Попытка прочитать из несуществующего файла
         assertThrows(IOException.class, () -> {
             try (BufferedReader reader = new BufferedReader(new FileReader("nonexistent.xml"))) {
                 FunctionsIO.deserializeXml(reader);
@@ -97,7 +89,6 @@ public class ArrayTabulatedFunctionXmlSerializationTest {
 
     @Test
     public void testSerializeXml_NullFunction() throws Exception {
-        // Проверка, что сериализация null вызывает исключение (или обрабатывается)
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(TEST_FILE))) {
             assertThrows(NullPointerException.class, () -> {
                 FunctionsIO.serializeXml(writer, null);

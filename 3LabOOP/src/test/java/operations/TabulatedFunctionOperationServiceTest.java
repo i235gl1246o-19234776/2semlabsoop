@@ -203,10 +203,7 @@ class TabulatedFunctionOperationServiceTest {
     private static final double[] Y2 = {0.0, 1.0, 4.0, 9.0}; // f(x) = x^2
 
     private static Stream<TabulatedFunctionFactory> provideFactories() {
-        return Stream.of(
-                new ArrayTabulatedFunctionFactory(),
-                new LinkedListTabulatedFunctionFactory()
-        );
+        return Stream.of(new ArrayTabulatedFunctionFactory(), new LinkedListTabulatedFunctionFactory());
     }
 
     @ParameterizedTest
@@ -223,8 +220,7 @@ class TabulatedFunctionOperationServiceTest {
         assertEquals(X1.length, result.getCount());
         for (int i = 0; i < X1.length; i++) {
             double expected = Y1[i] + Y2[i];
-            assertEquals(expected, result.getY(i), DELTA,
-                    "Неверный результат сложения в точке " + i);
+            assertEquals(expected, result.getY(i), DELTA, "Неверный результат сложения в точке " + i);
         }
 
         // Проверка типа результата
@@ -248,8 +244,7 @@ class TabulatedFunctionOperationServiceTest {
         assertEquals(X1.length, result.getCount());
         for (int i = 0; i < X1.length; i++) {
             double expected = Y1[i] - Y2[i];
-            assertEquals(expected, result.getY(i), DELTA,
-                    "Неверный результат вычитания в точке " + i);
+            assertEquals(expected, result.getY(i), DELTA, "Неверный результат вычитания в точке " + i);
         }
 
         // По умолчанию используется Array фабрика
@@ -276,27 +271,19 @@ class TabulatedFunctionOperationServiceTest {
         assertTrue(result instanceof LinkedListTabulatedFunction);
     }
 
-    // ========== Тест: разное количество точек ==========
     @Test
     @DisplayName("Исключение при разном количестве точек")
     void testInconsistentCountThrowsException() {
         TabulatedFunctionOperationService service = new TabulatedFunctionOperationService();
 
         TabulatedFunction f1 = new ArrayTabulatedFunction(X1, Y1);
-        TabulatedFunction f2 = new ArrayTabulatedFunction(
-                new double[]{0.0, 1.0}, // только 2 точки
-                new double[]{1.0, 2.0}
-        );
+        TabulatedFunction f2 = new ArrayTabulatedFunction(new double[]{0.0, 1.0}, // только 2 точки
+                new double[]{1.0, 2.0});
 
-        InconsistentFunctionsException exception = assertThrows(
-                InconsistentFunctionsException.class,
-                () -> service.add(f1, f2),
-                "Должно бросаться исключение при разном количестве точек"
-        );
+        InconsistentFunctionsException exception = assertThrows(InconsistentFunctionsException.class, () -> service.add(f1, f2), "Должно бросаться исключение при разном количестве точек");
 
     }
 
-    // ========== Тест: разные значения X ==========
     @Test
     @DisplayName("Исключение при несовпадении X-значений")
     void testInconsistentXValuesThrowsException() {
@@ -306,17 +293,11 @@ class TabulatedFunctionOperationServiceTest {
         double[] x2 = {0.0, 1.0, 2.0, 4.0}; // Последнее значение отличается!
         TabulatedFunction f2 = new ArrayTabulatedFunction(x2, Y2);
 
-        InconsistentFunctionsException exception = assertThrows(
-                InconsistentFunctionsException.class,
-                () -> service.add(f1, f2),
-                "Должно бросаться исключение при несовпадении X-значений"
-        );
+        InconsistentFunctionsException exception = assertThrows(InconsistentFunctionsException.class, () -> service.add(f1, f2), "Должно бросаться исключение при несовпадении X-значений");
 
-        assertTrue(exception.getMessage().contains("X values differ at index 3"),
-                "Сообщение должно указывать на индекс и значения");
+        assertTrue(exception.getMessage().contains("X values differ at index 3"), "Сообщение должно указывать на индекс и значения");
     }
 
-    // ========== Тест: null функции ==========
     @Test
     @DisplayName("Исключение при передаче null")
     void testNullFunctionThrowsException() {
@@ -324,16 +305,11 @@ class TabulatedFunctionOperationServiceTest {
 
         TabulatedFunction f = new ArrayTabulatedFunction(X1, Y1);
 
-        assertThrows(IllegalArgumentException.class,
-                () -> service.add(null, f),
-                "Должно бросаться исключение при null первой функции");
+        assertThrows(IllegalArgumentException.class, () -> service.add(null, f), "Должно бросаться исключение при null первой функции");
 
-        assertThrows(IllegalArgumentException.class,
-                () -> service.add(f, null),
-                "Должно бросаться исключение при null второй функции");
+        assertThrows(IllegalArgumentException.class, () -> service.add(f, null), "Должно бросаться исключение при null второй функции");
     }
 
-    // ========== Тест: сеттер и геттер фабрики ==========
     @Test
     @DisplayName("Проверка сеттера и геттера фабрики")
     void testFactorySetterGetter() {
@@ -342,17 +318,14 @@ class TabulatedFunctionOperationServiceTest {
         TabulatedFunctionFactory newFactory = new LinkedListTabulatedFunctionFactory();
         service.setFactory(newFactory);
 
-        assertSame(newFactory, service.getFactory(),
-                "Геттер должен возвращать установленную фабрику");
+        assertSame(newFactory, service.getFactory(), "Геттер должен возвращать установленную фабрику");
     }
 
-    // ========== Тест: конструктор по умолчанию ==========
     @Test
     @DisplayName("Конструктор по умолчанию использует ArrayTabulatedFunctionFactory")
     void testDefaultConstructorUsesArrayFactory() {
         TabulatedFunctionOperationService service = new TabulatedFunctionOperationService();
-        assertTrue(service.getFactory() instanceof ArrayTabulatedFunctionFactory,
-                "По умолчанию должна использоваться Array фабрика");
+        assertTrue(service.getFactory() instanceof ArrayTabulatedFunctionFactory, "По умолчанию должна использоваться Array фабрика");
     }
 
     private TabulatedFunctionOperationService service;
@@ -460,7 +433,6 @@ class TabulatedFunctionOperationServiceTest {
         TabulatedFunction result1 = service.multiply(a, b);
         assertTrue(result1 instanceof ArrayTabulatedFunction);
 
-        // Тестируем с LinkedList фабрикой
         service.setFactory(new LinkedListTabulatedFunctionFactory());
         TabulatedFunction result2 = service.divide(a, b);
         assertTrue(result2 instanceof LinkedListTabulatedFunction);
@@ -469,9 +441,7 @@ class TabulatedFunctionOperationServiceTest {
     @Test
     @DisplayName("Несовпадение размеров функций при умножении/делении")
     void testInconsistentSizesForMultiplyDivide() {
-        TabulatedFunction smallFunction = new ArrayTabulatedFunction(
-                new double[]{1.0, 2.0}, new double[]{1.0, 2.0}
-        );
+        TabulatedFunction smallFunction = new ArrayTabulatedFunction(new double[]{1.0, 2.0}, new double[]{1.0, 2.0});
 
         assertThrows(InconsistentFunctionsException.class, () -> {
             service.multiply(a, smallFunction);
@@ -485,9 +455,7 @@ class TabulatedFunctionOperationServiceTest {
     @Test
     @DisplayName("Несовпадение X-координат при умножении/делении")
     void testInconsistentXValuesForMultiplyDivide() {
-        TabulatedFunction differentX = new ArrayTabulatedFunction(
-                new double[]{1.0, 2.5, 3.0, 4.0}, new double[]{1.0, 2.0, 3.0, 4.0}
-        );
+        TabulatedFunction differentX = new ArrayTabulatedFunction(new double[]{1.0, 2.5, 3.0, 4.0}, new double[]{1.0, 2.0, 3.0, 4.0});
 
         assertThrows(InconsistentFunctionsException.class, () -> {
             service.multiply(a, differentX);
@@ -514,9 +482,7 @@ class TabulatedFunctionOperationServiceTest {
     @DisplayName("Умножение на нулевую функцию")
     void testMultiplyByZeroFunction() {
         double[] yValuesZero = {0.0, 0.0, 0.0, 0.0};
-        TabulatedFunction zeroFunction = new ArrayTabulatedFunction(
-                new double[]{1.0, 2.0, 3.0, 4.0}, yValuesZero
-        );
+        TabulatedFunction zeroFunction = new ArrayTabulatedFunction(new double[]{1.0, 2.0, 3.0, 4.0}, yValuesZero);
 
         TabulatedFunction result = service.multiply(a, zeroFunction);
 
@@ -526,109 +492,91 @@ class TabulatedFunctionOperationServiceTest {
     }
 
 
-        @ParameterizedTest
-        @MethodSource("provideFactories")
-        @DisplayName("createUnmodifiable возвращает обёрнутую в UnmodifiableTabulatedFunction")
-        void testCreateUnmodifiableReturnsUnmodifiable(TabulatedFunctionFactory factory) {
-            double[] x = {1.0, 2.0, 3.0};
-            double[] y = {4.0, 5.0, 6.0};
+    @ParameterizedTest
+    @MethodSource("provideFactories")
+    @DisplayName("createUnmodifiable возвращает обёрнутую в UnmodifiableTabulatedFunction")
+    void testCreateUnmodifiableReturnsUnmodifiable(TabulatedFunctionFactory factory) {
+        double[] x = {1.0, 2.0, 3.0};
+        double[] y = {4.0, 5.0, 6.0};
 
-            var result = factory.createUnmodifiable(x, y);
+        var result = factory.createUnmodifiable(x, y);
 
-            assertTrue(result instanceof UnmodifiableTabulatedFunction,
-                    "Результат должен быть обёрнут в UnmodifiableTabulatedFunction");
+        assertTrue(result instanceof UnmodifiableTabulatedFunction, "Результат должен быть обёрнут в UnmodifiableTabulatedFunction");
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideFactories")
+    @DisplayName("createUnmodifiable сохраняет значения x и y")
+    void testCreateUnmodifiablePreservesValues(TabulatedFunctionFactory factory) {
+        double[] x = {0.0, 1.0, 2.0};
+        double[] y = {1.0, 3.0, 5.0};
+
+        var unmodifiable = factory.createUnmodifiable(x, y);
+
+        assertEquals(3, unmodifiable.getCount());
+        for (int i = 0; i < 3; i++) {
+            assertEquals(x[i], unmodifiable.getX(i), 1e-10);
+            assertEquals(y[i], unmodifiable.getY(i), 1e-10);
         }
+    }
 
-        @ParameterizedTest
-        @MethodSource("provideFactories")
-        @DisplayName("createUnmodifiable сохраняет значения x и y")
-        void testCreateUnmodifiablePreservesValues(TabulatedFunctionFactory factory) {
-            double[] x = {0.0, 1.0, 2.0};
-            double[] y = {1.0, 3.0, 5.0};
+    @ParameterizedTest
+    @MethodSource("provideFactories")
+    @DisplayName("createUnmodifiable запрещает изменение через setY")
+    void testCreateUnmodifiableBlocksModification(TabulatedFunctionFactory factory) {
+        double[] x = {1.0, 2.0};
+        double[] y = {3.0, 4.0};
 
-            var unmodifiable = factory.createUnmodifiable(x, y);
+        var unmodifiable = factory.createUnmodifiable(x, y);
 
-            assertEquals(3, unmodifiable.getCount());
-            for (int i = 0; i < 3; i++) {
-                assertEquals(x[i], unmodifiable.getX(i), 1e-10);
-                assertEquals(y[i], unmodifiable.getY(i), 1e-10);
-            }
-        }
+        UnsupportedOperationException exception = assertThrows(UnsupportedOperationException.class, () -> unmodifiable.setY(0, 999.0), "Должно запрещать изменение");
 
-        @ParameterizedTest
-        @MethodSource("provideFactories")
-        @DisplayName("createUnmodifiable запрещает изменение через setY")
-        void testCreateUnmodifiableBlocksModification(TabulatedFunctionFactory factory) {
-            double[] x = {1.0, 2.0};
-            double[] y = {3.0, 4.0};
+        assertEquals("Нельзя это использовать", exception.getMessage());
+    }
 
-            var unmodifiable = factory.createUnmodifiable(x, y);
+    @ParameterizedTest
+    @MethodSource("provideFactories")
+    @DisplayName("createUnmodifiable работает с пустыми массивами")
+    void testCreateUnmodifiableWithEmptyArrays(TabulatedFunctionFactory factory) {
+        double[] x = {};
+        double[] y = {};
+        assertThrows(IllegalArgumentException.class, () -> factory.createUnmodifiable(x, y));
+    }
 
-            UnsupportedOperationException exception = assertThrows(
-                    UnsupportedOperationException.class,
-                    () -> unmodifiable.setY(0, 999.0),
-                    "Должно запрещать изменение"
-            );
+    @ParameterizedTest
+    @MethodSource("provideFactories")
+    @DisplayName("createUnmodifiable бросает исключение при null-массивах")
+    void testCreateUnmodifiableThrowsOnNullArrays(TabulatedFunctionFactory factory) {
+        double[] valid = {1.0, 2.0};
 
-            assertEquals("Нельзя это использовать", exception.getMessage());
-        }
+        assertThrows(IllegalArgumentException.class, () -> factory.createUnmodifiable(null, valid), "Должно бросаться исключение при null xValues");
 
-        @ParameterizedTest
-        @MethodSource("provideFactories")
-        @DisplayName("createUnmodifiable работает с пустыми массивами")
-        void testCreateUnmodifiableWithEmptyArrays(TabulatedFunctionFactory factory) {
-            double[] x = {};
-            double[] y = {};
-            assertThrows(IllegalArgumentException.class, ()->factory.createUnmodifiable(x, y));
-        }
+        assertThrows(IllegalArgumentException.class, () -> factory.createUnmodifiable(valid, null), "Должно бросаться исключение при null yValues");
+    }
 
-        @ParameterizedTest
-        @MethodSource("provideFactories")
-        @DisplayName("createUnmodifiable бросает исключение при null-массивах")
-        void testCreateUnmodifiableThrowsOnNullArrays(TabulatedFunctionFactory factory) {
-            double[] valid = {1.0, 2.0};
+    @ParameterizedTest
+    @MethodSource("provideFactories")
+    @DisplayName("createUnmodifiable бросает исключение при разных длинах массивов")
+    void testCreateUnmodifiableThrowsOnDifferentLengths(TabulatedFunctionFactory factory) {
+        double[] x = {1.0, 2.0};
+        double[] y = {3.0};
 
-            assertThrows(IllegalArgumentException.class,
-                    () -> factory.createUnmodifiable(null, valid),
-                    "Должно бросаться исключение при null xValues");
-
-            assertThrows(IllegalArgumentException.class,
-                    () -> factory.createUnmodifiable(valid, null),
-                    "Должно бросаться исключение при null yValues");
-        }
-
-        @ParameterizedTest
-        @MethodSource("provideFactories")
-        @DisplayName("createUnmodifiable бросает исключение при разных длинах массивов")
-        void testCreateUnmodifiableThrowsOnDifferentLengths(TabulatedFunctionFactory factory) {
-            double[] x = {1.0, 2.0};
-            double[] y = {3.0};
-
-            assertThrows(IllegalArgumentException.class,
-                    () -> factory.createUnmodifiable(x, y),
-                    "Должно бросаться исключение при несовпадении длин");
-        }
+        assertThrows(IllegalArgumentException.class, () -> factory.createUnmodifiable(x, y), "Должно бросаться исключение при несовпадении длин");
+    }
 
 
-        @Test
-        void constructorThrowsOnNullFactory() {
-            IllegalArgumentException exception = assertThrows(
-                    IllegalArgumentException.class,
-                    () -> new TabulatedFunctionOperationService(null)
-            );
-            assertEquals("Factory cannot be null", exception.getMessage());
-        }
+    @Test
+    void constructorThrowsOnNullFactory() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> new TabulatedFunctionOperationService(null));
+        assertEquals("Factory cannot be null", exception.getMessage());
+    }
 
-        @Test
-        void setFactoryThrowsOnNull() {
-            TabulatedFunctionOperationService service = new TabulatedFunctionOperationService(
-                    new ArrayTabulatedFunctionFactory() // или любая валидная фабрика
-            );
+    @Test
+    void setFactoryThrowsOnNull() {
+        TabulatedFunctionOperationService service = new TabulatedFunctionOperationService(new ArrayTabulatedFunctionFactory() // или любая валидная фабрика
+        );
 
-            IllegalArgumentException exception = assertThrows(
-                    IllegalArgumentException.class,
-                    () -> service.setFactory(null)
-            );
-            assertEquals("Factory cannot be null", exception.getMessage());
-        }
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> service.setFactory(null));
+        assertEquals("Factory cannot be null", exception.getMessage());
+    }
 }

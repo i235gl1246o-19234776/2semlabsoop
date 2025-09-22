@@ -4,6 +4,7 @@ import functions.*;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class TabulatedFunctionFactoryTest {
@@ -262,11 +263,9 @@ class TabulatedFunctionFactoryTest {
         TabulatedFunctionFactory factory = new ArrayTabulatedFunctionFactory();
         TabulatedFunction function = factory.createStrictUnmodifiable(xValues, yValues);
 
-        // Должен работать для существующих точек
         assertEquals(10.0, function.apply(1.0), 1e-10);
         assertEquals(20.0, function.apply(2.0), 1e-10);
 
-        // Должен бросать исключение для несуществующих точек
         assertThrows(UnsupportedOperationException.class, () -> function.apply(1.5));
         assertThrows(UnsupportedOperationException.class, () -> function.apply(0.5));
         assertThrows(UnsupportedOperationException.class, () -> function.apply(4.5));
@@ -281,12 +280,10 @@ class TabulatedFunctionFactoryTest {
         TabulatedFunctionFactory factory = new ArrayTabulatedFunctionFactory();
         TabulatedFunction function = factory.createStrictUnmodifiable(xValues, yValues);
 
-        // Попытка изменить значение должна бросать исключение
         assertThrows(UnsupportedOperationException.class, () -> {
             function.setY(1, 25.0);
         });
 
-        // Проверяем, что значение не изменилось
         assertEquals(20.0, function.getY(1), 1e-10);
     }
 
@@ -299,10 +296,8 @@ class TabulatedFunctionFactoryTest {
         TabulatedFunctionFactory factory = new ArrayTabulatedFunctionFactory();
         TabulatedFunction function = factory.createStrictUnmodifiable(xValues, yValues);
 
-        // Все операции модификации должны бросать исключение
         assertThrows(UnsupportedOperationException.class, () -> function.setY(0, 100.0));
 
-        // Данные должны остаться неизменными
         assertEquals(10.0, function.getY(0), 1e-10);
         assertEquals(20.0, function.getY(1), 1e-10);
     }
@@ -316,7 +311,6 @@ class TabulatedFunctionFactoryTest {
 
         TabulatedFunction function = factory.createStrictUnmodifiable(xValues, yValues);
 
-        // Изменяем исходные массивы
         xValues[0] = 100.0;
         yValues[0] = 200.0;
 
@@ -334,7 +328,6 @@ class TabulatedFunctionFactoryTest {
         TabulatedFunctionFactory factory = new ArrayTabulatedFunctionFactory();
         TabulatedFunction function = factory.createStrictUnmodifiable(xValues, yValues);
 
-        // Итератор должен работать для чтения
         int count = 0;
         for (var point : function) {
             assertNotNull(point);
@@ -342,9 +335,7 @@ class TabulatedFunctionFactoryTest {
         }
         assertEquals(3, count);
 
-        // Итератор должен запрещать remove
         var iterator = function.iterator();
-        iterator.next(); // Переходим к первому элементу
         assertThrows(UnsupportedOperationException.class, () -> iterator.remove());
     }
 
@@ -357,13 +348,10 @@ class TabulatedFunctionFactoryTest {
         TabulatedFunctionFactory factory = new ArrayTabulatedFunctionFactory();
         TabulatedFunction function = factory.createStrictUnmodifiable(xValues, yValues);
 
-        // Свойство Strict: запрет интерполяции
         assertThrows(UnsupportedOperationException.class, () -> function.apply(1.5));
 
-        // Свойство Unmodifiable: запрет модификации
         assertThrows(UnsupportedOperationException.class, () -> function.setY(0, 100.0));
 
-        // Свойство обеих: чтение данных работает
         assertEquals(1.0, function.getX(0), 1e-10);
         assertEquals(10.0, function.getY(0), 1e-10);
         assertEquals(10.0, function.apply(1.0), 1e-10);
@@ -381,7 +369,6 @@ class TabulatedFunctionFactoryTest {
         TabulatedFunction strict = factory.createStrict(xValues, yValues);
         TabulatedFunction strictUnmodifiable = factory.createStrictUnmodifiable(xValues, yValues);
 
-        // Все должны иметь одинаковые данные
         for (int i = 0; i < xValues.length; i++) {
             assertEquals(normal.getX(i), strict.getX(i), 1e-10);
             assertEquals(normal.getX(i), strictUnmodifiable.getX(i), 1e-10);
@@ -389,14 +376,12 @@ class TabulatedFunctionFactoryTest {
             assertEquals(normal.getY(i), strictUnmodifiable.getY(i), 1e-10);
         }
 
-        // Разное поведение при интерполяции
         assertEquals(15.0, normal.apply(1.5), 1e-10); // Интерполяция работает
         assertThrows(UnsupportedOperationException.class, () -> strict.apply(1.5)); // Только strict
         assertThrows(UnsupportedOperationException.class, () -> strictUnmodifiable.apply(1.5)); // Strict + Unmodifiable
 
-        // Разное поведение при модификации
-        normal.setY(0, 100.0); // Модификация работает
-        strict.setY(0, 100.0); // Модификация работает (только strict)
+        normal.setY(0, 100.0);
+        strict.setY(0, 100.0);
         assertThrows(UnsupportedOperationException.class, () -> strictUnmodifiable.setY(0, 100.0)); // Запрещено
     }
 
@@ -441,7 +426,6 @@ class TabulatedFunctionFactoryTest {
 
         TabulatedFunction function = factory.createUnmodifiable(xValues, yValues);
 
-        // Интерполяция должна работать
         assertEquals(15.0, function.apply(1.5), 0.0001);
         assertEquals(5.0, function.apply(0.5), 0.0001); // экстраполяция слева
         assertEquals(35.0, function.apply(3.5), 0.0001); // экстраполяция справа
@@ -456,12 +440,10 @@ class TabulatedFunctionFactoryTest {
 
         TabulatedFunction function = factory.createUnmodifiable(xValues, yValues);
 
-        // Попытка изменить значение должна бросать исключение
         assertThrows(UnsupportedOperationException.class, () -> {
             function.setY(1, 25.0);
         });
 
-        // Проверяем, что значение не изменилось
         assertEquals(20.0, function.getY(1), 0.0001);
     }
 
@@ -474,10 +456,8 @@ class TabulatedFunctionFactoryTest {
 
         TabulatedFunction function = factory.createUnmodifiable(xValues, yValues);
 
-        // Все операции модификации должны бросать исключение
         assertThrows(UnsupportedOperationException.class, () -> function.setY(0, 100.0));
 
-        // Данные должны остаться неизменными
         assertEquals(10.0, function.getY(0), 0.0001);
         assertEquals(20.0, function.getY(1), 0.0001);
         assertEquals(30.0, function.getY(2), 0.0001);
@@ -492,11 +472,9 @@ class TabulatedFunctionFactoryTest {
 
         TabulatedFunction function = factory.createUnmodifiable(xValues, yValues);
 
-        // Изменяем исходные массивы
         xValues[0] = 100.0;
         yValues[0] = 200.0;
 
-        // Функция должна остаться неизменной
         assertEquals(1.0, function.getX(0), 0.0001);
         assertEquals(10.0, function.getY(0), 0.0001);
     }
@@ -510,7 +488,6 @@ class TabulatedFunctionFactoryTest {
 
         TabulatedFunction function = factory.createUnmodifiable(xValues, yValues);
 
-        // Итератор должен работать для чтения
         int count = 0;
         for (var point : function) {
             assertNotNull(point);
@@ -518,9 +495,7 @@ class TabulatedFunctionFactoryTest {
         }
         assertEquals(3, count);
 
-        // Итератор должен запрещать remove
         var iterator = function.iterator();
-        iterator.next(); // Переходим к первому элементу
         assertThrows(UnsupportedOperationException.class, () -> iterator.remove());
     }
 
@@ -599,23 +574,19 @@ class TabulatedFunctionFactoryTest {
         TabulatedFunction normal = factory.create(xValues, yValues);
         TabulatedFunction unmodifiable = factory.createUnmodifiable(xValues, yValues);
 
-        // Обе функции должны иметь одинаковые данные
         for (int i = 0; i < xValues.length; i++) {
             assertEquals(normal.getX(i), unmodifiable.getX(i), 0.0001);
             assertEquals(normal.getY(i), unmodifiable.getY(i), 0.0001);
         }
 
-        // Обе должны поддерживать интерполяцию
         assertEquals(15.0, normal.apply(1.5), 0.0001);
         assertEquals(15.0, unmodifiable.apply(1.5), 0.0001);
 
-        // Разное поведение при модификации
         normal.setY(0, 100.0); // Модификация работает
         assertThrows(UnsupportedOperationException.class, () -> {
             unmodifiable.setY(0, 100.0); // Модификация запрещена
         });
 
-        // Проверяем, что unmodifiable не изменился
         assertEquals(10.0, unmodifiable.getY(0), 0.0001);
     }
 
@@ -626,14 +597,11 @@ class TabulatedFunctionFactoryTest {
         double[] xValues = {1.0, 2.0, 3.0};
         double[] yValues = {10.0, 20.0, 30.0};
 
-        // Создаем strict функцию и затем unmodifiable
         TabulatedFunction strictFunction = factory.createStrict(xValues, yValues);
         TabulatedFunction unmodifiableFunction = factory.createUnmodifiable(xValues, yValues);
 
-        // Unmodifiable не должен быть strict
         assertEquals(15.0, unmodifiableFunction.apply(1.5), 0.0001); // Интерполяция работает
 
-        // Но strict функция должна бросать исключение
         assertThrows(UnsupportedOperationException.class, () -> {
             strictFunction.apply(1.5);
         });
@@ -648,20 +616,16 @@ class TabulatedFunctionFactoryTest {
 
         TabulatedFunction function = factory.createUnmodifiable(xValues, yValues);
 
-        // Проверяем основные свойства
         assertNotNull(function);
         assertTrue(function instanceof UnmodifiableTabulatedFunction);
         assertEquals(3, function.getCount());
 
-        // Интерполяция должна работать
         assertEquals(15.0, function.apply(1.5), 0.0001);
 
-        // Модификация должна быть запрещена
         assertThrows(UnsupportedOperationException.class, () -> {
             function.setY(1, 25.0);
         });
 
-        // Данные должны быть корректными
         assertEquals(1.0, function.getX(0), 0.0001);
         assertEquals(10.0, function.getY(0), 0.0001);
     }

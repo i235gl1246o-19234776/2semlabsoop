@@ -106,7 +106,7 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
 
         Node curr = head;
         for(int i = 0; i < count - 1; i++){
-            if(x >= curr.x && x < curr.next.x){
+            if(x < curr.next.x){
                 return i;
             }
             curr = curr.next;
@@ -222,7 +222,7 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
 
         Node curr = head;
         for(int i = 0; i < count - 1; i++){
-            if(x >= curr.x && x < curr.next.x){
+            if(x < curr.next.x){
                 return curr;
             }
             curr = curr.next;
