@@ -8,6 +8,12 @@ public interface TabulatedFunctionFactory {
     TabulatedFunction create(double[] xValues, double[] yValues);
 
     default TabulatedFunction createStrict(double[] xValues, double[] yValues){
+        if (xValues == null || yValues == null) {
+            throw new IllegalArgumentException("Должны быть непустые массивы");
+        }
+        if (xValues.length != yValues.length) {
+            throw new IllegalArgumentException("Длины ОШИБКА");
+        }
         TabulatedFunction baseFunction = create(xValues, yValues);
         return new StrictTabulatedFunction(baseFunction);
     }
@@ -18,7 +24,6 @@ public interface TabulatedFunctionFactory {
         if (xValues.length != yValues.length) {
             throw new IllegalArgumentException("Длины ОШИБКА");
         }
-        //checkLengthIsTheSame(xVal, yVal);
         return new UnmodifiableTabulatedFunction(create(xValues, yValues));
     }
 

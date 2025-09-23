@@ -2,7 +2,7 @@ package functions;
 
 import java.util.Arrays;
 
-public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements Removable {
+public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements Insertable, Removable {
     private double[] xVal;
     private double[] yVal;
     private int count;
@@ -185,6 +185,35 @@ public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements
                 return interpolate(x, floorIndexOfX(x));
             }
         }
+    }
+
+    @Override
+    public void insert(double x, double y) {
+        int existingIndex = indexOfX(x);
+        if (existingIndex != -1) {
+            yVal[existingIndex] = y;
+            return;
+        }
+
+        int insertIndex = 0;
+        while (insertIndex < count && xVal[insertIndex] < x) {
+            insertIndex++;
+        }
+
+        if (count >= xVal.length) {
+            int newCapacity = (int) (xVal.length) + 1;
+            xVal = Arrays.copyOf(xVal, newCapacity);
+            yVal = Arrays.copyOf(yVal, newCapacity);
+        }
+
+        if (insertIndex < count) {
+            System.arraycopy(xVal, insertIndex, xVal, insertIndex + 1, count - insertIndex);
+            System.arraycopy(yVal, insertIndex, yVal, insertIndex + 1, count - insertIndex);
+        }
+
+        xVal[insertIndex] = x;
+        yVal[insertIndex] = y;
+        count++;
     }
 
     @Override
