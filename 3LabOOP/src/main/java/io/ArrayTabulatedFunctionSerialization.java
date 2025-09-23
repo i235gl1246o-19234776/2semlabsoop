@@ -22,7 +22,7 @@ public class ArrayTabulatedFunctionSerialization{
         }
 
         // ============ ЭТАП 1: СЕРИАЛИЗАЦИЯ ============
-        System.out.println("➡️ Сериализация функций...");
+        System.out.println("Сериализация функций...");
 
         try (
                 FileOutputStream fileOut = new FileOutputStream(filePath);
@@ -55,15 +55,15 @@ public class ArrayTabulatedFunctionSerialization{
             FunctionsIO.serialize(bufferedOut, firstDerivative);
             FunctionsIO.serialize(bufferedOut, secondDerivative);
 
-            System.out.println("✅ Сериализация успешно завершена.");
+            System.out.println("Сериализация успешно завершена.");
 
         } catch (IOException e) {
-            System.err.println("❌ Ошибка при сериализации:");
+            System.err.println("Ошибка при сериализации:");
             e.printStackTrace();
         }
 
         // ============ ЭТАП 2: ДЕСЕРИАЛИЗАЦИЯ ============
-        System.out.println("\n➡️ Десериализация функций...");
+        System.out.println("\n➡Десериализация функций...");
 
         try (
                 FileInputStream fileIn = new FileInputStream(filePath);
@@ -77,13 +77,13 @@ public class ArrayTabulatedFunctionSerialization{
             System.out.println("Функция 2: " + firstDerivative.toString());
             System.out.println("Функция 3: " + secondDerivative.toString());
 
-            System.out.println("✅ Десериализация успешно завершена.");
+            System.out.println("Десериализация успешно завершена.");
 
         } catch (IOException e) {
-            System.err.println("❌ Ошибка ввода-вывода при десериализации:");
+            System.err.println("Ошибка ввода-вывода при десериализации:");
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
-            System.err.println("❌ Не найден класс при десериализации (проверьте Serializable и пакеты):");
+            System.err.println("Не найден класс при десериализации (проверьте Serializable и пакеты):");
             e.printStackTrace();
         }
     }

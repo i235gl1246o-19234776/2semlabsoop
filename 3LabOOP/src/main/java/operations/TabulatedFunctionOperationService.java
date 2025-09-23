@@ -70,8 +70,7 @@ public class TabulatedFunctionOperationService {
         // Проверка на одинаковое количество точек
         if (countA != countB) {
             throw new InconsistentFunctionsException(
-                    "Inconsistent function sizes: " + countA + " vs " + countB
-            );
+                    "Размеры не совпадают: "+ countA + " и"+ countB);
         }
         // Получаем точки обеих функций
         Point[] pointsA = asPoints(a);
@@ -88,8 +87,7 @@ public class TabulatedFunctionOperationService {
             // Проверка на совпадение X-координат
             if (xA != xB) {
                 throw new InconsistentFunctionsException(
-                        "X values differ at index " + i + ": " + xA + " != " + xB
-                );
+                        "X не совпадают!");
             }
 
             xValues[i] = xA;

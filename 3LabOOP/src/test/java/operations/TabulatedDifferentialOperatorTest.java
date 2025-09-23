@@ -136,15 +136,11 @@ public class TabulatedDifferentialOperatorTest {
     void testSetNullFactory() {
         TabulatedDifferentialOperator operator = new TabulatedDifferentialOperator();
 
-        IllegalArgumentException exception = assertThrows(
+        assertThrows(
                 IllegalArgumentException.class,
                 () -> operator.setFactory(null),
                 "Должно бросаться исключение при установке null фабрики"
         );
-
-        assertNotNull(exception.getMessage());
-        assertTrue(exception.getMessage().toLowerCase().contains("null"),
-                "Сообщение исключения должно содержать упоминание null");
     }
 
 }

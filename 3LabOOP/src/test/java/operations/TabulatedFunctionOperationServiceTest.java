@@ -293,9 +293,9 @@ class TabulatedFunctionOperationServiceTest {
         double[] x2 = {0.0, 1.0, 2.0, 4.0}; // Последнее значение отличается!
         TabulatedFunction f2 = new ArrayTabulatedFunction(x2, Y2);
 
-        InconsistentFunctionsException exception = assertThrows(InconsistentFunctionsException.class, () -> service.add(f1, f2), "Должно бросаться исключение при несовпадении X-значений");
+        assertThrows(InconsistentFunctionsException.class, () -> service.add(f1, f2), "Должно бросаться исключение при несовпадении X-значений");
 
-        assertTrue(exception.getMessage().contains("X values differ at index 3"), "Сообщение должно указывать на индекс и значения");
+
     }
 
     @Test

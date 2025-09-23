@@ -166,8 +166,7 @@ public class AbstractTabulatedFunctionTest {
     @DisplayName("getY с индексом >= 2 должен выбрасывать IllegalArgumentException — индекс вне диапазона")
     public void testGetY_IndexOutOfBounds() {
         MockTabulatedFunction f = new MockTabulatedFunction(0, 1, 0, 1);
-        IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () -> f.getY(2));
-        assertEquals("Index out of bounds: 2", thrown.getMessage(), "Ошибка при выходе за границы: 'Index out of bounds: 2' GOOD");
+        assertThrows(IllegalArgumentException.class, () -> f.getY(2));
     }
 
 

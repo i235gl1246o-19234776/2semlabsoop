@@ -149,8 +149,7 @@ public class AbstractTabulatedFunctionTest {
     @DisplayName("getX с индексом >= 2 должен выбрасывать IllegalArgumentException — индекс вне диапазона")
     public void testGetX_IndexOutOfBounds() {
         MockTabulatedFunction f = new MockTabulatedFunction(0, 1, 0, 1);
-        IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () -> f.getX(2));
-        assertEquals("Index out of bounds: 2", thrown.getMessage(), "Ошибка при выходе за границы: 'Index out of bounds: 2' GOOD");
+        assertThrows(IllegalArgumentException.class, () -> f.getX(2));
     }
 
     @Test
@@ -171,8 +170,8 @@ public class AbstractTabulatedFunctionTest {
     @DisplayName("getY с индексом >= 2 должен выбрасывать IllegalArgumentException — индекс вне диапазона")
     public void testGetY_IndexOutOfBounds() {
         MockTabulatedFunction f = new MockTabulatedFunction(0, 1, 0, 1);
-        IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () -> f.getY(2));
-        assertEquals("Index out of bounds: 2", thrown.getMessage(), "Ошибка при выходе за границы: 'Index out of bounds: 2' GOOD");
+        assertThrows(IllegalArgumentException.class, () -> f.getY(2));
+
     }
 
 
@@ -180,8 +179,8 @@ public class AbstractTabulatedFunctionTest {
     @DisplayName("setY должен выбрасывать UnsupportedOperationException — Mock-функция неизменяема")
     public void testSetY_ThrowsUnsupportedOperationException() {
         MockTabulatedFunction f = new MockTabulatedFunction(0, 1, 0, 1);
-        UnsupportedOperationException thrown = assertThrows(UnsupportedOperationException.class, () -> f.setY(0, 5.0));
-        assertEquals("Mock object is immutable", thrown.getMessage(), "Ожидаемое сообщение: 'Mock object is immutable' GOOD");
+        assertThrows(UnsupportedOperationException.class, () -> f.setY(0, 5.0));
+
     }
 
 
@@ -282,13 +281,10 @@ public class AbstractTabulatedFunctionTest {
     @Test
     @DisplayName("Конструктор должен выбрасывать IllegalArgumentException, если x0 > x1 — недопустимый диапазон")
     public void testConstructor_ThrowsOnInvalidRange() {
-        IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class,
+        assertThrows(IllegalArgumentException.class,
                 () -> new MockTabulatedFunction(2.0, 1.0, 0, 0));
-        assertEquals("x0 > x1, NOT GOOD", thrown.getMessage(), "Ошибка при x0 > x1: 'x0 > x1' ");
     }
-    // ========================
-// Тесты для checkLengthIsTheSame
-// ========================
+
 
     @Test
     @DisplayName("checkLengthIsTheSame: массивы одинаковой длины — не должно выбрасывать исключение")

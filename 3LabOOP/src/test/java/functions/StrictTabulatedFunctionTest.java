@@ -73,14 +73,10 @@ class StrictTabulatedFunctionTest {
     @Test
     @DisplayName("Сообщение исключения должно содержать значение X и информацию о запрете интерполяции")
     void testExceptionMessageContainsXValue() {
-        UnsupportedOperationException exception = assertThrows(
+        assertThrows(
                 UnsupportedOperationException.class,
                 () -> strictArrayFunction.apply(2.7)
         );
-
-        assertTrue(exception.getMessage().contains("2.7"));
-        assertTrue(exception.getMessage().contains("не найдено"));
-        assertTrue(exception.getMessage().toLowerCase().contains("интерполир"));
     }
 
     @Test

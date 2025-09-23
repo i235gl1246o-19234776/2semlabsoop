@@ -114,7 +114,6 @@ class SteppingDifferentialOperatorsTest {
         SteppingDifferentialOperator operator = new SteppingDifferentialOperator(STEP);
         MathFunction derivative = operator.derive(f);
 
-        // Проверяем, что производная равна 0 в нескольких точках
         assertNull(operator.derive(f), "Метод должен возвращать null");
     }
 

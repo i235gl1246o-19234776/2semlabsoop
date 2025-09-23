@@ -14,8 +14,6 @@ import static org.junit.jupiter.api.Assertions.*;
 class ExceptionConstructorsTest {
     private static final double DELTA = 1e-10;
 
-    // ============ ArrayIsNotSortedException ============
-
     @Test
     @DisplayName("ArrayIsNotSortedException() должен создавать исключение с null-сообщением")
     void testArrayIsNotSortedExceptionDefaultConstructor() {
@@ -31,8 +29,6 @@ class ExceptionConstructorsTest {
         assertEquals(message, exception.getMessage());
     }
 
-    // ============ DifferentLengthOfArraysException ============
-
     @Test
     @DisplayName("DifferentLengthOfArraysException() должен создавать исключение с null-сообщением")
     void testDifferentLengthOfArraysExceptionDefaultConstructor() {
@@ -47,8 +43,6 @@ class ExceptionConstructorsTest {
         DifferentLengthOfArraysException exception = new DifferentLengthOfArraysException(message);
         assertEquals(message, exception.getMessage());
     }
-
-    // ============ InterpolationException ============
 
     @Test
     @DisplayName("InterpolationException() должен создавать исключение с null-сообщением")

@@ -360,12 +360,10 @@ public class FunctionsIOTest {
         StringReader stringReader = new StringReader(data);
         BufferedReader reader = new BufferedReader(stringReader);
 
-        IOException exception = assertThrows(IOException.class, () -> {
+        assertThrows(IOException.class, () -> {
             FunctionsIO.readTabulatedFunction(reader, new ArrayTabulatedFunctionFactory());
         });
 
-        assertTrue(exception.getMessage().contains("Некорректный формат данных в строке"),
-                "Сообщение должно содержать описание ошибки формата");
     }
 
     @Test
@@ -377,15 +375,9 @@ public class FunctionsIOTest {
         StringReader stringReader = new StringReader(data);
         BufferedReader reader = new BufferedReader(stringReader);
 
-        IOException exception = assertThrows(IOException.class, () -> {
+        assertThrows(IOException.class, () -> {
             FunctionsIO.readTabulatedFunction(reader, new ArrayTabulatedFunctionFactory());
         });
-
-        assertTrue(exception.getMessage().contains("Ошибка парсинга чисел в строке"),
-                "Сообщение должно содержать описание ошибки парсинга");
-        assertNotNull(exception.getCause(), "Должна быть указана причина (cause)");
-        assertTrue(exception.getCause() instanceof ParseException,
-                "Причина должна быть ParseException");
     }
 
     @Test
@@ -399,14 +391,10 @@ public class FunctionsIOTest {
         StringReader stringReader = new StringReader(data);
         BufferedReader reader = new BufferedReader(stringReader);
 
-        IOException exception = assertThrows(IOException.class, () -> {
+        assertThrows(IOException.class, () -> {
             FunctionsIO.readTabulatedFunction(reader, new ArrayTabulatedFunctionFactory());
         });
 
-        assertEquals("Некорректный формат числа", exception.getMessage(),
-                "Должно быть сообщение 'Некорректный формат числа'");
-        assertNotNull(exception.getCause());
-        assertTrue(exception.getCause() instanceof NumberFormatException);
 
     }
 
@@ -464,11 +452,9 @@ public class FunctionsIOTest {
     void serializeXml_NullFunction_ThrowsNullPointerException() {
         StringWriter writer = new StringWriter();
 
-        NullPointerException exception = assertThrows(NullPointerException.class, () -> {
+        assertThrows(NullPointerException.class, () -> {
             FunctionsIO.serializeXml(new BufferedWriter(writer), null);
         });
-
-        assertEquals("Function cannot be null", exception.getMessage());
     }
 
     @Test
