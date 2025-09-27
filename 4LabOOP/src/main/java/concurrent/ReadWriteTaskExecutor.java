@@ -1,47 +1,57 @@
 package concurrent;
 
 import functions.*;
+import functions.factory.LinkedListTabulatedFunctionFactory;
 
 public class ReadWriteTaskExecutor {
 
     public static void main(String[] args) {
+        final Object lock = new Object();
+
         ConstantFunction constantFunction = new ConstantFunction(-1.0);
 
-        double xFrom = 1.0;
-        double xTo = 1000.0;
-        int pointCount = 1000;
+        TabulatedFunction tabulatedFunction = new LinkedListTabulatedFunction(constantFunction, 1, 1000, 10);
+        System.out.printf("Табулированная функция: %s на интервале [%f, %f]%n",
+                constantFunction, 1.0, 1000.0);
+        System.out.println("WriteTask будет устанавливать все Y = 0.5");
+        System.out.println("===========================");
+        System.out.flush();
 
-        TabulatedFunction tabulatedFunction = new LinkedListTabulatedFunction(constantFunction, xFrom, xTo, pointCount);
+        ReadTask readTask = new ReadTask(tabulatedFunction, lock);
+        WriteTask writeTask = new WriteTask(tabulatedFunction, 0.5, lock);
 
-        ReadTask readTask = new ReadTask(tabulatedFunction);
-        WriteTask writeTask = new WriteTask(tabulatedFunction, 0.5);
+        Thread readThread = new Thread(readTask, "ReadThread");
+        Thread writeThread = new Thread(writeTask, "WriteThread");
 
-        Thread readThread = new Thread(readTask);
-        Thread writeThread = new Thread(writeTask);
-
-        System.out.println("Запуск потоков чтения и записи пип пип пип");
-        System.out.println("Исходная функция: ConstantFunction(-1.0) на интервале [1.0, 1000.0]");
-
-        System.out.println("WriteTask будет устанавливать все Y в 0.5");
-        System.out.println("ВИУ ВИУ ВИУ ====================================== ВИУ ВИУ ВИУ");
+        writeThread.start();
 
         try{
-            readThread.join();
-            writeThread.join();
-        } catch(InterruptedException e){
+            Thread.sleep(50);
+        }catch (InterruptedException e){
             e.printStackTrace();
         }
 
-        System.out.println("Оба потока завершены");
+        readThread.start();
 
-        // Проверяем финальное состояние функции
-        System.out.println("Проверка финальных значений функции:");
-        for (int i = 0; i < Math.min(10, tabulatedFunction.getCount()); i++) {
-            System.out.printf("Index %d: x = %f, y = %f%n",
-                    i, tabulatedFunction.getX(i), tabulatedFunction.getY(i));
-        }
-        if (tabulatedFunction.getCount() > 10) {
-            System.out.println("... и еще " + (tabulatedFunction.getCount() - 10) + " точек");
+        try{
+            writeThread.join();
+            readThread.join();
+
+            System.out.println("\nПроверка финальных значений функции:");
+            boolean allCorrect = true;
+
+            for (int i = 0; i < tabulatedFunction.getCount(); i++){
+                double y = tabulatedFunction.getY(i);
+                if (Math.abs(y - 0.5) > 1e-6){
+                    System.out.printf("Ошибка: для индекса %d значение y = %f", i, y);
+                    allCorrect = false;
+                }
+            }
+            if (allCorrect){
+                System.out.println("Все значения корректны и равны 0.5");
+            }
+        }catch (InterruptedException e){
+            e.printStackTrace();
         }
 
     }
