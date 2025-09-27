@@ -8,15 +8,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MultiplyingTaskExecutor {
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
         TabulatedFunction function = new LinkedListTabulatedFunction(
                 new UnitFunction(), 1.0, 1000.0, 1000
         );
 
         List<Thread> threads = new ArrayList<>();
+        List<MultiplyingTask> tasks = new ArrayList<>();
 
         for (int i = 0; i < 10; i++) {
             MultiplyingTask task = new MultiplyingTask(function);
+            tasks.add(task);
             Thread thread = new Thread(task);
             threads.add(thread);
         }
@@ -25,7 +27,23 @@ public class MultiplyingTaskExecutor {
             thread.start();
         }
 
-        Thread.sleep(2000);
+        while (!tasks.isEmpty()) {
+            List<MultiplyingTask> completedTasks = new ArrayList<>();
+            for (MultiplyingTask task : tasks) {
+                if (task.isCompleted()) {
+                    completedTasks.add(task);
+                }
+            }
+
+            tasks.removeAll(completedTasks);
+
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                break;
+            }
+        }
 
         System.out.println(function);
     }
