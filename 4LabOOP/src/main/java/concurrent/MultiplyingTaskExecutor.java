@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MultiplyingTaskExecutor {
-    public static void main(String[] args) throws InterruptedException {
+    public synchronized static void main(String[] args) throws InterruptedException {
         TabulatedFunction function = new LinkedListTabulatedFunction(
                 new UnitFunction(), 1.0, 1000.0, 1000
         );
