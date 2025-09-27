@@ -121,7 +121,6 @@ public class UnmodifiableTabulatedFunctionTest {
     @Test
     @DisplayName("Тест итератора для обёрнутых функций")
     void testIterator() {
-        // Test array-based function iterator
         int count = 0;
         for (Point point : unmodifiableArrayFunction) {
             assertEquals(arrayFunction.getX(count), point.x, 1e-10);
@@ -130,7 +129,6 @@ public class UnmodifiableTabulatedFunctionTest {
         }
         assertEquals(5, count);
 
-        // Test linked list-based function iterator
         count = 0;
         for (Point point : unmodifiableLinkedListFunction) {
             assertEquals(linkedListFunction.getX(count), point.x, 1e-10);
@@ -143,18 +141,15 @@ public class UnmodifiableTabulatedFunctionTest {
     @Test
     @DisplayName("Тест неизменности оригинальной функции после оборачивания")
     void testOriginalFunctionNotModified() {
-        // Проверяем, что оригинальная функция не изменена после создания неизменяемой обёртки
         double originalY = arrayFunction.getY(0);
         double originalY2 = linkedListFunction.getY(0);
 
-        // Попытка изменить через обёртку должна бросить исключение, но не изменить оригинал
         assertThrows(UnsupportedOperationException.class,
                 () -> unmodifiableArrayFunction.setY(0, 999.0));
 
         assertThrows(UnsupportedOperationException.class,
                 () -> unmodifiableLinkedListFunction.setY(0, 999.0));
 
-        // Оригинальные значения должны остаться неизменными
         assertEquals(originalY, arrayFunction.getY(0), 1e-10);
         assertEquals(originalY2, linkedListFunction.getY(0), 1e-10);
     }
@@ -162,7 +157,6 @@ public class UnmodifiableTabulatedFunctionTest {
     @Test
     @DisplayName("Тест множественного оборачивания функции")
     void testMultipleWrapping() {
-        // Тестируем двойное оборачивание
         TabulatedFunction doubleWrapped = new UnmodifiableTabulatedFunction(
                 new UnmodifiableTabulatedFunction(arrayFunction));
 
@@ -190,7 +184,6 @@ public class UnmodifiableTabulatedFunctionTest {
 
         Iterator<Point> iterator = unmodifiable.iterator();
 
-        // remove() без предварительного вызова next() также должен бросать исключение
         assertThrows(UnsupportedOperationException.class,
                 () -> iterator.remove());
     }

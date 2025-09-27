@@ -5,7 +5,6 @@ import org.junit.jupiter.api.DisplayName;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import exception.InterpolationException;
 import exception.ArrayIsNotSortedException;
 import exception.DifferentLengthOfArraysException;
 
@@ -1085,5 +1084,148 @@ public class ArrayTabulatedFunctionTest {
         assertThrows(IllegalArgumentException.class, ()->new ArrayTabulatedFunction(xValues, yValues));
     }
 
+    @Test
+    @DisplayName("Вставка точки в начало таблицы")
+    public void testInsertAtBeginning() {
+        double[] xValues = {1.0, 2.0, 3.0};
+        double[] yValues = {10.0, 20.0, 30.0};
+        ArrayTabulatedFunction function = new ArrayTabulatedFunction(xValues, yValues);
+
+        function.insert(0.5, 5.0);
+
+        assertEquals(4, function.getCount(), "Количество точек должно увеличиться на 1");
+        assertEquals(0.5, function.getX(0), 1e-10, "Новая точка должна быть на позиции 0");
+        assertEquals(5.0, function.getY(0), 1e-10, "Y значение должно соответствовать вставленному");
+        assertEquals(1.0, function.getX(1), 1e-10, "Первая исходная точка должна сместиться на позицию 1");
+        assertEquals(10.0, function.getY(1), 1e-10, "Y значение первой точки должно сохраниться");
+    }
+
+    @Test
+    @DisplayName("Вставка точки в середину таблицы")
+    public void testInsertInMiddle() {
+        double[] xValues = {1.0, 3.0, 5.0};
+        double[] yValues = {10.0, 30.0, 50.0};
+        ArrayTabulatedFunction function = new ArrayTabulatedFunction(xValues, yValues);
+
+        function.insert(2.0, 20.0);
+
+        assertEquals(4, function.getCount(), "Количество точек должно увеличиться на 1");
+        assertArrayEquals(new double[]{1.0, 2.0, 3.0, 5.0},
+                function.getxVal(), 1e-10, "X значения должны быть упорядочены");
+        assertEquals(20.0, function.getY(1), 1e-10, "Y значение вставленной точки должно быть корректным");
+    }
+
+    @Test
+    @DisplayName("Вставка точки в конец таблицы")
+    public void testInsertAtEnd() {
+        double[] xValues = {1.0, 2.0, 3.0};
+        double[] yValues = {10.0, 20.0, 30.0};
+        ArrayTabulatedFunction function = new ArrayTabulatedFunction(xValues, yValues);
+
+        function.insert(4.0, 40.0);
+
+        assertEquals(4, function.getCount(), "Количество точек должно увеличиться на 1");
+        assertEquals(4.0, function.getX(3), 1e-10, "Новая точка должна быть на последней позиции");
+        assertEquals(40.0, function.getY(3), 1e-10, "Y значение последней точки должно быть корректным");
+        assertEquals(3.0, function.getX(2), 1e-10, "Предпоследняя точка должна сохранить свое положение");
+    }
+
+    @Test
+    @DisplayName("Вставка точки с существующим X (замена Y)")
+    public void testInsertExistingX() {
+        double[] xValues = {1.0, 2.0, 3.0};
+        double[] yValues = {10.0, 20.0, 30.0};
+        ArrayTabulatedFunction function = new ArrayTabulatedFunction(xValues, yValues);
+
+        function.insert(2.0, 25.0);
+
+        assertEquals(3, function.getCount(), "Количество точек не должно измениться при замене");
+        assertEquals(2.0, function.getX(1), 1e-10, "X значение должно остаться прежним");
+        assertEquals(25.0, function.getY(1), 1e-10, "Y значение должно быть заменено");
+        assertNotEquals(20.0, function.getY(1), 1e-10, "Старое Y значение должно быть заменено");
+    }
+
+    @Test
+    @DisplayName("Вставка точки в пустую таблицу")
+    public void testInsertIntoEmptyFunction() {
+        ArrayTabulatedFunction function = new ArrayTabulatedFunction(
+                x -> x * x, 1.0, 3.0, 3
+        );
+
+        while (function.getCount() > 0) {
+            function.remove(0);
+        }
+
+        function.insert(0.5, 0.25);
+
+        assertEquals(1, function.getCount(), "Таблица должна содержать 1 точку");
+        assertEquals(0.5, function.getX(0), 1e-10, "X значение должно быть корректным");
+        assertEquals(0.25, function.getY(0), 1e-10, "Y значение должно быть корректным");
+    }
+
+    @Test
+    @DisplayName("Вставка нескольких точек с сохранением порядка")
+    public void testInsertMaintainsOrder() {
+        double[] xValues = {1.0, 4.0};
+        double[] yValues = {1.0, 4.0};
+        ArrayTabulatedFunction function = new ArrayTabulatedFunction(xValues, yValues);
+
+        function.insert(2.0, 2.0);
+        function.insert(3.0, 3.0);
+        function.insert(0.5, 0.5);
+
+        assertEquals(5, function.getCount(), "Должно быть 5 точек после трех вставок");
+
+        for (int i = 0; i < function.getCount() - 1; i++) {
+            assertTrue(function.getX(i) < function.getX(i + 1),
+                    "Порядок X значений должен сохраняться: " + function.getX(i) + " < " + function.getX(i + 1));
+        }
+    }
+
+    @Test
+    @DisplayName("Вставка точки с отрицательным X")
+    public void testInsertNegativeX() {
+        double[] xValues = {-2.0, 0.0, 2.0};
+        double[] yValues = {4.0, 0.0, 4.0};
+        ArrayTabulatedFunction function = new ArrayTabulatedFunction(xValues, yValues);
+
+        function.insert(-1.0, 1.0);
+        function.insert(-3.0, 9.0);
+
+        assertEquals(5, function.getCount(), "Должно быть 5 точек");
+        assertArrayEquals(new double[]{-3.0, -2.0, -1.0, 0.0, 2.0},
+                function.getxVal(), 1e-10, "Отрицательные X должны корректно сортироваться");
+    }
+
+    @Test
+    @DisplayName("Вставка точки с нулевым X")
+    public void testInsertZeroX() {
+        double[] xValues = {-1.0, 1.0};
+        double[] yValues = {1.0, 1.0};
+        ArrayTabulatedFunction function = new ArrayTabulatedFunction(xValues, yValues);
+
+        function.insert(0.0, 0.0);
+
+        assertEquals(3, function.getCount(), "Должно быть 3 точки");
+        assertEquals(0.0, function.getX(1), 1e-10, "Ноль должен быть в середине");
+        assertEquals(0.0, function.getY(1), 1e-10, "Y значение нулевой точки должно быть корректным");
+    }
+
+    @Test
+    @DisplayName("Вставка точки с одинаковым Y но разным X")
+    public void testInsertSameYDifferentX() {
+        double[] xValues = {1.0, 2.0, 3.0};
+        double[] yValues = {5.0, 5.0, 5.0};
+        ArrayTabulatedFunction function = new ArrayTabulatedFunction(xValues, yValues);
+
+        function.insert(1.5, 5.0);
+        function.insert(2.5, 5.0);
+
+        assertEquals(5, function.getCount(), "Должно быть 5 точек");
+        for (int i = 0; i < function.getCount(); i++) {
+            assertEquals(5.0, function.getY(i), 1e-10,
+                    "Все Y значения должны остаться равными 5.0");
+        }
+    }
 
 }

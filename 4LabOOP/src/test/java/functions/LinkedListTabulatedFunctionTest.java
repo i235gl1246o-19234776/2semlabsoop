@@ -3,7 +3,6 @@ package functions;
 import exception.InterpolationException;
 import exception.DifferentLengthOfArraysException;
 import exception.ArrayIsNotSortedException;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 import static org.junit.jupiter.api.Assertions.*;

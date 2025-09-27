@@ -58,19 +58,19 @@ public class MockTabulatedFunction extends AbstractTabulatedFunction{
     public double getX(int index) {
         if (index == 0) return x0;
         if (index == 1) return x1;
-        throw new IllegalArgumentException("Index out of bounds: " + index);
+        throw new IllegalArgumentException("Индекс выходит за пределы "+ index);
     }
 
     @Override
     public double getY(int index) {
         if (index == 0) return y0;
         if (index == 1) return y1;
-        throw new IllegalArgumentException("Index out of bounds: " + index);
+        throw new IllegalArgumentException("Индекс выходит за пределы "+ index);
     }
 
     @Override
     public void setY(int index, double value) {
-        throw new UnsupportedOperationException("Mock object is immutable");
+        throw new UnsupportedOperationException("Mock неизменяемый");
     }
 
     @Override

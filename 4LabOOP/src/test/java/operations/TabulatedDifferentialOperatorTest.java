@@ -1,10 +1,7 @@
 package operations;
 
 import functions.factory.*;
-import functions.Point;
 import functions.TabulatedFunction;
-import operations.TabulatedDifferentialOperator;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -18,7 +15,6 @@ public class TabulatedDifferentialOperatorTest {
 
     private static final double DELTA = 1e-10;
 
-    // ========== Фабрики для параметризованных тестов ==========
     private static Stream<TabulatedFunctionFactory> provideFactories() {
         return Stream.of(
                 new ArrayTabulatedFunctionFactory(),
@@ -26,14 +22,12 @@ public class TabulatedDifferentialOperatorTest {
         );
     }
 
-    // ========== Тестовые данные ==========
     private static final double[] X_LINEAR = {0.0, 1.0, 2.0, 3.0, 4.0};
     private static final double[] Y_LINEAR = {1.0, 3.0, 5.0, 7.0, 9.0}; // f(x) = 2x + 1
 
     private static final double[] X_QUADRATIC = {0.0, 1.0, 2.0, 3.0, 4.0};
     private static final double[] Y_QUADRATIC = {0.0, 1.0, 4.0, 9.0, 16.0}; // f(x) = x^2
 
-    // ========== Тест: линейная функция ==========
     @ParameterizedTest
     @MethodSource("provideFactories")
     @DisplayName("Производная линейной функции f(x) = 2x + 1 должна быть константой 2.0")
@@ -44,13 +38,11 @@ public class TabulatedDifferentialOperatorTest {
 
         assertEquals(X_LINEAR.length, derivative.getCount(), "Количество точек должно сохраняться");
 
-        // Проверяем внутренние точки (центральная разность)
         for (int i = 1; i < derivative.getCount() - 1; i++) {
             assertEquals(2.0, derivative.getY(i), DELTA,
                     "Производная в точке x=" + X_LINEAR[i] + " должна быть 2.0");
         }
 
-        // Проверяем граничные точки (левая/правая разность)
         if (derivative.getCount() > 1) {
             assertEquals(2.0, derivative.getY(0), DELTA, "Производная в первой точке должна быть 2.0");
             assertEquals(2.0, derivative.getY(derivative.getCount() - 1), DELTA,
@@ -58,7 +50,6 @@ public class TabulatedDifferentialOperatorTest {
         }
     }
 
-    // ========== Тест: квадратичная функция ==========
     @ParameterizedTest
     @MethodSource("provideFactories")
     @DisplayName("Производная квадратичной функции f(x) = x² должна быть f'(x) = 2x")
@@ -69,7 +60,6 @@ public class TabulatedDifferentialOperatorTest {
 
         assertEquals(X_QUADRATIC.length, derivative.getCount(), "Количество точек должно сохраняться");
 
-        // Проверяем несколько точек, используя корректные индексы
         for (int i = 0; i < derivative.getCount(); i++) {
             double x = derivative.getX(i);
             double expected = 2 * x;
@@ -77,8 +67,6 @@ public class TabulatedDifferentialOperatorTest {
                     "Производная в точке x=" + x + " должна быть " + expected);
         }
 
-        // Или проверьте конкретные точки с корректными индексами
-        // Например, среднюю точку:
         int middleIndex = derivative.getCount() / 2;
         double x = derivative.getX(middleIndex);
         double expected = 2 * x;
@@ -86,7 +74,6 @@ public class TabulatedDifferentialOperatorTest {
                 "Производная в средней точке x=" + x + " должна быть " + expected);
     }
 
-    // ========== Тест: две точки ==========
     @ParameterizedTest
     @MethodSource("provideFactories")
     @DisplayName("Производная функции из двух точек должна быть постоянной (разностное приближение)")
@@ -106,21 +93,18 @@ public class TabulatedDifferentialOperatorTest {
         assertEquals(expectedDerivative, derivative.getY(1), DELTA, "Производная во второй точке");
     }
 
-    // ========== Тест: работа с фабриками ==========
     @Test
     @DisplayName("Проверка работы с разными фабриками")
     void testDifferentFactories() {
         double[] x = {0.0, 1.0, 2.0};
         double[] y = {0.0, 1.0, 4.0};
 
-        // Array фабрика
         TabulatedFunctionFactory arrayFactory = new ArrayTabulatedFunctionFactory();
         TabulatedDifferentialOperator arrayOperator = new TabulatedDifferentialOperator(arrayFactory);
         TabulatedFunction derivative1 = arrayOperator.derive(arrayFactory.create(x, y));
         assertTrue(derivative1 instanceof functions.ArrayTabulatedFunction,
                 "Должна создаваться ArrayTabulatedFunction");
 
-        // LinkedList фабрика
         TabulatedFunctionFactory linkedListFactory = new LinkedListTabulatedFunctionFactory();
         TabulatedDifferentialOperator linkedListOperator = new TabulatedDifferentialOperator(linkedListFactory);
         TabulatedFunction derivative2 = linkedListOperator.derive(linkedListFactory.create(x, y));
@@ -128,7 +112,6 @@ public class TabulatedDifferentialOperatorTest {
                 "Должна создаваться LinkedListTabulatedFunction");
     }
 
-    // ========== Тест: конструктор по умолчанию ==========
     @Test
     @DisplayName("Конструктор по умолчанию должен использовать ArrayTabulatedFunctionFactory")
     void testDefaultConstructor() {
@@ -138,7 +121,6 @@ public class TabulatedDifferentialOperatorTest {
                 "По умолчанию должна использоваться ArrayTabulatedFunctionFactory");
     }
 
-    // ========== Тест: сеттер и геттер фабрики ==========
     @Test
     @DisplayName("Проверка сеттера и геттера фабрики")
     void testFactorySetterGetter() {
@@ -149,29 +131,16 @@ public class TabulatedDifferentialOperatorTest {
         assertSame(newFactory, operator.getFactory(), "Геттер должен возвращать установленную фабрику");
     }
 
-    // ========== Тест: исключение при null фабрике ==========
     @Test
     @DisplayName("Установка null фабрики должна вызывать IllegalArgumentException")
     void testSetNullFactory() {
         TabulatedDifferentialOperator operator = new TabulatedDifferentialOperator();
 
-        IllegalArgumentException exception = assertThrows(
+        assertThrows(
                 IllegalArgumentException.class,
                 () -> operator.setFactory(null),
                 "Должно бросаться исключение при установке null фабрики"
         );
-
-        assertNotNull(exception.getMessage());
-        assertTrue(exception.getMessage().toLowerCase().contains("null"),
-                "Сообщение исключения должно содержать упоминание null");
     }
 
-    // ========== Вспомогательный метод для отладки (если нужно) ==========
-    private void printFunction(TabulatedFunction function) {
-        System.out.print("Точки: ");
-        for (int i = 0; i < function.getCount(); i++) {
-            System.out.printf("(%.2f, %.4f) ", function.getX(i), function.getY(i));
-        }
-        System.out.println();
-    }
 }

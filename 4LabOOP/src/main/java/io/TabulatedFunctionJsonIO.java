@@ -17,20 +17,20 @@ public class TabulatedFunctionJsonIO {
         // Запись в JSON
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("3LabOOP/output/function.json"))) {
             FunctionsIO.serializeJson(writer, function);
-            System.out.println("✅ Функция успешно сериализована в JSON: output/function.json");
+            System.out.println("Функция успешно сериализована в JSON: output/function.json");
         } catch (IOException e) {
-            System.err.println("❌ Ошибка при записи JSON:");
+            System.err.println("Ошибка при записи JSON:");
             e.printStackTrace();
         }
 
         // Чтение из JSON
         try (BufferedReader reader = new BufferedReader(new FileReader("3LabOOP/output/function.json"))) {
             ArrayTabulatedFunction loadedFunction = FunctionsIO.deserializeJson(reader);
-            System.out.println("✅ Функция успешно десериализована из JSON:");
+            System.out.println("Функция успешно десериализована из JSON:");
             System.out.println("xValues: " + java.util.Arrays.toString(loadedFunction.getXVal()));
             System.out.println("yValues: " + java.util.Arrays.toString(loadedFunction.getYVal()));
         } catch (IOException e) {
-            System.err.println("❌ Ошибка при чтении JSON:");
+            System.err.println("Ошибка при чтении JSON:");
             e.printStackTrace();
         }
     }

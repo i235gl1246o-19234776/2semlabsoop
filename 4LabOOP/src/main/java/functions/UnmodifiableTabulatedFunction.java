@@ -74,7 +74,6 @@ public class UnmodifiableTabulatedFunction implements TabulatedFunction {
                 Point point = internalIterator.next();
                 return point;
             }
-
             @Override
             public void remove() {
                 throw new UnsupportedOperationException("Нельзя так делать");

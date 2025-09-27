@@ -27,8 +27,8 @@ public class ArrayTabulatedFunctionXmlSerialization {
                 System.out.println("Функция успешно десериализована!");
 
                 // Проверим, что данные совпадают
-                System.out.println("🔹 Оригинал: " + function.toString());
-                System.out.println("🔹 Восстановлено: " + restored.toString());
+                System.out.println("Оригинал: " + function.toString());
+                System.out.println("Восстановлено: " + restored.toString());
 
                 boolean equal = function.getCount() == restored.getCount();
                 for (int i = 0; equal && i < function.getCount(); i++) {

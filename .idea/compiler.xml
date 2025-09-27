@@ -8,8 +8,11 @@
         <outputRelativeToContentRoot value="true" />
         <module name="3LabOOP" />
         <module name="2LabOOP" />
-        <module name="4LabOOP" />
+        <module name="4LabOOP_" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="4LabOOP" target="24" />
+    </bytecodeTargetLevel>
   </component>
 </project>
