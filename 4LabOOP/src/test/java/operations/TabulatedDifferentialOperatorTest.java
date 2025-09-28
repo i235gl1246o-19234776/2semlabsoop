@@ -1,5 +1,8 @@
 package operations;
 
+import concurrent.SynchronizedTabulatedFunction;
+import functions.ArrayTabulatedFunction;
+import functions.LinkedListTabulatedFunction;
 import functions.factory.*;
 import functions.TabulatedFunction;
 import org.junit.jupiter.api.DisplayName;
@@ -143,4 +146,72 @@ public class TabulatedDifferentialOperatorTest {
         );
     }
 
+    @Test
+    @DisplayName("deriveSynchronously: совпадение с derive() для ArrayTabulatedFunction")
+    public void testDeriveSynchronouslyEqualsDerive_Array() {
+        double[] x = {0.0, 1.0, 2.0, 3.0};
+        double[] y = {0.0, 1.0, 4.0, 9.0}; // f(x) = x^2
+        TabulatedFunction func = new ArrayTabulatedFunction(x, y);
+
+        TabulatedDifferentialOperator op = new TabulatedDifferentialOperator();
+
+        TabulatedFunction deriv1 = op.derive(func);
+        TabulatedFunction deriv2 = op.deriveSynchronously(func);
+
+        assertEquals(deriv1.getCount(), deriv2.getCount());
+        for (int i = 0; i < deriv1.getCount(); i++) {
+            assertEquals(deriv1.getY(i), deriv2.getY(i), 1e-10,
+                    "Результаты должны совпадать для точки " + i);
+        }
+    }
+
+    @Test
+    @DisplayName("deriveSynchronously: совпадение с derive() для LinkedListTabulatedFunction")
+    public void testDeriveSynchronouslyEqualsDerive_LinkedList() {
+        double[] x = {0.0, 0.5, 1.0};
+        double[] y = {0.0, 0.25, 1.0}; // f(x) = x^2
+        TabulatedFunction func = new LinkedListTabulatedFunction(x, y);
+
+        TabulatedDifferentialOperator op = new TabulatedDifferentialOperator(new LinkedListTabulatedFunctionFactory());
+
+        TabulatedFunction deriv1 = op.derive(func);
+        TabulatedFunction deriv2 = op.deriveSynchronously(func);
+
+        assertEquals(deriv1.getCount(), deriv2.getCount());
+        for (int i = 0; i < deriv1.getCount(); i++) {
+            assertEquals(deriv1.getY(i), deriv2.getY(i), 1e-10);
+        }
+    }
+
+    @Test
+    @DisplayName("deriveSynchronously: входная функция уже SynchronizedTabulatedFunction")
+    public void testDeriveSynchronouslyWithAlreadySynchronized() {
+        double[] x = {1.0, 2.0, 3.0};
+        double[] y = {1.0, 4.0, 9.0}; // f(x) = x^2
+        TabulatedFunction base = new ArrayTabulatedFunction(x, y);
+        SynchronizedTabulatedFunction syncFunc = new SynchronizedTabulatedFunction(base);
+
+        TabulatedDifferentialOperator op = new TabulatedDifferentialOperator();
+
+        TabulatedFunction result = op.deriveSynchronously(syncFunc);
+
+        assertNotNull(result);
+        assertEquals(3, result.getCount());
+
+        // f'(x) = 2x → f'(1)=2, f'(2)=4, f'(3)=6
+        // Наш метод использует численное дифференцирование, поэтому проверим приближённо
+        assertEquals(2.0, result.getY(0), 0.5);   // крайняя точка — менее точна
+        assertEquals(4.0, result.getY(1), 0.1);  // центр — точнее
+        assertEquals(6.0, result.getY(2), 0.5);
+    }
+
+
+    @Test
+    @DisplayName("deriveSynchronously: исключение при null")
+    public void testDeriveSynchronouslyNull() {
+        TabulatedDifferentialOperator op = new TabulatedDifferentialOperator();
+        assertThrows(IllegalArgumentException.class, () -> {
+            op.deriveSynchronously(null);
+        });
+    }
 }

@@ -1,5 +1,6 @@
 package operations;
 
+import concurrent.SynchronizedTabulatedFunction;
 import functions.TabulatedFunction;
 import functions.Point;
 import functions.factory.TabulatedFunctionFactory;
@@ -41,9 +42,9 @@ public class TabulatedDifferentialOperator implements DifferentialOperator<Tabul
             xValues[i] = points[i].x;
         }
 
-        if (count == 1) {
-            yValues[0] = 0;
-        } else if (count == 2) {
+        //if (count == 1) {
+          //  yValues[0] = 0;
+        if (count == 2) {
             double h = points[1].x - points[0].x;
             double deriv = (points[1].y - points[0].y) / h;
             yValues[0] = deriv;
@@ -61,5 +62,19 @@ public class TabulatedDifferentialOperator implements DifferentialOperator<Tabul
         }
 
         return factory.create(xValues, yValues);
+    }
+    public TabulatedFunction deriveSynchronously(TabulatedFunction function) {
+        if (function == null) {
+            throw new IllegalArgumentException("Функция не может быть null");
+        }
+
+        SynchronizedTabulatedFunction syncFunction;
+        if (function instanceof SynchronizedTabulatedFunction) {
+            syncFunction = (SynchronizedTabulatedFunction) function;
+        } else {
+            syncFunction = new SynchronizedTabulatedFunction(function);
+        }
+
+        return syncFunction.doSynchronously(this::derive);
     }
 }

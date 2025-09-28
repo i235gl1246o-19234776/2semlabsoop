@@ -629,4 +629,83 @@ class TabulatedFunctionFactoryTest {
         assertEquals(1.0, function.getX(0), 0.0001);
         assertEquals(10.0, function.getY(0), 0.0001);
     }
+
+    private final TabulatedFunctionFactory factory = new ArrayTabulatedFunctionFactory();
+
+    @Test
+    @DisplayName("createStrict: корректные массивы → создаётся StrictTabulatedFunction")
+    public void testCreateStrictWithValidArrays() {
+        double[] x = {0.0, 1.0, 2.0};
+        double[] y = {0.0, 1.0, 4.0};
+
+        TabulatedFunction result = factory.createStrict(x, y);
+
+        // Проверяем, что результат — StrictTabulatedFunction
+        assertNotNull(result);
+        assertTrue(result instanceof StrictTabulatedFunction);
+
+        // Проверяем содержимое (через делегирование)
+        assertEquals(3, result.getCount());
+        assertEquals(0.0, result.getX(0), 1e-10);
+        assertEquals(1.0, result.getY(1), 1e-10);
+        assertEquals(2.0, result.getX(2), 1e-10);
+    }
+
+    @Test
+    @DisplayName("createStrict: null в xValues → IllegalArgumentException")
+    public void testCreateStrictWithNullX() {
+        double[] y = {1.0, 2.0};
+        assertThrows(IllegalArgumentException.class, () -> {
+            factory.createStrict(null, y);
+        });
+    }
+
+    @Test
+    @DisplayName("createStrict: null в yValues → IllegalArgumentException")
+    public void testCreateStrictWithNullY() {
+        double[] x = {1.0, 2.0};
+        assertThrows(IllegalArgumentException.class, () -> {
+            factory.createStrict(x, null);
+        });
+    }
+
+    @Test
+    @DisplayName("createStrict: разная длина массивов → IllegalArgumentException")
+    public void testCreateStrictWithDifferentLengths() {
+        double[] x = {1.0, 2.0, 3.0};
+        double[] y = {1.0, 2.0}; // короче
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            factory.createStrict(x, y);
+        });
+    }
+
+    @Test
+    @DisplayName("createStrict: пустые массивы → допустимо (если create допускает)")
+    public void testCreateStrictWithEmptyArrays() {
+        double[] x = {};
+        double[] y = {};
+
+        TabulatedFunction result = factory.createStrict(x, y);
+
+        assertNotNull(result);
+        assertTrue(result instanceof StrictTabulatedFunction);
+        assertEquals(0, result.getCount());
+    }
+
+    @Test
+    @DisplayName("createStrict: возвращает именно StrictTabulatedFunction, а не базовую реализацию")
+    public void testCreateStrictReturnsStrictWrapper() {
+        double[] x = {0.0, 1.0};
+        double[] y = {0.0, 1.0};
+
+        TabulatedFunction strictFunc = factory.createStrict(x, y);
+        TabulatedFunction baseFunc = factory.create(x, y);
+
+        // Убеждаемся, что createStrict ≠ create
+        assertNotSame(baseFunc, strictFunc);
+        assertNotEquals(baseFunc.getClass(), strictFunc.getClass());
+        assertTrue(strictFunc instanceof StrictTabulatedFunction);
+        assertFalse(baseFunc instanceof StrictTabulatedFunction);
+    }
 }
