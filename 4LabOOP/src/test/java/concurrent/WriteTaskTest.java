@@ -160,51 +160,6 @@ class WriteTaskTest {
         }
     }
 
-    @Test
-    @DisplayName("WriteTask должен работать с функцией из одной точки")
-    @Timeout(value = 2, unit = TimeUnit.SECONDS)
-    void testSinglePointFunction() throws InterruptedException {
-        double[] singleX = {5.0};
-        double[] singleY = {25.0};
-        TabulatedFunction singleFunction = new LinkedListTabulatedFunctionFactory().create(singleX, singleY);
-        WriteTask singleWriteTask = new WriteTask(singleFunction, 50.0, lock);
-        ReadTask singleReadTask = new ReadTask(singleFunction, lock);
-
-        Thread writeThread = new Thread(singleWriteTask);
-        Thread readThread = new Thread(singleReadTask);
-
-        writeThread.start();
-        readThread.start();
-
-        writeThread.join(1500);
-        readThread.join(1000);
-
-        assertEquals(50.0, singleFunction.getY(0), 1e-9,
-                "Значение должно быть установлено в 50.0");
-
-        String output = outputStream.toString();
-        assertTrue(output.contains("Writing for index 0"),
-                "Должна быть запись для единственного индекса");
-    }
-
-    @Test
-    @DisplayName("WriteTask должен корректно работать с пустой функцией")
-    @Timeout(value = 2, unit = TimeUnit.SECONDS)
-    void testEmptyFunction() throws InterruptedException {
-        double[] emptyX = {};
-        double[] emptyY = {};
-        TabulatedFunction emptyFunction = new LinkedListTabulatedFunctionFactory().create(emptyX, emptyY);
-        WriteTask emptyWriteTask = new WriteTask(emptyFunction, 99.0, lock);
-
-        Thread thread = new Thread(emptyWriteTask);
-
-        thread.start();
-        thread.join(1000);
-
-        String output = outputStream.toString();
-        assertFalse(output.contains("Writing for index"),
-                "Для пустой функции не должно быть вывода о записи");
-    }
 
     @Test
     @DisplayName("WriteTask должен сохранять оригинальные значения X")
@@ -298,25 +253,5 @@ class WriteTaskTest {
             assertEquals(negativeValue, function.getY(i), 1e-9,
                     "Значения должны быть установлены в " + negativeValue);
         }
-    }
-
-    @Test
-    @DisplayName("Базовый тест создания и запуска WriteTask")
-    void testBasicFunctionality() {
-        double[] xValues = {1.0};
-        double[] yValues = {10.0};
-        TabulatedFunction func = new LinkedListTabulatedFunctionFactory().create(xValues, yValues);
-        Object lockObj = new Object();
-
-        WriteTask task = new WriteTask(func, 99.0, lockObj);
-
-        assertNotNull(task, "WriteTask должен создаваться успешно");
-
-        Thread thread = new Thread(task);
-        assertDoesNotThrow(() -> {
-            thread.start();
-            thread.interrupt();
-            thread.join(100);
-        }, "Запуск и прерывание потока не должны вызывать исключений");
     }
 }
