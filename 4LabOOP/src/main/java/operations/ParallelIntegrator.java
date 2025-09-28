@@ -15,15 +15,20 @@ public class ParallelIntegrator {
      * @return приближённое значение интеграла
      */
     public static double integrate(MathFunction func, double a, double b, int n) {
-        if (a >= b) {
-            throw new IllegalArgumentException("a must be less than b");
+        if (a == b) {
+            return 0;
         }
         if (n <= 0) {
-            throw new IllegalArgumentException("n must be positive");
+            throw new IllegalArgumentException("n должно быть положительным");
         }
 
-        // Создаём задачу и выполняем в общем пуле
-        SimpsonIntegral task = new SimpsonIntegral(func, a, b, n);
-        return ForkJoinPool.commonPool().invoke(task);
+        SimpsonIntegral task;
+        if (a > b) {
+            task = new SimpsonIntegral(func, b, a, n);
+            return -ForkJoinPool.commonPool().invoke(task);
+        } else {
+            task = new SimpsonIntegral(func, a, b, n);
+            return ForkJoinPool.commonPool().invoke(task);
+        }
     }
 }

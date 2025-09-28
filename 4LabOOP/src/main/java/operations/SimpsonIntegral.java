@@ -22,7 +22,7 @@ public class SimpsonIntegral extends RecursiveTask<Double> {
         if (n <= THRESHOLD) {
             return computeSimpsonSequential(a, b, n);
         } else {
-            // Делим отрезок и число разбиений пополам
+            //Делим отрезок и число разбиений пополам
             double mid = a + (b - a) / 2.0;
             int halfN = n / 2;
 
