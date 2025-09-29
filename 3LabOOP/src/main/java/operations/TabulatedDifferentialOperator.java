@@ -41,9 +41,7 @@ public class TabulatedDifferentialOperator implements DifferentialOperator<Tabul
             xValues[i] = points[i].x;
         }
 
-        if (count == 1) {
-            yValues[0] = 0;
-        } else if (count == 2) {
+        if (count == 2) {
             double h = points[1].x - points[0].x;
             double deriv = (points[1].y - points[0].y) / h;
             yValues[0] = deriv;

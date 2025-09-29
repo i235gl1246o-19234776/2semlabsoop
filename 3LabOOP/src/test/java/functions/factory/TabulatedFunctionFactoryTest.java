@@ -1,5 +1,6 @@
 package functions.factory;
 
+import exception.DifferentLengthOfArraysException;
 import functions.*;
 
 import org.junit.jupiter.api.Test;
@@ -628,5 +629,36 @@ class TabulatedFunctionFactoryTest {
 
         assertEquals(1.0, function.getX(0), 0.0001);
         assertEquals(10.0, function.getY(0), 0.0001);
+    }
+    @Test
+    void testCreateWithDifferentLengthArrays() {
+
+        double[] differentX = {1.0, 2.0, 3.0};
+        double[] differentY = {10.0, 20.0};
+
+        assertThrows(java.lang.IllegalArgumentException.class, () -> {
+            ArrayTabulatedFunctionFactory factory = new ArrayTabulatedFunctionFactory();
+            factory.createStrict(differentX, differentY);
+        });
+    }
+    @Test
+    void testCreateWithNullY() {
+        double[] differentX = {};
+        double[] differentY = {};
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            ArrayTabulatedFunctionFactory factory = new ArrayTabulatedFunctionFactory();
+            factory.createStrict(differentX, null);
+        });
+    }
+    @Test
+    void testCreateWithNullX() {
+        double[] differentX = {};
+        double[] differentY = {};
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            ArrayTabulatedFunctionFactory factory = new ArrayTabulatedFunctionFactory();
+            factory.createStrict(null, differentY);
+        });
     }
 }
