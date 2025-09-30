@@ -15,13 +15,11 @@ public class ArrayTabulatedFunctionXmlSerialization {
         String filename = "function.xml";
 
         try {
-            // ➡️ Сериализация в XML
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
                 FunctionsIO.serializeXml(writer, function);
                 System.out.println("Функция успешно сериализована в " + filename);
             }
 
-            // ➡️ Десериализация из XML
             try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
                 ArrayTabulatedFunction restored = FunctionsIO.deserializeXml(reader);
                 System.out.println("Функция успешно десериализована!");
